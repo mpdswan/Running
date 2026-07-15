@@ -314,11 +314,11 @@ h1 .accent{color:var(--flame)}
 #cal-print{display:none}
 .cal-page{break-after:page;page-break-after:always}
 .cal-page:last-child{break-after:auto;page-break-after:auto}
-.cal-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;border-bottom:2px solid #000;padding-bottom:5px}
-.cal-head h2{font-family:var(--disp);text-transform:uppercase;font-size:22pt;letter-spacing:.02em;color:#000}
-.cal-sub{font-family:var(--mono);font-size:9pt;color:#333}
+.cal-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;border-bottom:2.5px solid var(--track);padding-bottom:5px}
+.cal-head h2{font-family:var(--disp);text-transform:uppercase;font-size:22pt;letter-spacing:.02em;color:var(--track)}
+.cal-sub{font-family:var(--mono);font-size:9pt;color:var(--ink-soft)}
 .cal-grid{width:100%;border-collapse:collapse;table-layout:fixed}
-.cal-grid th{font-family:var(--disp);text-transform:uppercase;font-size:8.5pt;letter-spacing:.08em;padding:4px 3px;border:1px solid #999;background:#EFEFEF;color:#000;text-align:left}
+.cal-grid th{font-family:var(--disp);text-transform:uppercase;font-size:8.5pt;letter-spacing:.08em;padding:4px 3px;border:1px solid #C3C9D8;background:var(--tint);color:var(--track-deep);text-align:left}
 .cal-phase-head{width:22px;padding:0!important;background:#fff!important;border:none!important}
 /* The phase label runs up the side of the week so it costs almost no width.
    The rotated text sits in an absolutely-positioned layer so it can never
@@ -329,28 +329,28 @@ h1 .accent{color:var(--flame)}
 .cal-phase-box{position:relative;height:100%;min-height:88px;width:100%}
 .cal-phase-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(180deg);
   writing-mode:vertical-rl;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.cal-phase-txt{font-family:var(--disp);text-transform:uppercase;font-size:7.4pt;letter-spacing:.09em;font-weight:700;color:#000;white-space:nowrap}
-.cal-phase-wk{font-family:var(--mono);font-size:6.4pt;color:#555;white-space:nowrap}
-.cal-phase.ph-none{background:#fff;border-color:#DDD}
-.cal-phase.ph-base{background:#E8EDFB}
-.cal-phase.ph-development{background:#FFE6D8}
-.cal-phase.ph-specific{background:#FFDCCB}
-.cal-phase.ph-taper,.cal-phase.ph-race{background:#111}
-.cal-phase.ph-taper .cal-phase-txt,.cal-phase.ph-race .cal-phase-txt{color:#fff}
-.cal-phase.ph-taper .cal-phase-wk,.cal-phase.ph-race .cal-phase-wk{color:#CCC}
-.cal-phase.ph-down{background:#E6E9F0}
-.cal-grid td{border:1px solid #999;vertical-align:top;padding:3px 4px;height:96px;overflow:hidden}
-.cal-blank{background:#FAFAFA}
+.cal-phase-txt{font-family:var(--disp);text-transform:uppercase;font-size:7.4pt;letter-spacing:.09em;font-weight:700;color:#fff;white-space:nowrap}
+.cal-phase-wk{font-family:var(--mono);font-size:6.4pt;color:rgba(255,255,255,.78);white-space:nowrap}
+.cal-phase.ph-none{background:#fff;border-color:#E4E7EF}
+.cal-phase.ph-base{background:var(--lv-easy)}
+.cal-phase.ph-development{background:var(--lv-interval)}
+.cal-phase.ph-specific{background:var(--lv-max)}
+.cal-phase.ph-taper{background:var(--flame)}
+.cal-phase.ph-race{background:var(--ink)}
+.cal-phase.ph-down{background:var(--lv-rest)}
+.cal-phase.ph-down .cal-phase-txt{color:var(--track-deep)}
+.cal-phase.ph-down .cal-phase-wk{color:var(--ink-soft)}
+.cal-grid td{border:1px solid #C3C9D8;vertical-align:top;padding:3px 4px;height:96px;overflow:hidden}
+.cal-blank{background:#F7F8FB}
 .cal-rest{background:#fff}
-.cal-daynum{font-family:var(--mono);font-size:9pt;font-weight:700;color:#000;margin-bottom:2px}
-.cal-item{margin-bottom:3px;line-height:1.2}
-.cal-name{display:block;font-size:8.4pt;font-weight:600;color:#000;word-wrap:break-word}
-.cal-meta{display:block;font-family:var(--mono);font-size:7.4pt;color:#444}
-.cal-xt .cal-name{font-weight:400;font-style:italic;color:#333}
+.cal-daynum{font-family:var(--mono);font-size:9pt;font-weight:700;color:var(--ink);margin-bottom:2px}
+.cal-item{margin-bottom:3px;line-height:1.2;border-left:3px solid var(--lv-easy);padding-left:4px}
+.cal-name{display:block;font-size:8.4pt;font-weight:600;color:var(--ink);word-wrap:break-word}
+.cal-meta{display:block;font-family:var(--mono);font-size:7.4pt;color:var(--ink-soft)}
+.cal-xt .cal-name{font-weight:400;font-style:italic;color:var(--xt)}
 .cal-race .cal-name{text-transform:uppercase;font-family:var(--disp);letter-spacing:.02em;font-size:9pt}
-.cal-race{border-left:3px solid #000;padding-left:3px}
-.cal-off{font-family:var(--mono);font-size:7.4pt;color:#AAA}
-.cal-today{outline:2px solid #000;outline-offset:-2px}
+.cal-race{border-left-width:4px!important}
+.cal-off{font-family:var(--mono);font-size:7.4pt;color:#B9C0CF}
 @media print{
   header .lanes,.nav,.panel,.plan-setup,.filters,.lib-search,.footnote,.plan-tip{display:none!important}
   header{background:#fff;color:#000;border-bottom:2px solid #000}
@@ -2669,8 +2669,6 @@ function buildCalendar(){
 
   const MONTHNAME = ['January','February','March','April','May','June','July',
                      'August','September','October','November','December'];
-  const isSameDay = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
-  const today = new Date();
 
   return months.map(m => {
     const year = m.getFullYear(), mon = m.getMonth();
@@ -2704,20 +2702,22 @@ function buildCalendar(){
       const tds = wk.map(d => {
         if (!d) return '<td class="cal-blank"></td>';
         const items = byDate[ymd(d)] || [];
-        const isToday = isSameDay(d, today);
         const entries = items.map(r => {
+          const col = kindColor(r.kind, planWk ? (planWk.isTaper ? 'specific' : planWk.phase) : 'base');
           if (r.kind === 'xt'){
-            return `<div class="cal-item cal-xt"><span class="cal-name">Cross-train</span><span class="cal-meta">${fmtHrs(r.mins)}</span></div>`;
+            return `<div class="cal-item cal-xt" style="border-left-color:${col}">
+              <span class="cal-name">Cross-train</span>
+              <span class="cal-meta">${fmtHrs(r.mins)}</span></div>`;
           }
           const sess = state && state.byName[r.session] != null ? state.sessions[state.byName[r.session]] : null;
           const km = sess ? sessionKm(sess) : null;
-          const isRace = r.kind === 'race' || r.kind === 'timetrial' || r.kind === 'bRace' || r.kind === 'cRace';
-          return `<div class="cal-item${isRace ? ' cal-race' : ''}">
-            <span class="cal-name">${r.session}</span>
+          const isRace = ['race','timetrial','bRace','cRace'].includes(r.kind);
+          return `<div class="cal-item${isRace ? ' cal-race' : ''}" style="border-left-color:${col}">
+            <span class="cal-name"${isRace ? ` style="color:${col}"` : ''}>${r.session}</span>
             <span class="cal-meta">${fmtHrs(r.mins)}${km ? ' \u00b7 ' + fmtKm(km) : ''}</span>
           </div>`;
         }).join('');
-        return `<td class="${items.length ? 'cal-has' : 'cal-rest'}${isToday ? ' cal-today' : ''}">
+        return `<td class="${items.length ? 'cal-has' : 'cal-rest'}">
           <div class="cal-daynum">${d.getDate()}</div>
           ${entries || '<div class="cal-off">rest</div>'}
         </td>`;
