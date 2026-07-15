@@ -310,6 +310,47 @@ h1 .accent{color:var(--flame)}
 .lib-search input:focus{outline:2px solid var(--track);outline-offset:1px;border-color:var(--track)}
 .lib-count{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
 
+/* --- printable month calendar --- */
+#cal-print{display:none}
+.cal-page{break-after:page;page-break-after:always}
+.cal-page:last-child{break-after:auto;page-break-after:auto}
+.cal-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;border-bottom:2px solid #000;padding-bottom:5px}
+.cal-head h2{font-family:var(--disp);text-transform:uppercase;font-size:22pt;letter-spacing:.02em;color:#000}
+.cal-sub{font-family:var(--mono);font-size:9pt;color:#333}
+.cal-grid{width:100%;border-collapse:collapse;table-layout:fixed}
+.cal-grid th{font-family:var(--disp);text-transform:uppercase;font-size:8.5pt;letter-spacing:.08em;padding:4px 3px;border:1px solid #999;background:#EFEFEF;color:#000;text-align:left}
+.cal-phase-head{width:22px;padding:0!important;background:#fff!important;border:none!important}
+/* The phase label runs up the side of the week so it costs almost no width.
+   The rotated text sits in an absolutely-positioned layer so it can never
+   drive the row's height -- otherwise the table stops paginating correctly. */
+.cal-phase{width:22px;padding:0!important;border:1px solid #999;background:#F4F4F4;vertical-align:middle}
+/* The box stretches to the row; the rotated text floats inside it and so can
+   never push the row taller -- which would break pagination. */
+.cal-phase-box{position:relative;height:100%;min-height:88px;width:100%}
+.cal-phase-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(180deg);
+  writing-mode:vertical-rl;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.cal-phase-txt{font-family:var(--disp);text-transform:uppercase;font-size:7.4pt;letter-spacing:.09em;font-weight:700;color:#000;white-space:nowrap}
+.cal-phase-wk{font-family:var(--mono);font-size:6.4pt;color:#555;white-space:nowrap}
+.cal-phase.ph-none{background:#fff;border-color:#DDD}
+.cal-phase.ph-base{background:#E8EDFB}
+.cal-phase.ph-development{background:#FFE6D8}
+.cal-phase.ph-specific{background:#FFDCCB}
+.cal-phase.ph-taper,.cal-phase.ph-race{background:#111}
+.cal-phase.ph-taper .cal-phase-txt,.cal-phase.ph-race .cal-phase-txt{color:#fff}
+.cal-phase.ph-taper .cal-phase-wk,.cal-phase.ph-race .cal-phase-wk{color:#CCC}
+.cal-phase.ph-down{background:#E6E9F0}
+.cal-grid td{border:1px solid #999;vertical-align:top;padding:3px 4px;height:96px;overflow:hidden}
+.cal-blank{background:#FAFAFA}
+.cal-rest{background:#fff}
+.cal-daynum{font-family:var(--mono);font-size:9pt;font-weight:700;color:#000;margin-bottom:2px}
+.cal-item{margin-bottom:3px;line-height:1.2}
+.cal-name{display:block;font-size:8.4pt;font-weight:600;color:#000;word-wrap:break-word}
+.cal-meta{display:block;font-family:var(--mono);font-size:7.4pt;color:#444}
+.cal-xt .cal-name{font-weight:400;font-style:italic;color:#333}
+.cal-race .cal-name{text-transform:uppercase;font-family:var(--disp);letter-spacing:.02em;font-size:9pt}
+.cal-race{border-left:3px solid #000;padding-left:3px}
+.cal-off{font-family:var(--mono);font-size:7.4pt;color:#AAA}
+.cal-today{outline:2px solid #000;outline-offset:-2px}
 @media print{
   header .lanes,.nav,.panel,.plan-setup,.filters,.lib-search,.footnote,.plan-tip{display:none!important}
   header{background:#fff;color:#000;border-bottom:2px solid #000}
@@ -326,6 +367,19 @@ h1 .accent{color:var(--flame)}
   .plan-progress,.save-row,.plan-warn{display:none!important}
   .phase-strip{page-break-inside:avoid}
   a[href]::after{content:''}
+  /* --- calendar print mode: the grid is the whole document --- */
+  body.printing-calendar > *{display:none!important}
+  body.printing-calendar #cal-print{display:block!important}
+  body.printing-calendar .cal-grid td{height:auto;min-height:88px}
+}
+/* Page size is chosen at print time by swapping this rule's contents, because
+   @page can't be targeted by a body class. */
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  body[data-cal-size="a3"] .cal-grid td{min-height:130px}
+  body[data-cal-size="a3"] .cal-name{font-size:9.5pt}
+  body[data-cal-size="a3"] .cal-meta{font-size:8.4pt}
+  body[data-cal-size="a3"] .cal-head h2{font-size:28pt}
 }
 
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -444,7 +498,7 @@ h1 .accent{color:var(--flame)}
 
     <div class="footnote">
       <h4>Using the files</h4>
-      <p><b>Final Surge:</b> Workouts &rarr; add a workout to a calendar day &rarr; import/attach the .FIT structured file, and it will sync to a connected Garmin as a followable workout. <b>TrainingPeaks:</b> drag the .FIT onto a calendar day. <b>Garmin direct:</b> drop the file into the <span style="font-family:var(--mono);font-size:13px">GARMIN/Workouts</span> folder on the watch via USB, or import via Garmin Connect.</p>
+      <p><b>Garmin direct:</b> connect the watch by USB and copy the .FIT files into the <span style="font-family:var(--mono);font-size:13px">GARMIN/Workouts</span> folder, then eject &mdash; they appear under Training &rarr; Workouts, named with their date and week. Garmin Connect only imports completed activities, not planned workouts, so there's no upload route there. <b>Final Surge:</b> Workouts &rarr; add a workout to a calendar day &rarr; import/attach the .FIT, and it will sync on to a connected Garmin &mdash; but note Final Surge ignores the name stored in the file and labels every import "Run Workout", so you'll be renaming them. <b>TrainingPeaks:</b> drag the .FIT onto a calendar day.</p>
       <p>All targets are written as absolute values — pace bands in m/s and heart-rate bands in bpm — so nothing depends on the threshold or zone settings of the receiving platform. Hill and stride efforts are exported as open-target steps with timed durations, because pace targets are meaningless on a gradient.</p>
       <p>Recalibrate whenever you set a new benchmark: paces tighten automatically as you get fitter.</p>
     </div>
@@ -548,11 +602,17 @@ h1 .accent{color:var(--flame)}
         <label>Export the block</label>
         <div class="save-row">
           <button class="ghost-btn" id="exp-zip" title="All workouts as .FIT files in a zip">All .FIT</button>
-          <button class="ghost-btn" id="exp-garmin" title="One .FIT per day, named by date, for dropping straight onto a Garmin watch">Garmin dates</button>
           <button class="ghost-btn" id="exp-ics" title="Calendar file">Calendar</button>
           <button class="ghost-btn" id="exp-csv" title="Spreadsheet">CSV</button>
         </div>
-        <div class="hint">"Garmin dates" names each file <b>YYYY-MM-DD.fit</b> \u2014 copy them into your watch\u2019s <b>GARMIN/NEWFILES</b> folder and it schedules them by day, no calendar app needed.</div>
+      </div>
+      <div class="field">
+        <label>Print a wall calendar</label>
+        <div class="save-row">
+          <button class="ghost-btn" id="print-a4" title="Month-per-page calendar, A4 landscape">A4 landscape</button>
+          <button class="ghost-btn" id="print-a3" title="Month-per-page calendar, A3 landscape">A3 landscape</button>
+        </div>
+        <div class="hint">A proper month grid, Monday to Sunday, one month per page \u2014 each day showing the session, its time and its distance.</div>
       </div>
       <div class="field">
         <label>Shift the whole plan</label>
@@ -577,6 +637,8 @@ h1 .accent{color:var(--flame)}
 <div class="chart-modal" id="chart-modal" style="display:none">
   <div class="chart-card" id="chart-body"></div>
 </div>
+
+<div id="cal-print" aria-hidden="true"></div>
 
 <!-- FIT-ENCODER-START -->
 <script id="fit-encoder">
@@ -2088,9 +2150,14 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
   // beyond what this week shape or this athlete's volume can support
   const cap   = longShareCap();
   const start = Math.max(LONG_RUNGS[0], snapRung(Math.min(60, Math.max(targets[1] * cap, LONG_RUNGS[0]))));
-  const peak  = Math.max(start, Math.min(prof.longPeak,
-                                          snapRung(targets.peak * cap),
-                                          snapRung(longCapacity(cap))));
+  const byVolume = snapRung(targets.peak * cap);      // limited by weekly hours
+  const byShape  = snapRung(longCapacity(cap));       // limited by the week's shape
+  const peak  = Math.max(start, Math.min(prof.longPeak, byVolume, byShape));
+  // Which limit actually bit? Adding running days only relieves the shape limit;
+  // if weekly volume is what's holding the long run back, more days achieve
+  // nothing and the athlete needs to raise the hours they start from.
+  const limitedBy = (peak >= prof.longPeak - 5) ? null
+                  : (byVolume <= byShape ? 'volume' : 'shape');
   const span = Math.max(1, specEnd - 1);
   const out = [0];
   let lastBuild = 0;
@@ -2120,6 +2187,7 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
     out[w] = Math.max(m, LONG_RUNGS[0]);
   }
   out.peakLong = Math.max.apply(null, out.slice(1));
+  out.limitedBy = limitedBy;
   return out;
 }
 
@@ -2534,6 +2602,163 @@ function approxKm(runMin){
   return runMin * 60 / easyMid;
 }
 
+/* Distance for one session, summing each block at the pace that block is
+   actually run at -- an interval session covers more ground than the same
+   minutes of easy running, and a recovery jog covers less. Indicative, but far
+   closer than pricing the whole session at easy pace. */
+function sessionKm(sess){
+  if (!state || !sess || !sess.blocks) return null;
+  const P = state.paces;
+  const mid = band => (band[0] + band[1]) / 2;            // sec/km
+  const paceFor = {
+    rest:     mid(P.easy) * 1.18,   // recovery jog / walk: slower than easy
+    easy:     mid(P.easy),
+    steady:   mid(P.steady),
+    tempo:    mid(P.tempo),
+    interval: mid(P.interval),
+    max:      mid(P.rep)
+  };
+  let km = 0;
+  for (const [lvl, mins] of sess.blocks){
+    const secPerKm = paceFor[lvl] || mid(P.easy);
+    km += (mins * 60) / secPerKm;
+  }
+  return km;
+}
+const fmtKm = km => km == null ? '' : (km < 10 ? km.toFixed(1) : Math.round(km)) + ' km';
+
+/* ===================================================================
+   PRINTABLE CALENDAR
+   A real month grid -- Monday to Sunday across, weeks down, one month per
+   page in landscape. Each day carries the session, its duration and its
+   distance. Built as a separate DOM block that only exists when printing the
+   calendar, so it never interferes with the on-screen plan.
+   =================================================================== */
+function buildCalendar(){
+  const g = planState.generated;
+  if (!g) return '';
+  const rows = planRows();
+  // index every training day by its date
+  const byDate = {};
+  rows.forEach(r => {
+    const k = ymd(r.date);
+    (byDate[k] = byDate[k] || []).push(r);
+  });
+  // index plan weeks by the Monday they start on, so each calendar row can be
+  // labelled with the block phase it belongs to
+  const weekByMonday = {};
+  g.weeks.forEach(wk => { weekByMonday[ymd(wk.wkStart)] = wk; });
+  const phaseOf = wk => {
+    if (!wk) return null;
+    if (wk.cells.some(c => c.kind === 'race')) return { label:'Race Week', cls:'ph-race' };
+    if (wk.isDown) return { label:'Recovery', cls:'ph-down' };
+    if (wk.isTaper) return { label:'Taper', cls:'ph-taper' };
+    const m = PHASE_META[wk.phase];
+    return { label: m ? m.label : wk.phase, cls:'ph-' + wk.phase };
+  };
+
+  // the span of months the plan covers
+  const first = g.weeks[0].wkStart;
+  const last  = g.weeks[g.weeks.length-1].wkEnd;
+  const months = [];
+  let cur = new Date(first.getFullYear(), first.getMonth(), 1);
+  while (cur <= last){
+    months.push(new Date(cur));
+    cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1);
+  }
+
+  const MONTHNAME = ['January','February','March','April','May','June','July',
+                     'August','September','October','November','December'];
+  const isSameDay = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  const today = new Date();
+
+  return months.map(m => {
+    const year = m.getFullYear(), mon = m.getMonth();
+    // Monday-first offset for the 1st of the month
+    const firstDow = (new Date(year, mon, 1).getDay() + 6) % 7;   // 0 = Monday
+    const daysInMonth = new Date(year, mon+1, 0).getDate();
+    const cells = [];
+    // leading blanks
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(year, mon, d));
+    // trailing blanks to complete the last week
+    while (cells.length % 7 !== 0) cells.push(null);
+
+    const weekRows = [];
+    for (let i = 0; i < cells.length; i += 7) weekRows.push(cells.slice(i, i+7));
+
+    const body = weekRows.map(wk => {
+      // the Monday this row represents -- may fall outside the month, so derive
+      // it from the first real day in the row rather than the first cell
+      const firstReal = wk.find(d => d);
+      let rowMonday = null;
+      if (firstReal){
+        const off = (firstReal.getDay() + 6) % 7;          // 0 = Monday
+        rowMonday = addDays(firstReal, -off);
+      }
+      const ph = rowMonday ? phaseOf(weekByMonday[ymd(rowMonday)]) : null;
+      const planWk = rowMonday ? weekByMonday[ymd(rowMonday)] : null;
+      const phCell = `<td class="cal-phase ${ph ? ph.cls : 'ph-none'}">${
+        ph ? `<div class="cal-phase-box"><div class="cal-phase-inner"><span class="cal-phase-txt">${ph.label}</span>${planWk ? `<span class="cal-phase-wk">W${planWk.w}</span>` : ''}</div></div>` : ''
+      }</td>`;
+      const tds = wk.map(d => {
+        if (!d) return '<td class="cal-blank"></td>';
+        const items = byDate[ymd(d)] || [];
+        const isToday = isSameDay(d, today);
+        const entries = items.map(r => {
+          if (r.kind === 'xt'){
+            return `<div class="cal-item cal-xt"><span class="cal-name">Cross-train</span><span class="cal-meta">${fmtHrs(r.mins)}</span></div>`;
+          }
+          const sess = state && state.byName[r.session] != null ? state.sessions[state.byName[r.session]] : null;
+          const km = sess ? sessionKm(sess) : null;
+          const isRace = r.kind === 'race' || r.kind === 'timetrial' || r.kind === 'bRace' || r.kind === 'cRace';
+          return `<div class="cal-item${isRace ? ' cal-race' : ''}">
+            <span class="cal-name">${r.session}</span>
+            <span class="cal-meta">${fmtHrs(r.mins)}${km ? ' \u00b7 ' + fmtKm(km) : ''}</span>
+          </div>`;
+        }).join('');
+        return `<td class="${items.length ? 'cal-has' : 'cal-rest'}${isToday ? ' cal-today' : ''}">
+          <div class="cal-daynum">${d.getDate()}</div>
+          ${entries || '<div class="cal-off">rest</div>'}
+        </td>`;
+      }).join('');
+      return '<tr>' + phCell + tds + '</tr>';
+    }).join('');
+
+    return `<section class="cal-page">
+      <div class="cal-head">
+        <h2>${MONTHNAME[mon]} ${year}</h2>
+        <span class="cal-sub">${g.prof} plan \u00b7 ${g.N} weeks</span>
+      </div>
+      <table class="cal-grid">
+        <thead><tr><th class="cal-phase-head"></th>${['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+          .map(d => `<th>${d}</th>`).join('')}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </section>`;
+  }).join('');
+}
+
+function printCalendar(size){
+  if (!planState.generated) return planError('Build a plan first.');
+  const paper = (size === 'a3') ? 'A3' : 'A4';
+  document.body.setAttribute('data-cal-size', size || 'a4');
+  // @page can't be reached by a class, so swap a dedicated style element
+  let ps = pd('cal-page-size');
+  if (!ps){
+    ps = document.createElement('style');
+    ps.id = 'cal-page-size';
+    document.head.appendChild(ps);
+  }
+  ps.textContent = '@page{size:' + paper + ' landscape;margin:10mm}';
+  pd('cal-print').innerHTML = buildCalendar();
+  document.body.classList.add('printing-calendar');
+  // let the DOM settle, print, then put everything back
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => document.body.classList.remove('printing-calendar'), 300);
+  }, 60);
+}
 function generatePlan(){
   pd('pl-err').classList.remove('show');
   XT_MINS = planState.xtMins || 45;
@@ -2555,6 +2780,7 @@ function generatePlan(){
     const raceMon = addDays(raceDateObj, -isoIndex(raceDateObj));
     N = Math.round((raceMon - start) / (7*86400000)) + 1;
     raceDayIdx = isoIndex(raceDateObj);
+    if (N < 1) return planError('That race date has already passed \u2014 pick a date in the future, or clear it for a rolling block.');
     if (N < 3) return planError('That race date is too soon to plan a block around \u2014 pick something at least 3 weeks out.');
     if (N < 5) planError('Heads up: that\u2019s a short runway. Showing a compressed plan \u2014 more time would help.');
     N = Math.min(N, 26);
@@ -2749,8 +2975,12 @@ function generatePlan(){
   // has a run day immediately after it. Flag when that didn't happen.
   const wantsB2B = !!(prof.ultra && prof.b2bPeak > 0);
   const gotB2B = weeks.some(w => w.cells.some(c => c.kind === 'b2b'));
-  const b2bMissed = wantsB2B && !gotB2B;
-  planState.generated = { weeks, N, start, longDay, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: prof.longPeak, peakLong: longLadder.peakLong, ultra: !!prof.ultra, b2bMissed };
+  // Back-to-backs are only injected on a calibrated plan (they need paces). An
+  // uncalibrated preview never has them, so don't cry "missing" -- the calibrate
+  // prompt already tells the user what to do. Only a genuine day-layout problem
+  // (calibrated, but the long run is the last run of the week) should warn.
+  const b2bMissed = !!state && wantsB2B && !gotB2B;
+  planState.generated = { weeks, N, start, longDay, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: prof.longPeak, peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed };
   // a rebuild can change what each day is for, so stale swaps are dropped
   const sig = [planState.goal, planState.dayMode.join(''), longDay, N, ymd(start), planState.currentMins, planState.xtMins, JSON.stringify(planState.races||[])].join('|');
   if (planState.sig && planState.sig !== sig){
@@ -2787,7 +3017,9 @@ function renderPlan(){
     ? `<div class="plan-note-info"><b>Every run is a quality run.</b> With three running days and cross-training filling the gaps, each run earns its place \u2014 speed, threshold and the long run \u2014 and your bike days carry the recovery. It\u2019s a proven structure, but it leaves no easy running: keep the cross-training genuinely easy, and if the legs feel flat, swap a quality session for an easy run rather than pushing through.</div>`
     : '';
   const longNote = (g.longCapped && !g.underVolume)
-    ? `<div class="plan-note-info"><b>Long run peaks at ${fmtHrs(g.peakLong)}.</b> A ${g.prof} block would ideally build to ${fmtHrs(g.goalLong)}, but on ${runDaysOf().length} running days that would make the long run over a third of your week \u2014 a reliable way to get hurt. Add a running day, or raise the weekly volume you start from, and it will build further.</div>`
+    ? (g.longLimit === 'volume'
+        ? `<div class="plan-note-info"><b>Long run peaks at ${fmtHrs(g.peakLong)}.</b> A ${g.prof} block would ideally build to ${fmtHrs(g.goalLong)}, but you\u2019re starting from about ${fmtHrs(planState.currentMins)} a week, and this block builds to roughly ${fmtHrs(g.targets.peak)}. A long run bigger than this would swallow too much of the week to recover from. <b>Adding running days won\u2019t change this</b> \u2014 the limit is total weekly hours, so raise "what you run now" (or come back to this goal once you\u2019re running more), and the long run will build further.</div>`
+        : `<div class="plan-note-info"><b>Long run peaks at ${fmtHrs(g.peakLong)}.</b> A ${g.prof} block would ideally build to ${fmtHrs(g.goalLong)}, but on ${runDaysOf().length} running days that would make the long run too big a share of your week \u2014 a reliable way to get hurt. Add a running day (or a cross-training day) and it will build further.</div>`)
     : '';
   const crowdWarn = g.crowded
     ? `<div class="plan-warn"><b>Heads up:</b> the days you\u2019ve chosen sit close together, so a hard day lands next to your long run. That\u2019s workable, but spreading your runs across the week \u2014 or dropping one \u2014 would recover better.</div>`
@@ -2863,7 +3095,6 @@ function renderPlan(){
         <span class="wk-dates">${fmtDate(wk.wkStart)} \u2013 ${fmtDate(wk.wkEnd)}</span>
         ${loadHtml}
         <button class="wk-zip" data-w="${wk.w}" title="Download this week's workouts as .FIT">.ZIP</button>
-        <button class="wk-zip wk-garmin" data-w="${wk.w}" title="This week named by date for a Garmin watch (GARMIN/NEWFILES)">GARMIN</button>
         <span class="wk-badge" style="background:${badgeColor}">${badge}</span>
       </div>
       ${wk.note ? `<div class="wk-note ${wk.noteCls}"><span>\u2192</span><span>${wk.note}</span></div>` : ''}
@@ -2930,8 +3161,7 @@ function renderPlan(){
     generatePlan();
   });
   out.querySelectorAll('.pl-chart').forEach(b => b.onclick = () => showSessionChart(+b.dataset.i));
-  out.querySelectorAll('.wk-zip:not(.wk-garmin)').forEach(b => b.onclick = () => exportZip(+b.dataset.w));
-  out.querySelectorAll('.wk-garmin').forEach(b => b.onclick = () => exportZip(+b.dataset.w, true));
+  out.querySelectorAll('.wk-zip').forEach(b => b.onclick = () => exportZip(+b.dataset.w));
   if (!planState._scrolled){
     const now = document.getElementById('week-now');
     if (now && now.scrollIntoView){ planState._scrolled = true; setTimeout(() => now.scrollIntoView({block:'center'}), 60); }
@@ -3145,7 +3375,8 @@ renderRaces();
 
 pd('save-plan').onclick = savePlan;
 pd('exp-zip').onclick = () => exportZip(null);
-pd('exp-garmin').onclick = () => exportZip(null, true);
+pd('print-a4').onclick = () => printCalendar('a4');
+pd('print-a3').onclick = () => printCalendar('a3');
 pd('exp-ics').onclick = exportIcs;
 pd('exp-csv').onclick = exportCsv;
 pd('shift-back').onclick = () => shiftPlan(-1);
@@ -3252,7 +3483,7 @@ function planRows(){
   return rows;
 }
 
-function exportZip(weekNo, garminDates){
+function exportZip(weekNo){
   if (!state) return planError('Calibrate first \u2014 the .FIT files need your paces.');
   const g = planState.generated; if (!g) return;
   const rows = planRows().filter(r => (weekNo == null || r.week === weekNo) && r.kind !== 'xt');
@@ -3261,38 +3492,26 @@ function exportZip(weekNo, garminDates){
   rows.forEach(r => {
     const i = state.byName[r.session]; if (i == null) return;
     const sess = state.sessions[i];
-    let base;
-    if (garminDates){
-      // Garmin reads scheduled workouts named by date (YYYY-MM-DD.fit): drop the
-      // file straight into GARMIN/NEWFILES and the watch files it on that day, no
-      // renaming or calendar app needed. If a day somehow has two workouts, the
-      // second gets a -2 suffix so nothing is silently overwritten.
-      base = ymd(r.date);
-      if (seen[base]) base += '-' + (++seen[base]); else seen[base] = 1;
-    } else {
-      // default: sorts chronologically and shows the calendar slot at a glance
-      base = ymd(r.date) + '_W' + String(r.week).padStart(2,'0') + '-' + DOW[DOW.indexOf(r.dow)] + '_' + slug(r.session);
-      if (seen[base]) base += '-' + (++seen[base]); else seen[base] = 1;
-    }
-    // the workout NAME carries the calendar context regardless, so it reads
-    // correctly inside Garmin / Final Surge even where the filename is ignored
-    // each file needs a distinct serial/timestamp or the watch keeps only one.
-    // date drives it, plus a counter so two workouts on the same day still differ.
+    // filename sorts chronologically and shows the calendar slot at a glance
+    let base = ymd(r.date) + '_W' + String(r.week).padStart(2,'0') + '-' + DOW[DOW.indexOf(r.dow)] + '_' + slug(r.session);
+    if (seen[base]) base += '-' + (++seen[base]); else seen[base] = 1;
+    // Each file needs a distinct serial/timestamp or a watch treats a batch as
+    // one file and keeps only the last. Date drives it, plus a counter so two
+    // workouts on the same day still differ.
     const dayKey = ymd(r.date);
     dayCount[dayKey] = (dayCount[dayKey] || 0) + 1;
     const uid = Math.floor(r.date.getTime() / 1000) + dayCount[dayKey];
+    // the workout NAME carries the date and week, so it reads correctly inside
+    // Garmin / Final Surge even where the platform ignores the filename
     const bytes = encodeFitWorkout(fitWorkoutName(r.date, r.week, r.session),
                                    flattenSteps(sess.structure), uid);
     files.push({ name: base + '.fit', data: bytes });
   });
   if (!files.length) return planError('Nothing to export.');
   const zip = makeZip(files);
-  const scope = weekNo == null ? 'plan' : ('week-' + weekNo);
-  const tag = garminDates ? (scope + '-garmin') : scope;
+  const tag = weekNo == null ? 'plan' : ('week-' + weekNo);
   downloadBlob(new Blob([zip], {type:'application/zip'}), 'session-forge-' + tag + '.zip');
-  flashHint(garminDates
-    ? files.length + ' workouts named by date. Unzip and copy the .fit files into your Garmin\u2019s GARMIN/NEWFILES folder, then eject \u2014 the watch schedules them automatically.'
-    : files.length + ' workouts exported. Import them into Final Surge or TrainingPeaks.');
+  flashHint(files.length + ' workouts exported. Import them into Final Surge or TrainingPeaks, or copy them onto your watch.');
 }
 
 const icsEsc = t => String(t).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
