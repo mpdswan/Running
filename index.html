@@ -158,10 +158,18 @@ h1 .accent{color:var(--flame)}
 .dl:disabled{border-color:var(--line);color:var(--line);cursor:not-allowed}
 
 .footnote{margin-top:34px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;font-size:14px;color:var(--ink-soft)}
+.backup-bar{display:flex;align-items:center;gap:12px;max-width:1152px;margin:16px auto 0;background:var(--tint);border:1px solid var(--track);border-radius:var(--radius);padding:10px 16px;font-size:14px;color:var(--track-deep)}
+.backup-bar .ghost-btn{margin-left:auto}
+.backup-bar .ghost-btn+.ghost-btn{margin-left:0}
+@media(max-width:1200px){.backup-bar{margin-left:24px;margin-right:24px}}
+@media print{.backup-bar{display:none!important}}
 .seg-toggle{display:flex;gap:0;border:1px solid var(--track);border-radius:8px;overflow:hidden;width:fit-content}
 .seg-opt{font-family:var(--body);font-size:14px;font-weight:600;color:var(--track-deep);background:var(--white);border:none;padding:8px 18px;cursor:pointer;transition:all .12s}
 .seg-opt+.seg-opt{border-left:1px solid var(--track)}
 .seg-opt.is-on{background:var(--track);color:#fff}
+.xt-chips{display:flex;flex-wrap:wrap;gap:7px}
+.xt-chip{font-family:var(--body);font-size:13.5px;font-weight:600;color:var(--track-deep);background:var(--white);border:1px solid var(--track);border-radius:20px;padding:6px 14px;cursor:pointer;transition:all .12s}
+.xt-chip.is-on{background:var(--track);color:#fff}
 .footnote h4{font-family:var(--disp);text-transform:uppercase;font-size:18px;color:var(--ink);margin-bottom:6px}
 /* --- session structure chart --- */
 .pl-chart{flex:none;display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;color:var(--track-deep);background:var(--white);border:1px solid var(--line);border-radius:5px;padding:0;transition:all .12s}
@@ -371,12 +379,16 @@ h1 .accent{color:var(--flame)}
   body.printing-calendar > *{display:none!important}
   body.printing-calendar #cal-print{display:block!important}
   body.printing-calendar .cal-grid td{height:auto;min-height:88px}
+  /* months spanning six week-rows get shorter day boxes so the bands strip
+     still fits on the page */
+  body.printing-calendar .cal-six .cal-grid td{min-height:70px}
 }
 /* Page size is chosen at print time by swapping this rule's contents, because
    @page can't be targeted by a body class. */
 @page{size:A4 landscape;margin:10mm}
 @media print{
   body[data-cal-size="a3"] .cal-grid td{min-height:130px}
+  body[data-cal-size="a3"] .cal-six .cal-grid td{min-height:104px}
   body[data-cal-size="a3"] .cal-name{font-size:9.5pt}
   body[data-cal-size="a3"] .cal-meta{font-size:8.4pt}
   body[data-cal-size="a3"] .cal-head h2{font-size:28pt}
@@ -401,12 +413,14 @@ h1 .accent{color:var(--flame)}
   </div>
 </header>
 
+<div id="backup-bar" class="backup-bar" style="display:none"></div>
+
 <!-- ============ calibrate view ============ -->
 <section class="cal-wrap" id="view-calibrate" aria-label="Calibrate">
   <aside class="panel cal-panel" aria-label="Your benchmark">
     <div class="panel-head">
       <h2>Your Benchmark</h2>
-      <p>A recent race or genuine all-out effort. Every pace band and heart-rate zone is calibrated from this \u2014 update it whenever you retest.</p>
+      <p>A recent race or genuine all-out effort. Every pace band and heart-rate zone is calibrated from this — update it whenever you retest.</p>
     </div>
     <div class="panel-body">
       <div class="err" id="err" role="alert"></div>
@@ -542,6 +556,16 @@ h1 .accent{color:var(--flame)}
         <div class="hint">Counts toward your training load, not your running volume</div>
       </div>
       <div class="field">
+        <label>Cross-training &mdash; pick any that apply</label>
+        <div class="xt-chips" id="xt-chips">
+          <button type="button" class="xt-chip is-on" data-t="bike">Bike / Zwift</button>
+          <button type="button" class="xt-chip" data-t="strength">Strength</button>
+          <button type="button" class="xt-chip" data-t="swim">Swim</button>
+          <button type="button" class="xt-chip" data-t="row">Rowing</button>
+        </div>
+        <div class="hint">Pick one or several &mdash; the plan rotates them through your cross-training days, keeping strength off the day before your long run</div>
+      </div>
+      <div class="field">
         <label>Plan type</label>
         <div class="seg-toggle" id="plan-type" role="group" aria-label="Plan type">
           <button type="button" class="seg-opt is-on" data-type="road" aria-pressed="true">Road / track</button>
@@ -570,6 +594,17 @@ h1 .accent{color:var(--flame)}
         <div class="hint">Blank = a focused block sized to your goal. Extra time becomes base building.</div>
       </div>
       <div class="field">
+        <label for="base-weeks">Base building first</label>
+        <select id="base-weeks">
+          <option value="0" selected>None — straight into the block</option>
+          <option value="4">4 weeks of base</option>
+          <option value="6">6 weeks of base</option>
+          <option value="8">8 weeks of base</option>
+          <option value="12">12 weeks of base</option>
+        </select>
+        <div class="hint">Easy volume, hills and strides before the sharp work — the right way back from injury or a long break. With a race date set, spare time becomes base automatically and this is ignored.</div>
+      </div>
+      <div class="field">
         <label>Your week &mdash; tap to cycle</label>
         <div class="day-grid" id="day-grid" role="group" aria-label="Days: tap to cycle off, run, cross-train"></div>
         <div class="day-legend">
@@ -583,7 +618,21 @@ h1 .accent{color:var(--flame)}
       <div class="field">
         <label for="long-day">Long run day</label>
         <select id="long-day"></select>
-        <div class="hint">Your long run anchors each week</div>
+        <div class="hint">Your long run anchors each week. Ultra plans need a run day <b>straight after</b> this for the back-to-back &mdash; Sunday long runs use the following Monday.</div>
+      </div>
+      <div class="field">
+        <label for="speed-day">Speed session day</label>
+        <select id="speed-day">
+          <option value="-1" selected>Any &mdash; let the plan pick</option>
+          <option value="0">Monday</option>
+          <option value="1">Tuesday</option>
+          <option value="2">Wednesday</option>
+          <option value="3">Thursday</option>
+          <option value="4">Friday</option>
+          <option value="5">Saturday</option>
+          <option value="6">Sunday</option>
+        </select>
+        <div class="hint">Your hardest run of the week. It can't sit right next to your long run &mdash; leave at least a day between them.</div>
       </div>
       <div class="field">
         <label>Races along the way <span class="lbl-note">(besides your goal race)</span></label>
@@ -612,7 +661,7 @@ h1 .accent{color:var(--flame)}
           <button class="ghost-btn" id="print-a4" title="Month-per-page calendar, A4 landscape">A4 landscape</button>
           <button class="ghost-btn" id="print-a3" title="Month-per-page calendar, A3 landscape">A3 landscape</button>
         </div>
-        <div class="hint">A proper month grid, Monday to Sunday, one month per page \u2014 each day showing the session, its time and its distance.</div>
+        <div class="hint">A proper month grid, Monday to Sunday, one month per page — each day showing the session, its time and its distance.</div>
       </div>
       <div class="field">
         <label>Shift the whole plan</label>
@@ -1961,6 +2010,7 @@ function calibrate(){
   state.sessions.forEach((s, i) => { state.byName[s.name] = i; });
   renderPaces(); renderFilters(); renderGrid();
   if (planState.generated) renderPlan();
+  saveBackup();
 }
 
 $('calc').onclick = calibrate;
@@ -2288,7 +2338,24 @@ const PHASE_META = {
 };
 
 // dayMode: per-weekday 'off' | 'run' | 'xt'  (Mon=0 .. Sun=6)
+
+/* Cross-training comes in flavours, and a week can mix them. The chosen types
+   rotate across the week's XT days (offset week by week for variety), with one
+   piece of judgement applied: strength stays off the day before the long run,
+   because heavy legs and a long run make a bad pair. Labels and guidance change
+   per day; the scheduling itself does not -- an XT day is an XT day. */
+const XT_TYPES = {
+  bike:     { label:'Bike / Zwift',  short:'bike',  target:'easy \u00b7 Z1\u2013Z2' },
+  strength: { label:'Strength',      short:'gym',   target:'full body \u00b7 controlled' },
+  swim:     { label:'Swim',          short:'swim',  target:'easy \u00b7 technique focus' },
+  row:      { label:'Rowing',        short:'row',   target:'easy \u00b7 Z1\u2013Z2' }
+};
+const xtSelected = () => (Array.isArray(planState.xtTypes) && planState.xtTypes.length)
+  ? planState.xtTypes.filter(t => XT_TYPES[t])
+  : ['bike'];
+const xtMetaOf = c => XT_TYPES[(c && c.xtKind)] || XT_TYPES[xtSelected()[0]] || XT_TYPES.bike;
 let planState = { dayMode:['off','run','off','run','off','run','run'], longDay:6, raceDate:null, goal:'5k', planType:'road',
+                  xtTypes:['bike'], baseWeeks:0, speedDay:-1,
                   currentMins:180, xtMins:45, races:[], overrides:{}, flips:{}, done:{}, generated:null };
 // "any" days are counted as run days for capacity (long-run share, frequency),
 // since the plan will lean on them for running whenever the week needs it
@@ -2354,7 +2421,7 @@ function resolveName(kind, phase, weekNo, prof){
     case 'b2b':       return b2bName(90);
     case 'easy':      return 'Easy Aerobic 40 min';
     case 'recovery':  return 'Recovery 30 min';
-    case 'xt':        return 'Cross-training';
+    case 'xt':        return XT_TYPES[xtSelected()[0]].label;
     case 'strides':   return 'Easy Run + 6 Strides';
     case 'sharpener': return '8 \u00d7 200 m';
     case 'primary':   return phase === 'base' ? pick(BASE.primary)
@@ -2388,8 +2455,8 @@ function kindColor(kind, phase){
   return 'var(--lv-easy)';
 }
 
-function kindTarget(kind, phase){
-  if (kind === 'xt') return 'easy \u00b7 Z1\u2013Z2 \u00b7 ' + (planState.xtMins || 45) + ' min';
+function kindTarget(kind, phase, cell){
+  if (kind === 'xt') return xtMetaOf(cell).target + ' \u00b7 ' + (planState.xtMins || 45) + ' min';
   if (!state) return '';
   const P = state.paces;
   switch(kind){
@@ -2448,6 +2515,18 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
     // a small week can't carry two quality sessions and a long run as well
     if (targetMins && targetMins < 150) q = 1;
     let qd = pickQualityDays(runAv, longDay, q);
+    // honour a fixed speed-session day whenever this week's shape allows it:
+    // it must be a run day, not the long run, and not right next to it
+    const sd = planState.speedDay;
+    if (sd != null && sd >= 0 && runAv.includes(sd) && sd !== longDay && dayDist(sd, longDay) >= 2){
+      if (q === 2){
+        const others = runAv.filter(d => d !== longDay && d !== sd && dayDist(d, sd) >= 2 && dayDist(d, longDay) >= 2);
+        qd = others.length ? [sd, others[0]] : [sd];
+        if (!others.length) q = 1;
+      } else {
+        qd = [sd];
+      }
+    }
     // if this week's shape can't keep two hard days apart, run one properly
     // instead of two badly
     if (q === 2){
@@ -2478,15 +2557,28 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
   const raceCut = (isTaper && raceDayIdx != null) ? raceDayIdx : 99;
   xtAv.forEach(d => { if (!cells[d] && d < raceCut) cells[d] = { kind:'xt' }; });
 
+  // spread the chosen cross-training types across this week's XT days,
+  // rotating the starting type week by week for variety. Strength stays off
+  // the day before the long run when there's an alternative to give it.
+  const sel = xtSelected();
+  const xtIdxs = Object.keys(cells).map(Number).filter(d => cells[d].kind === 'xt').sort((a,b)=>a-b);
+  xtIdxs.forEach((d, i) => {
+    let t = sel[(i + weekNo) % sel.length];
+    if (t === 'strength' && sel.length > 1 && d === longDay - 1){
+      t = sel.find(x => x !== 'strength') || t;
+    }
+    cells[d].xtKind = t;
+  });
+
   const idxs = new Set(Object.keys(cells).map(Number));
   return [...idxs].sort((a,b)=>a-b).map(d => {
     const c = cells[d];
     const name = c.kind === 'race' ? ((prof && prof.race) || '5K Benchmark Test')
                : c.kind === 'timetrial' ? ((prof && prof.tt) || '5K Benchmark Test')
-               : c.kind === 'xt' ? 'Cross-training'
+               : c.kind === 'xt' ? XT_TYPES[c.xtKind].label
                : (c.kind === 'long' || c.kind === 'longdown') ? (longMins ? longName(longMins) : resolveName(c.kind, phase, weekNo, prof))
                : resolveName(c.kind, phase, weekNo, prof);
-    return { idx:d, kind:c.kind, name };
+    return { idx:d, kind:c.kind, name, xtKind:c.xtKind };
   });
 }
 
@@ -2670,6 +2762,8 @@ function buildCalendar(){
   const MONTHNAME = ['January','February','March','April','May','June','July',
                      'August','September','October','November','December'];
 
+  // every page carries the pace and HR bands, so the wall copy stands alone --
+  // one thin mono line that costs almost no height even on six-row months
   return months.map(m => {
     const year = m.getFullYear(), mon = m.getMonth();
     // Monday-first offset for the 1st of the month
@@ -2685,7 +2779,7 @@ function buildCalendar(){
     const weekRows = [];
     for (let i = 0; i < cells.length; i += 7) weekRows.push(cells.slice(i, i+7));
 
-    const body = weekRows.map(wk => {
+    const body = weekRows.map((wk, rowIdx) => {
       // the Monday this row represents -- may fall outside the month, so derive
       // it from the first real day in the row rather than the first cell
       const firstReal = wk.find(d => d);
@@ -2699,14 +2793,14 @@ function buildCalendar(){
       const phCell = `<td class="cal-phase ${ph ? ph.cls : 'ph-none'}">${
         ph ? `<div class="cal-phase-box"><div class="cal-phase-inner"><span class="cal-phase-txt">${ph.label}</span>${planWk ? `<span class="cal-phase-wk">W${planWk.w}</span>` : ''}</div></div>` : ''
       }</td>`;
-      const tds = wk.map(d => {
+      let tds = wk.map(d => {
         if (!d) return '<td class="cal-blank"></td>';
         const items = byDate[ymd(d)] || [];
         const entries = items.map(r => {
           const col = kindColor(r.kind, planWk ? (planWk.isTaper ? 'specific' : planWk.phase) : 'base');
           if (r.kind === 'xt'){
             return `<div class="cal-item cal-xt" style="border-left-color:${col}">
-              <span class="cal-name">Cross-train</span>
+              <span class="cal-name">${r.session}</span>
               <span class="cal-meta">${fmtHrs(r.mins)}</span></div>`;
           }
           const sess = state && state.byName[r.session] != null ? state.sessions[state.byName[r.session]] : null;
@@ -2721,11 +2815,11 @@ function buildCalendar(){
           <div class="cal-daynum">${d.getDate()}</div>
           ${entries || '<div class="cal-off">rest</div>'}
         </td>`;
-      }).join('');
-      return '<tr>' + phCell + tds + '</tr>';
+      });
+      return '<tr>' + phCell + tds.join('') + '</tr>';
     }).join('');
 
-    return `<section class="cal-page">
+    return `<section class="cal-page${weekRows.length >= 6 ? ' cal-six' : ''}">
       <div class="cal-head">
         <h2>${MONTHNAME[mon]} ${year}</h2>
         <span class="cal-sub">${g.prof} plan \u00b7 ${g.N} weeks</span>
@@ -2768,6 +2862,16 @@ function generatePlan(){
   let longDay = planState.longDay;
   if (!runAv.includes(longDay)) longDay = runAv[runAv.length-1];
 
+  // a fixed speed-session day has to make sense before anything is built
+  const sdChoice = planState.speedDay;
+  if (sdChoice != null && sdChoice >= 0){
+    const mode = planState.dayMode[sdChoice];
+    if (mode === 'off') return planError('Your speed-session day (' + DOW[sdChoice] + ') is an off day \u2014 make it a run day, or set the speed day back to Any.');
+    if (mode === 'xt')  return planError('Your speed-session day (' + DOW[sdChoice] + ') is set to cross-training \u2014 make it a run day, or set the speed day back to Any.');
+    if (sdChoice === longDay) return planError('Your speed session and your long run can\u2019t share a day \u2014 move one of them.');
+    if (dayDist(sdChoice, longDay) < 2) return planError('Your speed session can\u2019t sit right next to your long run \u2014 leave at least one day between them (Sunday and Monday count as next to each other).');
+  }
+
   const prof = raceProfile();
   const start = resolveStartMonday();
   let N, raceDayIdx = null, raceDateObj = null;
@@ -2785,7 +2889,9 @@ function generatePlan(){
     if (N < 5) planError('Heads up: that\u2019s a short runway. Showing a compressed plan \u2014 more time would help.');
     N = Math.min(N, 26);
   } else {
-    N = prof.spec;                     // no race date: a focused block sized to the goal
+    // no race date: a focused block sized to the goal, plus any base-building
+    // weeks the athlete asked for up front (the return-from-injury on-ramp)
+    N = prof.spec + (planState.baseWeeks || 0);
     raceDayIdx = runAv.includes(6) ? 6 : runAv[runAv.length-1];
   }
 
@@ -2830,23 +2936,41 @@ function generatePlan(){
     // that), and any remaining flexible days become cross-training.
     const fixedRun = modeW.map((m,i) => m === 'run' ? i : -1).filter(i => i >= 0);
     const flexible = modeW.map((m,i) => m === 'any' ? i : -1).filter(i => i >= 0);
-    const wantRun  = Math.max(0, (isTaper ? 3 : 4) - fixedRun.length);
-    // prefer the flexible day nearest the long-run day to become a run, so the
-    // week stays well spaced
+    // Theory first: scale run days with the week's target minutes (a ~75-minute
+    // average run day is comfortable), between four and five. Four is the floor
+    // because three-run weeks can leave every quality slot jammed against the
+    // long run.
+    const desired  = isTaper ? 3 : Math.min(5, Math.max(4, Math.ceil((targets[w] || 0) / 75)));
+    let wantRun    = Math.max(0, desired - fixedRun.length);
     const flexByUse = flexible.slice().sort((a,b) => Math.abs(a-longDay) - Math.abs(b-longDay));
-    const flexRun = new Set(flexByUse.slice(0, wantRun));
-
-    const runW = modeW.map((m,i) => (m === 'run' || (m === 'any' && flexRun.has(i))) ? i : -1).filter(i => i >= 0);
-    const xtW  = modeW.map((m,i) => (m === 'xt'  || (m === 'any' && !flexRun.has(i))) ? i : -1).filter(i => i >= 0);
-    let longW = runW.includes(longDay) ? longDay : (runW.length ? runW[runW.length-1] : longDay);
-    if (runW.length < 2){ /* too few runs this week to structure: fall back */ }
     const longMins = ladder[w];
     // only the final week holds the race; earlier taper weeks are reduced
     // training weeks, not a second race day
     const isRaceWeek = isTaper && w === N;
     const taperTrain = isTaper && !isRaceWeek;
-    let cells     = buildWeek(runW, xtW, longW, namePhase, isDown || taperTrain, isRaceWeek, w,
-                              isRaceWeek ? raceDayIdx : null, isRaceWeek && !raceDateObj && !prof.ultra, prof, longMins, targets[w]);
+    const makeCells = (nFlex) => {
+      const flexRun = new Set(flexByUse.slice(0, nFlex));
+      // a fixed speed-session day that landed on a flexible day must become a run
+      if (planState.speedDay >= 0 && modeW[planState.speedDay] === 'any') flexRun.add(planState.speedDay);
+      const runW = modeW.map((m,i) => (m === 'run' || (m === 'any' && flexRun.has(i))) ? i : -1).filter(i => i >= 0);
+      const xtW  = modeW.map((m,i) => (m === 'xt'  || (m === 'any' && !flexRun.has(i))) ? i : -1).filter(i => i >= 0);
+      const longW = runW.includes(longDay) ? longDay : (runW.length ? runW[runW.length-1] : longDay);
+      return buildWeek(runW, xtW, longW, namePhase, isDown || taperTrain, isRaceWeek, w,
+                       isRaceWeek ? raceDayIdx : null, isRaceWeek && !raceDateObj && !prof.ultra, prof, longMins, targets[w]);
+    };
+    let cells = makeCells(wantRun);
+    // ...then reality: theory can't know what the built week actually holds
+    // (session lengths are quantised, early easy runs are short). If the week
+    // lands materially under target and unconverted flexible days remain,
+    // convert one more to a run and rebuild until the target is met or the
+    // flexible days run out. Recovery and taper weeks are left deliberately
+    // light, so they don't retry.
+    if (!isTaper && !isDown){
+      while (wantRun < flexByUse.length && cellsMins(cells) < (targets[w] || 0) * 0.9){
+        wantRun++;
+        cells = makeCells(wantRun);
+      }
+    }
     // a recovery week takes the shortest option in each pool, so the load
     // genuinely drops rather than depending on where the rotation landed
     if (isDown && state){
@@ -2973,6 +3097,28 @@ function generatePlan(){
   const longCapped = longLadder.peakLong < prof.longPeak - 5;
   // ultra plans want back-to-back long runs; they only fit if the long-run day
   // has a run day immediately after it. Flag when that didn't happen.
+  // Sunday long runs put the second half of the back-to-back on Monday of the
+  // FOLLOWING week, when that Monday is a run day. Only into normal building
+  // weeks -- recovery, taper and race weeks keep their easing, so a long run
+  // on the eve of a down week simply goes without its pair that time.
+  if (state && prof.ultra && prof.b2bPeak > 0){
+    for (let i = 0; i < weeks.length - 1; i++){
+      const wk = weeks[i], nw = weeks[i+1];
+      if (wk.isDown || wk.isTaper) continue;
+      if (wk.phase !== 'development' && wk.phase !== 'specific') continue;
+      if (wk.cells.some(c => c.kind === 'b2b')) continue;
+      const lc = wk.cells.find(c => c.kind === 'long' && c.idx === 6);
+      if (!lc) continue;
+      if (nw.isDown || nw.isTaper || nw.hasRace) continue;
+      const mon = nw.cells.find(c => c.idx === 0 && (c.kind === 'easy' || c.kind === 'recovery'));
+      if (!mon) continue;
+      const frac = Math.min(1, (wk.w - baseEnd) / Math.max(1, specEnd - baseEnd));
+      const mins = snapB2B(Math.max(60, 60 + frac * (prof.b2bPeak - 60)));
+      mon.kind = 'b2b';
+      mon.name = b2bName(mins);
+    }
+  }
+
   const wantsB2B = !!(prof.ultra && prof.b2bPeak > 0);
   const gotB2B = weeks.some(w => w.cells.some(c => c.kind === 'b2b'));
   // Back-to-backs are only injected on a calibrated plan (they need paces). An
@@ -2982,7 +3128,7 @@ function generatePlan(){
   const b2bMissed = !!state && wantsB2B && !gotB2B;
   planState.generated = { weeks, N, start, longDay, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: prof.longPeak, peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed };
   // a rebuild can change what each day is for, so stale swaps are dropped
-  const sig = [planState.goal, planState.dayMode.join(''), longDay, N, ymd(start), planState.currentMins, planState.xtMins, JSON.stringify(planState.races||[])].join('|');
+  const sig = [planState.goal, planState.dayMode.join(''), longDay, N, ymd(start), planState.currentMins, planState.xtMins, planState.speedDay, JSON.stringify(planState.races||[])].join('|');
   if (planState.sig && planState.sig !== sig){
     // the shape of the block changed, so day-level edits no longer refer to
     // the same sessions
@@ -3025,7 +3171,7 @@ function renderPlan(){
     ? `<div class="plan-warn"><b>Heads up:</b> the days you\u2019ve chosen sit close together, so a hard day lands next to your long run. That\u2019s workable, but spreading your runs across the week \u2014 or dropping one \u2014 would recover better.</div>`
     : '';
   const b2bNote = g.b2bMissed
-    ? `<div class="plan-warn"><b>Back-to-back long runs couldn\u2019t be placed.</b> This ${g.prof} plan is built around a long run followed the next morning by a second long run on tired legs \u2014 the key ultra session. That needs a running day <i>immediately after</i> your long-run day. Right now your long run is your last run of the week. Set your long run to <b>Saturday</b> (with Sunday as a run day) and rebuild, and the back-to-backs will appear.</div>`
+    ? `<div class="plan-warn"><b>Back-to-back long runs couldn\u2019t be placed.</b> This ${g.prof} plan is built around a long run followed the next morning by a second long run on tired legs \u2014 the key ultra session. That needs a run day <i>immediately after</i> your long-run day: either in the same week (long run Saturday, second run Sunday), or \u2014 for Sunday long runs \u2014 a <b>Monday run day</b> so the pair lands Sunday\u2013Monday. Add a run day straight after your long run and rebuild.</div>`
     : (g.ultra && !g.b2bMissed && g.prof !== '50K')
       ? `<div class="plan-note-info"><b>Back-to-back weekends are in.</b> Each big weekend pairs a long run with a shorter second long run the next morning \u2014 run that second one deliberately slowly, walking the hills. Two moderate days back to back build ultra durability more safely than one enormous run.</div>`
       : '';
@@ -3055,12 +3201,12 @@ function renderPlan(){
     const rows = cells.map(c => {
       const isRace = c.kind === 'race' || c.kind === 'timetrial';
       const color = kindColor(c.kind, phaseForCol);
-      const tgt = kindTarget(c.kind, phaseForCol);
+      const tgt = kindTarget(c.kind, phaseForCol, c);
       const label = (c.kind === 'bRace' || c.kind === 'cRace')
                     ? (c.kind === 'bRace' ? 'B race' : 'C race') + ' \u00b7 ' + (RACE_LABEL[c.raceDist] || c.name)
                   : c.kind === 'race' ? ('Race day \u00b7 ' + c.name)
                   : c.kind === 'timetrial' ? (c.name + ' (benchmark)')
-                  : c.kind === 'xt' ? 'Cross-train (Zwift / bike)'
+                  : c.kind === 'xt' ? (c.name || xtMetaOf(c).label)
                   : c.name;
       const cands = candidatesFor(c.kind, phaseForSwap, null, c.name);
       const canSwap = cands.length > 1 && c.kind !== 'race' && c.kind !== 'xt';
@@ -3074,8 +3220,8 @@ function renderPlan(){
         ? `<button class="pl-chart" data-i="${state.byName[c.name]}" title="See the session structure" aria-label="See the session structure">${chartIcon}</button><button class="pl-dl" data-i="${state.byName[c.name]}" data-date="${ymd(addDays(wk.wkStart, c.idx))}" data-week="${wk.w}" title="Download .FIT">FIT</button>` : '';
       const isDone = !!planState.done[doneKey(wk.w, c.idx)];
       const flipTo = c.kind === 'xt' ? 'run' : 'xt';
-      const flipLbl = c.kind === 'xt' ? 'Make it a run' : 'Make it a bike day';
-      const flipTxt = c.kind === 'xt' ? '\u21c4 run' : '\u21c4 bike';
+      const flipLbl = c.kind === 'xt' ? 'Make it a run' : ('Make it a ' + (xtSelected().length === 1 ? XT_TYPES[xtSelected()[0]].short : 'cross-training') + ' day');
+      const flipTxt = c.kind === 'xt' ? '\u21c4 run' : ('\u21c4 ' + (xtSelected().length === 1 ? XT_TYPES[xtSelected()[0]].short : 'XT'));
       const canFlip = c.kind !== 'race' && c.kind !== 'timetrial';
       const flip = canFlip
         ? `<button class="pl-flip" data-w="${wk.w}" data-idx="${c.idx}" data-to="${flipTo}" title="${flipLbl}">${flipTxt}</button>` : '';
@@ -3166,6 +3312,7 @@ function renderPlan(){
     const now = document.getElementById('week-now');
     if (now && now.scrollIntoView){ planState._scrolled = true; setTimeout(() => now.scrollIntoView({block:'center'}), 60); }
   }
+  saveBackup();
 }
 
 /* ---- plan input wiring ---- */
@@ -3227,6 +3374,22 @@ document.querySelectorAll('#plan-type .seg-opt').forEach(b => {
 });
 pd('cur-vol').onchange = e => { planState.currentMins = +e.target.value; };
 pd('xt-mins').onchange = e => { planState.xtMins = +e.target.value; };
+pd('base-weeks').onchange = e => { planState.baseWeeks = +e.target.value; };
+pd('speed-day').onchange = e => { planState.speedDay = +e.target.value; };
+function syncXtChips(){
+  document.querySelectorAll('#xt-chips .xt-chip').forEach(b =>
+    b.classList.toggle('is-on', xtSelected().includes(b.dataset.t)));
+}
+document.querySelectorAll('#xt-chips .xt-chip').forEach(b => {
+  b.onclick = () => {
+    const t = b.dataset.t, cur = new Set(xtSelected());
+    if (cur.has(t) && cur.size === 1) return;          // keep at least one type
+    cur.has(t) ? cur.delete(t) : cur.add(t);
+    planState.xtTypes = ['bike','strength','swim','row'].filter(x => cur.has(x));
+    syncXtChips();
+    if (planState.generated) generatePlan();           // re-spread types across the week
+  };
+});
 pd('build-plan').onclick = generatePlan;
 
 /* ---- start date (snaps to Monday) ---- */
@@ -3258,7 +3421,7 @@ function flashHint(msg){
 }
 function collectSnapshot(){
   return {
-    app: 'session-forge', version: 7, savedAt: new Date().toISOString(),
+    app: 'session-forge', version: 9, savedAt: new Date().toISOString(),
     benchmark: {
       distM: +pd('dist').value,
       time:  pd('time').value.trim(),
@@ -3269,6 +3432,9 @@ function collectSnapshot(){
     plan: {
       goal:        planState.goal,
       planType:    planState.planType || 'road',
+      xtTypes:     xtSelected(),
+      baseWeeks:   planState.baseWeeks || 0,
+      speedDay:    (typeof planState.speedDay === 'number') ? planState.speedDay : -1,
       currentMins: planState.currentMins,
       xtMins:      planState.xtMins,
       races:       (planState.races || []).map(r => ({ ...r })),
@@ -3287,7 +3453,39 @@ function savePlan(){
   if (!snap.benchmark.time && !planState.generated) return planError('Nothing to save yet \u2014 set your benchmark or build a plan first.');
   const tag = snap.plan.raceDate ? ('-' + snap.plan.raceDate) : ('-' + snap.plan.start);
   downloadBlob(new Blob([JSON.stringify(snap, null, 2)], {type:'application/json'}), 'session-forge-plan' + tag + '.json');
-  flashHint('Saved. Keep the file with your training \u2014 load it back any time.');
+  flashHint('Saved. Keep the file with your training \u2014 load it back any time. (A browser backup is also kept automatically.)');
+}
+
+/* --- automatic browser backup ---
+   A safety net for the person who builds a plan, ticks off three weeks, and
+   never pressed Save. Everything is wrapped in try/catch because storage can
+   be unavailable (private windows, some file:// setups) -- in that case the
+   feature just silently doesn't exist, and the Save file remains the real
+   mechanism. */
+const BACKUP_KEY = 'session-forge-backup';
+function saveBackup(){
+  try {
+    const snap = collectSnapshot();
+    if (!snap.benchmark.time && !planState.generated) return;   // nothing worth keeping
+    localStorage.setItem(BACKUP_KEY, JSON.stringify(snap));
+  } catch(e){ /* storage unavailable: the file save is the real mechanism */ }
+}
+function checkBackup(){
+  try {
+    const raw = localStorage.getItem(BACKUP_KEY);
+    if (!raw) return;
+    const snap = JSON.parse(raw);
+    if (!snap || snap.app !== 'session-forge') return;
+    const when = snap.savedAt ? new Date(snap.savedAt) : null;
+    const nice = when ? when.toLocaleDateString(undefined,{day:'numeric',month:'short'}) + ' ' + when.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}) : 'earlier';
+    const bar = pd('backup-bar');
+    bar.innerHTML = `<span>\u21ba A backup from <b>${nice}</b> was found in this browser.</span>
+      <button class="ghost-btn" id="backup-restore">Restore it</button>
+      <button class="ghost-btn" id="backup-dismiss">Dismiss</button>`;
+    bar.style.display = 'flex';
+    pd('backup-restore').onclick = () => { bar.style.display='none'; applySnapshot(snap); };
+    pd('backup-dismiss').onclick = () => { bar.style.display='none'; };
+  } catch(e){ /* no storage, no banner */ }
 }
 function applySnapshot(s){
   if (!s || s.app !== 'session-forge') return planError('That doesn\u2019t look like a Session Forge plan file.');
@@ -3325,6 +3523,15 @@ function applySnapshot(s){
   pd('cur-vol').value = planState.currentMins;
   planState.xtMins = (typeof p.xtMins === 'number') ? p.xtMins : 45;
   pd('xt-mins').value = planState.xtMins;
+  // v9 stores an array; v8 stored a single string ('mixed' folds into bike)
+  planState.xtTypes = Array.isArray(p.xtTypes) ? p.xtTypes.filter(t => XT_TYPES[t])
+                    : (XT_TYPES[p.xtType] ? [p.xtType] : ['bike']);
+  if (!planState.xtTypes.length) planState.xtTypes = ['bike'];
+  syncXtChips();
+  planState.baseWeeks = (typeof p.baseWeeks === 'number') ? p.baseWeeks : 0;
+  pd('base-weeks').value = String(planState.baseWeeks);
+  planState.speedDay = (typeof p.speedDay === 'number') ? p.speedDay : -1;
+  pd('speed-day').value = String(planState.speedDay);
   planState.races = Array.isArray(p.races) ? p.races.map(r => ({ ...r })) : [];
   renderRaces();
   planState.sig = null;                                   // don't wipe restored swaps
@@ -3454,7 +3661,7 @@ function makeZip(files){
    calendar and CSV must all resolve them the same way -- otherwise the plan
    shows one workout and the export sends another. */
 function effectiveName(wk, c){
-  if (c.kind === 'xt') return 'Cross-train';
+  if (c.kind === 'xt') return c.name || xtMetaOf(c).label;
   const ov = planState.overrides[swapKey(wk.w, c.idx)];
   if (!ov) return c.name;
   const phaseForSwap = wk.namePhase || (wk.isTaper ? 'specific' : wk.phase);
@@ -3475,7 +3682,7 @@ function planRows(){
         date, week: wk.w, phase: wk.isDown ? 'recovery' : wk.phase,
         dow: DOW[c.idx], kind: c.kind,
         session: name,
-        target: kindTarget(c.kind, phaseForCol),
+        target: kindTarget(c.kind, phaseForCol, c),
         mins: (c.kind === 'xt') ? XT_MINS : durOf(name)
       });
     });
@@ -3827,6 +4034,9 @@ function showView(v){
 pd('nav-calibrate').onclick = () => showView('calibrate');
 pd('nav-sessions').onclick  = () => showView('sessions');
 pd('nav-plan').onclick      = () => showView('plan');
+
+// offer to restore a browser backup from a previous visit
+checkBackup();
 </script>
 </body>
 </html>
