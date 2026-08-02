@@ -500,7 +500,7 @@ h1 .accent{color:var(--flame)}
 <div class="wrap" id="view-sessions" style="display:none">
   <main>
     <div class="lib-search">
-      <input id="lib-q" type="search" placeholder="Search sessions &mdash; try &lsquo;hill&rsquo;, &lsquo;800&rsquo;, &lsquo;threshold&rsquo;, &lsquo;Fartlek&rsquo;&hellip;" aria-label="Search sessions" autocomplete="off">
+      <input id="lib-q" type="search" placeholder="Search 90+ sessions &mdash; try &lsquo;hill&rsquo;, &lsquo;800&rsquo;, &lsquo;threshold&rsquo;, &lsquo;long run&rsquo;&hellip;" aria-label="Search sessions" autocomplete="off">
       <span class="lib-count" id="lib-count"></span>
     </div>
     <div class="filters" id="filters" role="group" aria-label="Filter sessions by type"></div>
@@ -729,9 +729,9 @@ const WKT_NAME_LEN  = 32;
 const STEP_NAME_LEN = 24;
 
 // enums
-const DUR_TIME = 0, DUR_DISTANCE = 1, DUR_OPEN = 2, DUR_REPEAT = 6;
+const DUR_TIME = 0, DUR_DISTANCE = 1, DUR_OPEN = 5, DUR_REPEAT = 6;
 const TGT_SPEED = 0, TGT_HR = 1, TGT_OPEN = 2;
-const INT_ACTIVE = 0, INT_REST = 1, INT_WARMUP = 2, INT_COOLDOWN = 3;
+const INT_ACTIVE = 0, INT_REST = 1, INT_WARMUP = 2, INT_COOLDOWN = 3, INT_PREP = 4;
 
 /*
  step objects:
@@ -868,7 +868,7 @@ function stepDistOpen(name, metres, intensity = INT_ACTIVE){
   return { name, durType: DUR_DISTANCE, durValue: Math.round(metres * 100),
            tgtType: TGT_OPEN, tgtValue: 0, low: 0, high: 0, intensity };
 }
-function stepLapOpen(name, intensity = INT_ACTIVE){
+function stepLapOpen(name, intensity = INT_PREP){
   return { name, durType: DUR_OPEN, durValue: 0,
            tgtType: TGT_OPEN, tgtValue: 0, low: 0, high: 0, intensity };
 }
@@ -1568,7 +1568,7 @@ function makeSessions(P, Z){
     cat:'Testing', name:'5K Benchmark Test',
     desc:'A thorough warm up, then a lap-press to get you to your start point, then 5 km all-out as a time trial, then an easy cool down. The 5 km is an open effort \u2014 you set the pace \u2014 so it works as a fresh benchmark.',
     benefit:'This is how you recalibrate the whole app: run it, enter your new time on the Calibrate tab, and every pace band and plan tightens around your current fitness. Do it every 4\u20136 weeks.',
-    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready', 1), stepDistOpen('5 km \u2014 all out',5000,0), cd(10) ],
+    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready'), stepDistOpen('5 km \u2014 all out',5000,0), cd(10) ],
     lines:[ '15 min warm up (thorough)', 'Move to start line \u2014 press lap to begin', '5 km all-out time trial', '10 min cool down' ],
     blocks:[ ['easy',15], ['easy',3], ['max',22], ['easy',10] ]
   });
@@ -1576,7 +1576,7 @@ function makeSessions(P, Z){
     cat:'Testing', name:'1 Mile Time Trial',
     desc:'Warm up thoroughly, then a lap-press to reach your start point, then one mile flat out, then jog it off. Short, savage, over quickly.',
     benefit:'A sharp check on speed and a fine benchmark in its own right \u2014 though the further your goal race is from a mile, the less it predicts. Feed the time in on the Calibrate tab.',
-    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready', 1), stepDistOpen('1 mile \u2014 all out',1609,0), cd(10) ],
+    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready'), stepDistOpen('1 mile \u2014 all out',1609,0), cd(10) ],
     lines:[ '15 min warm up (thorough)', 'Move to start line \u2014 press lap to begin', '1 mile all-out', '10 min cool down' ],
     blocks:[ ['easy',15], ['easy',2], ['max',distMins(1609,P.rep)], ['easy',10] ]
   });
@@ -1584,7 +1584,7 @@ function makeSessions(P, Z){
     cat:'Testing', name:'10K Time Trial',
     desc:'Warm up, a lap-press to reach your start, then run 10 km as hard as you can sustain, cool down. An honest, unforgiving test of aerobic fitness.',
     benefit:'The best single benchmark for 10K and half-marathon training, and a strong calibration input. Costly to recover from \u2014 treat it as a race, not a session.',
-    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready', 1), stepDistOpen('10 km \u2014 race effort',10000,0), cd(10) ],
+    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready'), stepDistOpen('10 km \u2014 race effort',10000,0), cd(10) ],
     lines:[ '15 min warm up', 'Move to start line \u2014 press lap to begin', '10 km all-out', '10 min cool down' ],
     blocks:[ ['easy',15], ['easy',3], ['max',distMins(10000,P.tempo)], ['easy',10] ]
   });
@@ -1640,7 +1640,7 @@ function makeSessions(P, Z){
     cat:'Testing', name:'3K Time Trial',
     desc:'Warm up well, a lap-press to reach your start, then run 3 km as hard as you can hold, then cool down. Shorter and sharper than the 5K test \u2014 less fatiguing, and a good check on your faster gears.',
     benefit:'A quick, repeatable fitness gauge that\u2019s easier to slot into a busy week. Feed the time in as a 3 km effort to re-calibrate between full 5K tests.',
-    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready', 1), stepDistOpen('3 km \u2014 all out',3000,0), cd(10) ],
+    structure:[ wu(15), stepLapOpen('Get to your start \u2014 press lap when ready'), stepDistOpen('3 km \u2014 all out',3000,0), cd(10) ],
     lines:[ '15 min warm up (thorough)', 'Move to start line \u2014 press lap to begin', '3 km all-out time trial', '10 min cool down' ],
     blocks:[ ['easy',15], ['easy',3], ['max',13], ['easy',10] ]
   });
