@@ -87,6 +87,10 @@ h1 .accent{color:var(--flame)}
 
 /* ---------- benchmark panel ---------- */
 .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);position:sticky;top:16px}
+.c25k-main{min-width:0}
+.c25k-main .plan-out{margin-top:0}
+#view-start .footnote{margin-top:22px}
+@media(max-width:820px){.c25k-main{margin-top:20px}}
 @media(max-width:920px){.panel{position:static}}
 .panel-head{padding:16px 18px 12px;border-bottom:2px solid var(--track)}
 .panel-head h2{font-family:var(--disp);text-transform:uppercase;font-size:22px;font-weight:700;letter-spacing:.02em}
@@ -131,9 +135,15 @@ h1 .accent{color:var(--flame)}
 .zone-line .zv{font-family:var(--mono);font-size:13px;color:var(--ink);white-space:nowrap}
 
 /* ---------- main column ---------- */
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.dur-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.c25k-mode .plan-only{display:none}
+.c25k-note{background:var(--tint);border:1px solid var(--track);border-radius:var(--radius);padding:12px 16px;font-size:14px;color:var(--track-deep);margin-bottom:16px;display:none}
+.c25k-mode .c25k-note{display:block}
+.field-group-head{font-family:var(--disp);text-transform:uppercase;font-size:12px;letter-spacing:.1em;color:var(--track-deep);padding-top:10px;margin-top:4px;border-top:1px solid var(--line)}
 .chip{padding:7px 14px;border-radius:20px;border:1px solid var(--line);background:var(--white);font-size:13.5px;font-weight:500;color:var(--ink-soft)}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip-sm{padding:5px 11px;font-size:12.5px}
 .locked-note{background:var(--white);border:1px dashed var(--line);border-radius:var(--radius);padding:26px 22px;text-align:center;color:var(--ink-soft);font-size:15px}
 .locked-note .big{font-family:var(--disp);text-transform:uppercase;font-size:22px;color:var(--ink);display:block;margin-bottom:4px}
 
@@ -167,7 +177,6 @@ h1 .accent{color:var(--flame)}
 .seg-opt{font-family:var(--body);font-size:14px;font-weight:600;color:var(--track-deep);background:var(--white);border:none;padding:8px 18px;cursor:pointer;transition:all .12s}
 .seg-opt+.seg-opt{border-left:1px solid var(--track)}
 .seg-opt.is-on{background:var(--track);color:#fff}
-.xt-chips{display:flex;flex-wrap:wrap;gap:7px}
 .xt-chip{font-family:var(--body);font-size:13.5px;font-weight:600;color:var(--track-deep);background:var(--white);border:1px solid var(--track);border-radius:20px;padding:6px 14px;cursor:pointer;transition:all .12s}
 .xt-chip.is-on{background:var(--track);color:#fff}
 .footnote h4{font-family:var(--disp);text-transform:uppercase;font-size:18px;color:var(--ink);margin-bottom:6px}
@@ -307,6 +316,10 @@ h1 .accent{color:var(--flame)}
 .pl-sess.race{font-family:var(--disp);text-transform:uppercase;font-weight:700;letter-spacing:.03em;color:var(--flame);font-size:16px}
 .pl-tgt{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);white-space:nowrap;text-align:right}
 .pl-flipslot{display:flex;justify-content:flex-end}
+.pl-second{background:var(--tint);border-top:1px dashed var(--line)}
+.pl-second .pl-dow{color:var(--track);font-style:italic}
+.pl-second .pl-name{font-size:14px}
+.pl-tick-sp{width:18px;flex:none}
 .pl-actions{display:flex;justify-content:flex-end;gap:6px}
 .pl-dl{flex:none;font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--track-deep);background:var(--tint);border:1px solid var(--track);border-radius:5px;padding:3px 8px;transition:all .12s}
 .pl-dl:hover{background:var(--track);color:#fff}
@@ -406,6 +419,7 @@ h1 .accent{color:var(--flame)}
     <h1>Session <span class="accent">Forge</span></h1>
     <p class="sub">Enter your max heart rate and one recent all-out effort. Get a full library of structured sessions &mdash; intervals, tempos, hills, fartlek, track and long runs &mdash; as <strong>.FIT files with fixed pace and heart-rate ranges</strong> (never % of threshold), plus a periodised plan built around your goal race. Ready for Final Surge, TrainingPeaks or straight onto a Garmin.</p>
     <nav class="nav" role="tablist" aria-label="Views">
+      <button class="nav-tab" id="nav-start" role="tab" aria-selected="false">New to running</button>
       <button class="nav-tab" id="nav-calibrate" role="tab" aria-selected="true">Calibrate</button>
       <button class="nav-tab" id="nav-plan" role="tab" aria-selected="false">Build a plan</button>
       <button class="nav-tab" id="nav-sessions" role="tab" aria-selected="false">Session library</button>
@@ -466,6 +480,39 @@ h1 .accent{color:var(--flame)}
         </div>
       </div>
 
+      <div class="hint" style="margin-top:-6px">Heart-rate zones below come from your maximum. If you entered an estimate rather than a measured figure, treat the zones as a guide &mdash; the age formula carries roughly &plusmn;10 bpm of individual variation, so trust pace and perceived effort where the two disagree.</div>
+
+      <div class="field-group-head">Your training right now</div>
+
+      <div class="field">
+        <label for="cur-vol">What you run in a typical week</label>
+        <select id="cur-vol">
+          <option value="60">About 1 hour</option>
+          <option value="90">About 1&frac12; hours</option>
+          <option value="120">About 2 hours</option>
+          <option value="150">About 2&frac12; hours</option>
+          <option value="180" selected>About 3 hours</option>
+          <option value="240">About 4 hours</option>
+          <option value="300">About 5 hours</option>
+          <option value="360">About 6 hours</option>
+          <option value="450">About 7&frac12; hours</option>
+          <option value="600">10 hours or more</option>
+        </select>
+        <div class="hint">Be honest &mdash; what you actually do now, not what you managed at your fittest. Every plan builds from here.</div>
+      </div>
+
+      <div class="field">
+        <label for="cur-days">How many days a week you run now</label>
+        <select id="cur-days">
+                    <option value="3" selected>3 days</option>
+          <option value="4">4 days</option>
+          <option value="5">5 days</option>
+          <option value="6">6 days</option>
+          <option value="7">7 days</option>
+        </select>
+        <div class="hint" id="cur-avg-hint"></div>
+      </div>
+
       <button class="go" id="calc">Calibrate</button>
     </div>
   </aside>
@@ -500,10 +547,11 @@ h1 .accent{color:var(--flame)}
 <div class="wrap" id="view-sessions" style="display:none">
   <main>
     <div class="lib-search">
-      <input id="lib-q" type="search" placeholder="Search 90+ sessions &mdash; try &lsquo;hill&rsquo;, &lsquo;800&rsquo;, &lsquo;threshold&rsquo;, &lsquo;long run&rsquo;&hellip;" aria-label="Search sessions" autocomplete="off">
+      <input id="lib-q" type="search" placeholder="Search the library &mdash; try &lsquo;hill&rsquo;, &lsquo;800&rsquo;, &lsquo;threshold&rsquo;, &lsquo;long run&rsquo;&hellip;" aria-label="Search sessions" autocomplete="off">
       <span class="lib-count" id="lib-count"></span>
     </div>
     <div class="filters" id="filters" role="group" aria-label="Filter sessions by type"></div>
+    <div class="dur-filters" id="dur-filters" role="group" aria-label="Filter by duration"></div>
     <div class="locked-note" id="locked">
       <span class="big">Library locked</span>
       Head to the <b>Calibrate</b> tab and enter a benchmark effort. Every session below will then be built around your numbers.
@@ -520,31 +568,68 @@ h1 .accent{color:var(--flame)}
 </div>
 
 <!-- ============ plan builder view ============ -->
+<!-- ============ new to running view ============ -->
+<section class="cal-wrap" id="view-start" style="display:none" aria-label="New to running">
+  <div class="panel">
+    <h2 class="panel-h">Start from nothing</h2>
+    <p class="panel-sub">Nine weeks of walking and running that ends with you running five kilometres without stopping. You don't need a watch, a benchmark, or any idea of your paces &mdash; just three half-hours a week.</p>
+
+    <div class="field">
+      <label for="start-days">Which days suit you?</label>
+      <select id="start-days">
+        <option value="024" selected>Monday, Wednesday, Friday</option>
+        <option value="135">Tuesday, Thursday, Saturday</option>
+        <option value="146">Tuesday, Friday, Sunday</option>
+        <option value="026">Monday, Wednesday, Sunday</option>
+        <option value="036">Monday, Thursday, Sunday</option>
+      </select>
+      <div class="hint">Three runs a week with a rest day between each. Any combination works &mdash; pick whichever fits your life, because the only thing that matters is that you keep turning up.</div>
+    </div>
+
+    <div class="field">
+      <label for="start-date-c25k">Start date</label>
+      <input id="start-date-c25k" type="date">
+      <div class="hint">Snaps to the Monday of that week</div>
+    </div>
+
+    <button class="cta" id="build-c25k">Build my nine weeks</button>
+
+    
+  </div>
+
+  <div class="c25k-main">
+    <div id="c25k-out" class="plan-out"></div>
+
+    <div class="field" id="c25k-export" style="display:none">
+      <label>Take it with you</label>
+      <div class="save-row">
+        <button class="ghost-btn" id="c25k-zip" title="All nine weeks as .FIT files">All .FIT</button>
+        <button class="ghost-btn" id="c25k-ics" title="Calendar file">Calendar</button>
+        <button class="ghost-btn" id="c25k-a4" title="Printable month grid, A4 landscape">Print A4</button>
+      </div>
+      <div class="hint">The same files as the main planner &mdash; every session ready for your watch.</div>
+    </div>
+
+    <div class="footnote" style="margin-top:22px">
+      <h4>What to expect</h4>
+      <p><b>Week one is eight one-minute runs.</b> That is not a typo and it is not condescending &mdash; it is the amount that lets almost everyone come back on Wednesday without sore shins. The running builds from there, and by week five you'll do twenty minutes without stopping.</p>
+      <p><b>Go slower than feels right.</b> Nearly everyone who struggles with this programme is running too fast. You should be able to hold a conversation. There are deliberately no pace targets here.</p>
+      <p><b>Repeat any week you need to.</b> Nothing breaks if week five takes a fortnight. Finishing matters, the calendar doesn't.</p>
+      <p><b>At the end you run a 5K.</b> Enter that time on the Calibrate tab and the rest of this app &mdash; pace bands, heart-rate zones, and plans for anything up to a hundred miles &mdash; opens up around it.</p>
+    </div>
+  </div>
+</section>
+
 <section class="plan-wrap" id="view-plan" style="display:none" aria-label="Plan builder">
   <div class="plan-setup">
     <div class="plan-setup-head">
       <h2>Build your block</h2>
-      <p>A periodised plan from now to race day — the right session on the right day, spaced the way training should be. Set a race date or leave it blank for a rolling 12 weeks.</p>
+      <p>A periodised plan from now to race day — the right session on the right day, spaced the way training should be. Set a race date, or leave it blank and the plan sizes a block to your goal.</p>
     </div>
     <div class="pl-err" id="pl-err" role="alert"></div>
-    <div class="plan-inputs">
-      <div class="field">
-        <label for="cur-vol">What you run now (per week)</label>
-        <select id="cur-vol">
-          <option value="60">About 1 hour</option>
-          <option value="90">About 1&frac12; hours</option>
-          <option value="120">About 2 hours</option>
-          <option value="150">About 2&frac12; hours</option>
-          <option value="180" selected>About 3 hours</option>
-          <option value="240">About 4 hours</option>
-          <option value="300">About 5 hours</option>
-          <option value="360">About 6 hours</option>
-          <option value="450">About 7&frac12; hours</option>
-          <option value="600">10 hours or more</option>
-        </select>
-        <div class="hint">The plan builds from here. Be honest &mdash; not what you did at your fittest.</div>
-      </div>
-      <div class="field">
+    <div class="c25k-note"><b>Nine weeks, three runs a week.</b> Every session starts and ends with a five-minute walk, and the running is broken into intervals that get longer as the weeks pass. There is nothing to set up &mdash; no benchmark, no paces. Pick your start date and the days you can run, and go. When you finish, run your 5K and enter the time on the Calibrate tab: the full planner opens from there.</div>
+<div class="plan-inputs">
+      <div class="field plan-only">
         <label for="xt-mins">Typical cross-training session</label>
         <select id="xt-mins">
           <option value="30">30 min</option>
@@ -556,16 +641,6 @@ h1 .accent{color:var(--flame)}
         <div class="hint">Counts toward your training load, not your running volume</div>
       </div>
       <div class="field">
-        <label>Cross-training &mdash; pick any that apply</label>
-        <div class="xt-chips" id="xt-chips">
-          <button type="button" class="xt-chip is-on" data-t="bike">Bike / Zwift</button>
-          <button type="button" class="xt-chip" data-t="strength">Strength</button>
-          <button type="button" class="xt-chip" data-t="swim">Swim</button>
-          <button type="button" class="xt-chip" data-t="row">Rowing</button>
-        </div>
-        <div class="hint">Pick one or several &mdash; the plan rotates them through your cross-training days, keeping strength off the day before your long run</div>
-      </div>
-      <div class="field">
         <label>Plan type</label>
         <div class="seg-toggle" id="plan-type" role="group" aria-label="Plan type">
           <button type="button" class="seg-opt is-on" data-type="road" aria-pressed="true">Road / track</button>
@@ -573,7 +648,7 @@ h1 .accent{color:var(--flame)}
         </div>
         <div class="hint" id="plan-type-hint">5K to marathon, on the road or track</div>
       </div>
-      <div class="field">
+      <div class="field plan-only">
         <label for="goal">Goal race</label>
         <select id="goal">
           <option value="5k" selected>5K</option>
@@ -588,15 +663,16 @@ h1 .accent{color:var(--flame)}
         <input id="start-date" type="date">
         <div class="hint">Snaps to the Monday of that week. Blank = next Monday.</div>
       </div>
-      <div class="field">
+      <div class="field plan-only">
         <label for="race-date">Race date <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
         <input id="race-date" type="date">
         <div class="hint">Blank = a focused block sized to your goal. Extra time becomes base building.</div>
       </div>
-      <div class="field">
+      <div class="field plan-only">
         <label for="base-weeks">Base building first</label>
         <select id="base-weeks">
-          <option value="0" selected>None — straight into the block</option>
+          <option value="auto" selected>Recommended &mdash; 4 weeks</option>
+          <option value="0">None &mdash; straight into the block</option>
           <option value="4">4 weeks of base</option>
           <option value="6">6 weeks of base</option>
           <option value="8">8 weeks of base</option>
@@ -605,7 +681,7 @@ h1 .accent{color:var(--flame)}
         <div class="hint">Easy volume, hills and strides before the sharp work — the right way back from injury or a long break. With a race date set, spare time becomes base automatically and this is ignored.</div>
       </div>
       <div class="field">
-        <label>Your week &mdash; tap to cycle</label>
+        <label>Days you're available &mdash; tap to cycle</label>
         <div class="day-grid" id="day-grid" role="group" aria-label="Days: tap to cycle off, run, cross-train"></div>
         <div class="day-legend">
           <span><i style="background:var(--track)"></i>Run</span>
@@ -613,14 +689,31 @@ h1 .accent{color:var(--flame)}
           <span><i style="background:var(--track);opacity:.45"></i>Either</span>
           <span><i style="background:#FBFCFE;border:1px solid var(--line)"></i>Off</span>
         </div>
-        <div class="hint">Tap to cycle. <b>Either</b> = you'll train, but let the plan pick run or bike depending on what the week needs.</div>
+        <div class="hint">This is when you <b>could</b> train, not what you'll be given. The plan starts at the number of days you run now and adds one only when the training genuinely needs it &mdash; days it doesn't use are rest days. Mark <b>Cross-train</b> for days you'd rather bike or swim than run.</div>
       </div>
-      <div class="field">
+      <div class="field plan-only">
         <label for="long-day">Long run day</label>
         <select id="long-day"></select>
         <div class="hint">Your long run anchors each week. Ultra plans need a run day <b>straight after</b> this for the back-to-back &mdash; Sunday long runs use the following Monday.</div>
       </div>
-      <div class="field">
+      <div class="field plan-only">
+        <label>What you want from this block</label>
+        <div class="seg-toggle" id="intent-toggle" role="group" aria-label="Training intent">
+          <button type="button" class="seg-opt" data-intent="finish" aria-pressed="false">Finish</button>
+          <button type="button" class="seg-opt is-on" data-intent="improve" aria-pressed="true">Progression</button>
+          <button type="button" class="seg-opt" data-intent="pb" aria-pressed="false">Chase a PB</button>
+        </div>
+        <div class="hint" id="intent-hint"></div>
+      </div>
+      <div class="field plan-only" id="doubles-field" style="display:none">
+        <label>Double days</label>
+        <div class="seg-toggle" id="doubles-toggle" role="group" aria-label="Double days">
+          <button type="button" class="seg-opt is-on" data-dbl="0" aria-pressed="true">One run a day</button>
+          <button type="button" class="seg-opt" data-dbl="1" aria-pressed="false">Allow doubles</button>
+        </div>
+        <div class="hint">A second short recovery jog on a few easy days in the biggest weeks &mdash; never on quality days, never before the long run, never two days running. Only worth it once you're consistently over six hours a week.</div>
+      </div>
+      <div class="field plan-only">
         <label for="speed-day">Speed session day</label>
         <select id="speed-day">
           <option value="-1" selected>Any &mdash; let the plan pick</option>
@@ -634,7 +727,7 @@ h1 .accent{color:var(--flame)}
         </select>
         <div class="hint">Your hardest run of the week. It can't sit right next to your long run &mdash; leave at least a day between them.</div>
       </div>
-      <div class="field">
+      <div class="field plan-only">
         <label>Races along the way <span class="lbl-note">(besides your goal race)</span></label>
         <div id="race-list"></div>
         <button class="ghost-btn" id="race-add">+ Add a race</button>
@@ -721,7 +814,19 @@ class ByteWriter {
   u16(v){ this.u8(v); this.u8(v >> 8); }
   u32(v){ this.u8(v); this.u8(v >> 8); this.u8(v >> 16); this.u8(v >> 24); }
   str(s, len){
-    for (let i = 0; i < len; i++) this.u8(i < s.length ? s.charCodeAt(i) & 0x7F : 0);
+    // FIT strings are ASCII. Masking a multi-byte character to 7 bits turns an
+    // em-dash into a control code, so map the typography we actually use to
+    // sensible ASCII first and drop anything else.
+    const ascii = String(s || '')
+      .replace(/[\u2012-\u2015\u2212]/g, '-')      // dashes
+      .replace(/[\u2018\u2019\u201B]/g, "'")       // single quotes
+      .replace(/[\u201C\u201D]/g, '"')             // double quotes
+      .replace(/\u2026/g, '...')
+      .replace(/\u00d7/g, 'x')                     // multiplication sign
+      .replace(/\u00b7/g, '-')                     // middle dot
+      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/[^\x20-\x7E]/g, '');               // anything else non-printable
+    for (let i = 0; i < len; i++) this.u8(i < ascii.length ? ascii.charCodeAt(i) & 0x7F : 0);
   }
 }
 
@@ -854,10 +959,22 @@ function stepDistPace(name, metres, paceSlow, paceFast, intensity = INT_ACTIVE){
            low: paceToSpeed1000(paceSlow), high: paceToSpeed1000(paceFast),
            intensity };
 }
-function stepTimeHr(name, minutes, hrLow, hrHigh, intensity = INT_ACTIVE){
+/* Easy and long runs export with a heart-rate band, but a LOWER bound on an
+   easy run is worth nothing: running below it means you're doing the session
+   right, not wrong, and the watch nagging about it on a cold first mile is pure
+   noise. So the floor drops to a figure no living runner will trip and the
+   ceiling does the work. Anything genuinely two-sided -- a tempo held inside a
+   band -- passes its own floor explicitly. */
+const HR_NO_FLOOR = 40;
+function stepTimeHr(name, minutes, hrLow, hrHigh, intensity = INT_ACTIVE, floored = false){
+  /* Easy and long runs get no meaningful lower bound: running under it means
+     you're doing the session right, and the watch nagging on a cold first mile
+     is noise. Anything genuinely two-sided -- a steady run that must not become
+     a shuffle -- passes floored:true and keeps its real floor. */
+  const lo = floored ? hrLow : HR_NO_FLOOR;
   return { name, durType: DUR_TIME, durValue: Math.round(minutes * 60000),
            tgtType: TGT_HR, tgtValue: 0,
-           low: Math.round(hrLow) + 100, high: Math.round(hrHigh) + 100,
+           low: Math.round(lo) + 100, high: Math.round(hrHigh) + 100,
            intensity };
 }
 function stepTimeOpen(name, minutes, intensity = INT_ACTIVE){
@@ -929,7 +1046,15 @@ const paceAt = (vdot,f) => 60000 / velocityAtFraction(vdot,f); // sec/km
 function buildPaces(vdot){
   // each band: [slow sec/km, fast sec/km]
   return {
-    easy:     [paceAt(vdot,0.62), paceAt(vdot,0.74)],
+    /* Daniels puts easy running at 55-63% of VDOT. The band used to start at
+       62%, which made the *slowest* easy pace roughly his *fastest* -- close
+       enough to marathon pace that 80% of every plan drifted into the grey
+       zone, and flatly incompatible with the Z1-Z2 heart-rate cap the same
+       runs export with. */
+    /* Bands are [slow, fast] throughout -- paceAt returns sec/km, so the lower
+       VDOT fraction is the slower end and must come first. Reversing this one
+       inverted the speed range on any step built from it, which watches reject. */
+    easy:     [paceAt(vdot,0.55), paceAt(vdot,0.63)],
     steady:   [paceAt(vdot,0.78), paceAt(vdot,0.85)],
     tempo:    [paceAt(vdot,0.85), paceAt(vdot,0.905)],
     interval: [paceAt(vdot,0.95), paceAt(vdot,1.005)],
@@ -1015,14 +1140,25 @@ const LONG_RUNGS = (() => {
 })();
 const LONG_LIB_STEP = 15;   // only these appear as library cards, to avoid 29 near-identical entries
 const LONG_RUN_ROAD_MAX = 180;   // above this is ultra territory
-const EASY_RUNGS = (() => { const a=[]; for (let m=25; m<=120; m+=5) a.push(m); return a; })();
+const EASY_RUNGS = (() => { const a=[]; for (let m=25; m<=180; m+=5) a.push(m); return a; })();
 const EASY_LIB_STEP = 15;
 const longName = m => 'Long Run ' + m + ' min';
 const b2bName = m => 'Back-to-Back ' + m + ' min';
 const easyName = m => 'Easy Aerobic ' + m + ' min';
+/* The medium-long run: the session that separates endurance training from a
+   5K plan with a big Saturday. Long enough to bite into fat metabolism and
+   fatigue resistance, short enough to run midweek and recover from by the
+   weekend. Half and marathon blocks are built on these. */
+/* Finer rungs than the long run's, because the medium-long tracks it at about
+   60% and coarse steps would leave it stuck on one value for most of a block. */
+const MEDLONG_RUNGS = [55,60,65,70,75,80,85,90,100,110,120];
+const medLongName = m => 'Medium-Long Run ' + m + ' min';
+const snapMedLong = x => MEDLONG_RUNGS.reduce((a,b) => Math.abs(b-x) < Math.abs(a-x) ? b : a);
 const snapEasy = x => EASY_RUNGS.reduce((a,b) => Math.abs(b-x) < Math.abs(a-x) ? b : a);
 const snapRung = x => LONG_RUNGS.reduce((a,b) => Math.abs(b-x) < Math.abs(a-x) ? b : a);
-const B2B_RUNGS = [60,75,90,105,120,150];
+/* Rungs start at 40 so a 50K -- whose second long run peaks at 75 minutes --
+   has room to build rather than sitting on the same session for eight weeks. */
+const B2B_RUNGS = [40,45,50,60,75,90,105,120,150];
 const snapB2B = x => B2B_RUNGS.reduce((a,b) => Math.abs(b-x) < Math.abs(a-x) ? b : a);
 
 function makeSessions(P, Z){
@@ -1378,7 +1514,7 @@ function makeSessions(P, Z){
      run the morning after the main long run, on deliberately tired legs. It
      accumulates the fatigue of a much longer effort without any single monster
      run, and rehearses the exact feeling of the back half of an ultra. */
-  [60,75,90,105,120,150].forEach(m => {
+  B2B_RUNGS.forEach(m => {
     add({
       hidden: (m % 30 !== 0),
       cat:'Endurance', name: b2bName(m),
@@ -1407,7 +1543,325 @@ function makeSessions(P, Z){
     });
   });
 
+
+  /* ---- medium-long runs ----
+     Built as a ladder like the easy runs, so the plan can size them to the
+     week. These sit between an easy run and the long run in both duration and
+     purpose: long enough to train fatigue resistance, short enough to run on a
+     Wednesday. A steady-effort finish on the longer rungs stops them turning
+     into a second easy run. */
+  MEDLONG_RUNGS.forEach(m => {
+    const steadyFin = m >= 90 ? 20 : m >= 80 ? 15 : 0;
+    const easyPart  = m - steadyFin;
+    add({
+      cat:'Endurance', name:medLongName(m), hidden:true, medlong:true,
+      desc:'A ' + m + '-minute run at easy to steady effort'
+           + (steadyFin ? ', finishing with ' + steadyFin + ' minutes at steady pace on legs that are already tired.' : '.')
+           + ' Midweek endurance \u2014 substantial, but not a long run.',
+      benefit:'The session that turns a 5K plan into an endurance plan. Runs of this length train fat metabolism and fatigue resistance without the recovery cost of a full long run, so you can carry one every week alongside the weekend.',
+      structure: steadyFin
+        ? [ stepTimeHr('Easy',easyPart,Z.z1[1],Z.z2[1],0), stepTimePace('Steady finish',steadyFin,P.steady[0],P.steady[1]) ]
+        : [ stepTimeHr('Easy to steady',m,Z.z1[1],Z.z2[1],0) ],
+      lines: steadyFin
+        ? [ easyPart + ' min easy \u00b7 HR band', steadyFin + ' min steady @ ' + fmtBand(P.steady) ]
+        : [ m + ' min easy to steady \u00b7 HR band' ],
+      blocks: steadyFin ? [ ['easy',easyPart], ['steady',steadyFin] ] : [ ['easy',m] ]
+    });
+  });
+
+  /* ---- marathon-pace work ----
+     What marathon runners actually recognise as marathon training. The volume
+     at goal pace matters more than the pace of any single rep, so these are
+     long blocks rather than short intervals. */
+  add({
+    cat:'Threshold', name:'2 \u00d7 6 km Marathon Pace',
+    desc:'Two six-kilometre blocks at goal marathon pace with a gentle kilometre of jogging between them.',
+    benefit:'A Canova staple. Twelve kilometres at race pace teaches your legs and your fuelling what the effort feels like, while the break in the middle keeps the session repeatable week to week.',
+    structure:[ wu(15), {loop:[stepDistPace('6 km @ MP',6000,P.steady[0],P.steady[1]), jog(5)], times:2}, cd(10) ],
+    lines:[ '15 min warm up', '2 \u00d7 [ 6 km @ ' + fmtBand(P.steady) + ' \u00b7 5 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(2).fill(0).flatMap(()=>[['steady',distMins(6000,P.steady)],['rest',5]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'3 \u00d7 5 km Marathon Pace',
+    desc:'Three five-kilometre blocks at goal marathon pace, three minutes of easy jogging between each.',
+    benefit:'Fifteen kilometres at race pace inside a single session. This is the workout that tells you honestly whether your goal time is realistic \u2014 if the third block falls apart, the target is too fast.',
+    structure:[ wu(15), {loop:[stepDistPace('5 km @ MP',5000,P.steady[0],P.steady[1]), jog(3)], times:3}, cd(10) ],
+    lines:[ '15 min warm up', '3 \u00d7 [ 5 km @ ' + fmtBand(P.steady) + ' \u00b7 3 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(3).fill(0).flatMap(()=>[['steady',distMins(5000,P.steady)],['rest',3]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'Alternations \u2014 2 km MP / 1 km steady',
+    desc:'Five rounds of two kilometres at marathon pace followed by one kilometre slightly slower. No standing recoveries \u2014 the easier kilometre is the recovery.',
+    benefit:'Continuous running with a rhythm change every few minutes. Alternations build the ability to surge and settle without losing form, which is what happens on rolling courses and around aid stations.',
+    structure:[ wu(12), {loop:[stepDistPace('2 km @ MP',2000,P.steady[0],P.steady[1]), stepDistPace('1 km float',1000,P.easy[0],P.easy[1])], times:5}, cd(10) ],
+    lines:[ '12 min warm up', '5 \u00d7 [ 2 km @ ' + fmtBand(P.steady) + ' \u00b7 1 km @ ' + fmtBand(P.easy) + ' ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(5).fill(0).flatMap(()=>[['steady',distMins(2000,P.steady)],['easy',distMins(1000,P.easy)]]), ['easy',10] ]
+  });
+  add({
+    cat:'Endurance', name:'Fast-Finish Long Run \u2014 last 30 at MP',
+    desc:'Ninety minutes easy, then thirty minutes at goal marathon pace to finish.',
+    benefit:'The most race-specific session in marathon training. Running at goal pace on two-hour legs is exactly the demand of the last ten kilometres, and no amount of fresh-legged pace work replaces it.',
+    structure:[ stepTimeHr('Easy',90,Z.z1[1],Z.z2[1],0), stepTimePace('Marathon pace finish',30,P.steady[0],P.steady[1]), cd(5) ],
+    lines:[ '90 min easy \u00b7 HR band', '30 min @ ' + fmtBand(P.steady), '5 min cool down' ],
+    blocks:[ ['easy',90], ['steady',30], ['easy',5] ]
+  });
+  add({
+    cat:'Endurance', name:'Fast-Finish Long Run \u2014 last 10 km at MP',
+    desc:'Two hours easy, then ten kilometres at goal marathon pace.',
+    benefit:'The hardest long run in the library and the sharpest predictor of marathon day. Complete this well three weeks out and your goal is sound.',
+    structure:[ stepTimeHr('Easy',120,Z.z1[1],Z.z2[1],0), stepDistPace('10 km @ MP',10000,P.steady[0],P.steady[1]), cd(5) ],
+    lines:[ '120 min easy \u00b7 HR band', '10 km @ ' + fmtBand(P.steady), '5 min cool down' ],
+    blocks:[ ['easy',120], ['steady',distMins(10000,P.steady)], ['easy',5] ]
+  });
+
+  /* ---- broken threshold: bread-and-butter half-marathon work ---- */
+  add({
+    cat:'Threshold', name:'4 \u00d7 10 min Threshold',
+    desc:'Four ten-minute blocks at threshold with two minutes of jogging between.',
+    benefit:'Forty minutes of threshold work broken into pieces short enough to hold good form throughout. The staple half-marathon session.',
+    structure:[ wu(12), {loop:[stepTimePace('10 min threshold',10,P.tempo[0],P.tempo[1]), jog(2)], times:4}, cd(10) ],
+    lines:[ '12 min warm up', '4 \u00d7 [ 10 min @ ' + fmtBand(P.tempo) + ' \u00b7 2 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(4).fill(0).flatMap(()=>[['tempo',10],['rest',2]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'2 \u00d7 20 min Threshold',
+    desc:'Two twenty-minute threshold blocks with three minutes of jogging between them.',
+    benefit:'Longer blocks than the 4 \u00d7 10 for the same total work \u2014 more mentally demanding, and closer to the sustained concentration a half marathon asks for.',
+    structure:[ wu(12), {loop:[stepTimePace('20 min threshold',20,P.tempo[0],P.tempo[1]), jog(3)], times:2}, cd(10) ],
+    lines:[ '12 min warm up', '2 \u00d7 [ 20 min @ ' + fmtBand(P.tempo) + ' \u00b7 3 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(2).fill(0).flatMap(()=>[['tempo',20],['rest',3]]), ['easy',10] ]
+  });
+
+  /* ---- short hill sprints: pure neuromuscular work ---- */
+  add({
+    cat:'Hills', name:'10 \u00d7 10 s Hill Sprints',
+    desc:'Ten maximal ten-second efforts up a steep hill, walking back down between each. Full recovery \u2014 these are sprints, not intervals.',
+    benefit:'Almost pure strength and neuromuscular work with very little metabolic cost. Ten seconds is too short to accumulate fatigue, so these sharpen without denting the week. Excellent in base weeks.',
+    structure:[ wu(15), {loop:[stepTimeOpen('Hill sprint \u2014 maximal',1/6,0), stepTimeOpen('Walk down \u2014 full recovery',2,1)], times:10}, cd(10) ],
+    lines:[ '15 min warm up', '10 \u00d7 [ 10 s maximal uphill \u00b7 walk down ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(10).fill(0).flatMap(()=>[['max',1/6],['rest',2]]), ['easy',10] ]
+  });
+  add({
+    cat:'Speed & Track', name:'16 \u00d7 200 m',
+    desc:'Sixteen 200 metre repetitions at rep pace with 200 metres of jogging between each.',
+    benefit:'Pure running economy. Short enough that form stays sharp on every rep, numerous enough to be a real session. The classic economy workout for 5K runners.',
+    structure:[ wu(15), {loop:[stepDistPace('200 m',200,P.rep[0],P.rep[1]), jog(1.5)], times:16}, cd(10) ],
+    lines:[ '15 min warm up', '16 \u00d7 [ 200 m @ ' + fmtBand(P.rep) + ' \u00b7 90 s jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(16).fill(0).flatMap(()=>[['max',distMins(200,P.rep)],['rest',1.5]]), ['easy',10] ]
+  });
+
+
+  /* ---- lower-volume interval sessions ----
+     The same workouts in a size a developing runner can absorb. Four 800s at
+     VDOT 30 is about eighteen minutes of hard running -- the same stimulus a
+     well-trained runner gets from eight of them. */
+  add({
+    cat:'Intervals', name:'4 \u00d7 800 m',
+    desc:'Four 800 m reps at interval pace with two-minute jogs. A complete VO\u2082max session without the volume of the six-rep version.',
+    benefit:'Enough hard running to drive adaptation, few enough reps that form holds to the end. The right size for runners still building toward heavier interval work.',
+    structure:[ wu(12), {loop:[stepDistPace('800 m rep',800,P.interval[0],P.interval[1]), jog(2)], times:4}, cd(10) ],
+    lines:[ '12 min warm up', '4 \u00d7 [ 800 m @ ' + fmtBand(P.interval) + ' \u00b7 2:00 jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(4).fill(0).flatMap(()=>[['interval',distMins(800,P.interval)],['rest',2]]), ['easy',10] ]
+  });
+  add({
+    cat:'Intervals', name:'3 \u00d7 1 km',
+    desc:'Three kilometre reps at interval pace with three-minute jogs between.',
+    benefit:'Kilometre reps are long enough to settle into a rhythm, and three of them is a real session without being a punishing one. A sensible first step into classic interval training.',
+    structure:[ wu(12), {loop:[stepDistPace('1 km rep',1000,P.interval[0],P.interval[1]), jog(3)], times:3}, cd(10) ],
+    lines:[ '12 min warm up', '3 \u00d7 [ 1 km @ ' + fmtBand(P.interval) + ' \u00b7 3:00 jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(3).fill(0).flatMap(()=>[['interval',distMins(1000,P.interval)],['rest',3]]), ['easy',10] ]
+  });
+
+
+  /* ---- sessions for developing runners ----
+     Short enough at slower paces to be a real session rather than an ordeal.
+     A runner at VDOT 28 spends nearly five minutes on an 800, so four of them
+     is already eighteen minutes of hard running -- these keep the work in a
+     range that can actually be absorbed and repeated. */
+  add({
+    cat:'Intervals', name:'6 \u00d7 2 min Hard',
+    desc:'Six two-minute efforts at interval pace with two minutes of easy jogging between each. Timed rather than measured, so it works on any route.',
+    benefit:'Twelve minutes of hard running in bite-sized pieces. Time-based reps mean everyone does the same session regardless of speed \u2014 there is no rep that drags on because you are slower.',
+    structure:[ wu(12), {loop:[stepTimePace('2 min hard',2,P.interval[0],P.interval[1]), jog(2)], times:6}, cd(8) ],
+    lines:[ '12 min warm up', '6 \u00d7 [ 2 min @ ' + fmtBand(P.interval) + ' \u00b7 2 min jog ]', '8 min cool down' ],
+    blocks:[ ['easy',12], ...Array(6).fill(0).flatMap(()=>[['interval',2],['rest',2]]), ['easy',8] ]
+  });
+  add({
+    cat:'Speed & Track', name:'6 \u00d7 400 m',
+    desc:'Six 400 metre reps at rep pace with a full 90 seconds of recovery between each.',
+    benefit:'Short, sharp and forgiving. Generous recoveries keep every rep quick, which is the whole point \u2014 this is about running fast, not about surviving.',
+    structure:[ wu(12), {loop:[stepDistPace('400 m',400,P.rep[0],P.rep[1]), jog(1.5)], times:6}, cd(8) ],
+    lines:[ '12 min warm up', '6 \u00d7 [ 400 m @ ' + fmtBand(P.rep) + ' \u00b7 90 s jog ]', '8 min cool down' ],
+    blocks:[ ['easy',12], ...Array(6).fill(0).flatMap(()=>[['max',distMins(400,P.rep)],['rest',1.5]]), ['easy',8] ]
+  });
+  add({
+    cat:'Threshold', name:'12-Minute Tempo',
+    desc:'A single twelve-minute block at threshold pace, well warmed up either side.',
+    benefit:'The gentlest genuine threshold session in the library. Twelve minutes is long enough to matter and short enough that a developing runner finishes it in control rather than in pieces.',
+    structure:[ wu(12), stepTimePace('Tempo',12,P.tempo[0],P.tempo[1]), cd(10) ],
+    lines:[ '12 min warm up', '12 min tempo @ ' + fmtBand(P.tempo), '10 min cool down' ],
+    blocks:[ ['easy',12], ['tempo',12], ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'3 \u00d7 5 min Threshold',
+    desc:'Three five-minute threshold blocks with 90-second jogs between them.',
+    benefit:'Fifteen minutes of threshold work split into pieces short enough to hold the pace honestly. A sensible first structured threshold session.',
+    structure:[ wu(12), {loop:[stepTimePace('5 min threshold',5,P.tempo[0],P.tempo[1]), jog(1.5)], times:3}, cd(8) ],
+    lines:[ '12 min warm up', '3 \u00d7 [ 5 min @ ' + fmtBand(P.tempo) + ' \u00b7 90 s jog ]', '8 min cool down' ],
+    blocks:[ ['easy',12], ...Array(3).fill(0).flatMap(()=>[['tempo',5],['rest',1.5]]), ['easy',8] ]
+  });
+  add({
+    cat:'Fartlek', name:'8 \u00d7 1 min On / 1 min Easy',
+    desc:'Eight one-minute pickups with a minute of easy running between each. No pace targets \u2014 run the minute at an effort you could hold for about five.',
+    benefit:'An honest introduction to hard running that needs no track, no measuring and no watch-watching. The short pieces make it manageable for anybody.',
+    structure:[ wu(12), {loop:[stepTimeOpen('1 min on \u2014 strong',1,0), stepTimeOpen('1 min easy',1,1)], times:8}, cd(8) ],
+    lines:[ '12 min warm up', '8 \u00d7 [ 1 min strong \u00b7 1 min easy ]', '8 min cool down' ],
+    blocks:[ ['easy',12], ...Array(8).fill(0).flatMap(()=>[['interval',1],['rest',1]]), ['easy',8] ]
+  });
+
+  /* ---- sessions for well-trained runners ----
+     Faster athletes cover the same prescription in far less time, so the
+     workload has to grow to stay meaningful: a VDOT 60 runner finishes 5 x 1 km
+     in about fifteen minutes of work, which is a warm-up by their standards. */
+  add({
+    cat:'Intervals', name:'10 \u00d7 1 km',
+    desc:'Ten kilometre reps at interval pace with 90-second jog recoveries. A landmark session.',
+    benefit:'Ten kilometres of work at VO\u2082max intensity with short recoveries. This is a serious athlete\u2019s session \u2014 completing it in control says a great deal about your fitness.',
+    structure:[ wu(15), {loop:[stepDistPace('1 km rep',1000,P.interval[0],P.interval[1]), jog(1.5)], times:10}, cd(10) ],
+    lines:[ '15 min warm up', '10 \u00d7 [ 1 km @ ' + fmtBand(P.interval) + ' \u00b7 90 s jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(10).fill(0).flatMap(()=>[['interval',distMins(1000,P.interval)],['rest',1.5]]), ['easy',10] ]
+  });
+  add({
+    cat:'Intervals', name:'5 \u00d7 2 km Threshold',
+    desc:'Five two-kilometre blocks at threshold pace with two-minute jogs between.',
+    benefit:'Ten kilometres of threshold running. Long blocks, short recoveries \u2014 among the most productive sessions in distance training, and among the most demanding.',
+    structure:[ wu(15), {loop:[stepDistPace('2 km @ threshold',2000,P.tempo[0],P.tempo[1]), jog(2)], times:5}, cd(10) ],
+    lines:[ '15 min warm up', '5 \u00d7 [ 2 km @ ' + fmtBand(P.tempo) + ' \u00b7 2 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(5).fill(0).flatMap(()=>[['tempo',distMins(2000,P.tempo)],['rest',2]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'6 \u00d7 1 mile Threshold',
+    desc:'Six mile repetitions at threshold pace with two-minute jogs.',
+    benefit:'Nearly ten miles of quality inside one session. Mile repeats at threshold are the classic marathon-and-half staple for runners with the base to handle them.',
+    structure:[ wu(15), {loop:[stepDistPace('1 mile @ threshold',1609,P.tempo[0],P.tempo[1]), jog(2)], times:6}, cd(10) ],
+    lines:[ '15 min warm up', '6 \u00d7 [ 1 mile @ ' + fmtBand(P.tempo) + ' \u00b7 2 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(6).fill(0).flatMap(()=>[['tempo',distMins(1609,P.tempo)],['rest',2]]), ['easy',10] ]
+  });
+  add({
+    cat:'Speed & Track', name:'20 \u00d7 400 m',
+    desc:'Twenty 400 metre reps at rep pace with 60-second jog recoveries. The classic economy session, done properly.',
+    benefit:'Eight kilometres of fast running with minimal rest. Builds running economy and mental resilience in equal measure \u2014 the reps stay quick only if you stay relaxed.',
+    structure:[ wu(15), {loop:[stepDistPace('400 m',400,P.rep[0],P.rep[1]), jog(1)], times:20}, cd(10) ],
+    lines:[ '15 min warm up', '20 \u00d7 [ 400 m @ ' + fmtBand(P.rep) + ' \u00b7 60 s jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(20).fill(0).flatMap(()=>[['max',distMins(400,P.rep)],['rest',1]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'60-Minute Tempo',
+    desc:'A continuous hour at threshold pace. Only for runners for whom threshold is genuinely comfortable.',
+    benefit:'An hour at threshold is close to half-marathon race effort sustained for the full distance. The hardest continuous session in the library.',
+    structure:[ wu(15), stepTimePace('Tempo',60,P.tempo[0],P.tempo[1]), cd(10) ],
+    lines:[ '15 min warm up', '60 min tempo @ ' + fmtBand(P.tempo), '10 min cool down' ],
+    blocks:[ ['easy',15], ['tempo',60], ['easy',10] ]
+  });
+  add({
+    cat:'Intervals', name:'4 \u00d7 2 km',
+    desc:'Four two-kilometre reps at interval pace with three-minute jogs.',
+    benefit:'Eight kilometres at VO\u2082max intensity. Two-kilometre reps are long enough that pacing errors are punished, which makes them an excellent discipline session as well as a physiological one.',
+    structure:[ wu(15), {loop:[stepDistPace('2 km rep',2000,P.interval[0],P.interval[1]), jog(3)], times:4}, cd(10) ],
+    lines:[ '15 min warm up', '4 \u00d7 [ 2 km @ ' + fmtBand(P.interval) + ' \u00b7 3 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(4).fill(0).flatMap(()=>[['interval',distMins(2000,P.interval)],['rest',3]]), ['easy',10] ]
+  });
+
+
+  /* Second runs of the day. Recovery and easy versions come from the ladders
+     already in the library; the steady ones exist because a runner carrying
+     nine or ten hours a week can take a genuine second run rather than a
+     shuffle, and calling it "recovery" would misdescribe the effort. */
+  [40,45,50,60].forEach(m => add({
+    cat:'Endurance', name:'Steady Second Run ' + m + ' min', hidden:true,
+    desc:'A ' + m + '-minute second run, run at a comfortable steady effort rather than a shuffle.',
+    benefit:'At high weekly volume a second run is simply more aerobic work, and running it at steady rather than recovery pace makes it count for something. Only appropriate once the weekly load is genuinely high.',
+    structure:[ stepTimeHr('Steady',m,Z.z2[0],Z.z2[1],0,true) ],
+    lines:[ m + ' min steady \u00b7 Z2' ],
+    blocks:[ ['steady',m] ]
+  }));
+
+  /* extra recovery rungs so a second run can be sized to the gap the week has
+     rather than rounded to the nearest quarter hour */
+  [25,35,40,50].forEach(m => add({
+    cat:'Recovery', name:'Recovery ' + m + ' min',
+    desc:m + ' minutes at genuine recovery pace, capped at the bottom heart-rate zone.',
+    benefit:'Blood flow without load \u2014 easy volume that costs almost nothing to absorb, which is exactly what a second run of the day should be.',
+    structure:[ stepTimeHr('Easy jog',m,Z.z1[0],Z.z1[1],0) ],
+    lines:[ m + ' min very easy \u00b7 Z1' ],
+    blocks:[ ['rest',m] ]
+  }));
+
+
+  /* Half-marathon pace work. For a 1:25 runner threshold is close enough to
+     race pace to serve as a rehearsal; for a 2:15 runner it is a long way
+     faster than anything they'll hold on the day, and they never practise the
+     effort they're actually going to run. HM effort sits between steady and
+     threshold, so it's built from the midpoint of the two. */
+  const hmBand = [ (P.steady[0] + P.tempo[0]) / 2, (P.steady[1] + P.tempo[1]) / 2 ];
+  add({
+    cat:'Threshold', name:'3 \u00d7 4 km at Half Pace',
+    desc:'Three four-kilometre blocks at goal half-marathon effort with three minutes of easy jogging between.',
+    benefit:'Twelve kilometres at race effort. Threshold work sharpens the ceiling, but this is the pace you will actually hold on the day \u2014 and knowing what it feels like on tired legs is most of pacing a half well.',
+    structure:[ wu(15), {loop:[stepDistPace('4 km @ HM effort',4000,hmBand[0],hmBand[1]), jog(3)], times:3}, cd(10) ],
+    lines:[ '15 min warm up', '3 \u00d7 [ 4 km @ ' + fmtBand(hmBand) + ' \u00b7 3 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(3).fill(0).flatMap(()=>[['tempo',distMins(4000,hmBand)],['rest',3]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'2 \u00d7 6 km at Half Pace',
+    desc:'Two six-kilometre blocks at goal half-marathon effort, four minutes of jogging between them.',
+    benefit:'Longer blocks at race effort, closer to the sustained concentration the event asks for. The session that tells you whether your goal time is honest.',
+    structure:[ wu(15), {loop:[stepDistPace('6 km @ HM effort',6000,hmBand[0],hmBand[1]), jog(4)], times:2}, cd(10) ],
+    lines:[ '15 min warm up', '2 \u00d7 [ 6 km @ ' + fmtBand(hmBand) + ' \u00b7 4 min jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(2).fill(0).flatMap(()=>[['tempo',distMins(6000,hmBand)],['rest',4]]), ['easy',10] ]
+  });
+  add({
+    cat:'Threshold', name:'10 km at Half Pace',
+    desc:'A continuous ten kilometres at goal half-marathon effort after a full warm up.',
+    benefit:'Half the race distance at race effort, unbroken. Do this three weeks out and you will know exactly what you can hold.',
+    structure:[ wu(15), stepDistPace('10 km @ HM effort',10000,hmBand[0],hmBand[1]), cd(10) ],
+    lines:[ '15 min warm up', '10 km @ ' + fmtBand(hmBand), '10 min cool down' ],
+    blocks:[ ['easy',15], ['tempo',distMins(10000,hmBand)], ['easy',10] ]
+  });
+
   /* ---------- RECOVERY ---------- */
+  add({
+    cat:'Recovery', name:'Recovery 20 min',
+    desc:'Twenty very slow minutes. Pure active recovery, no effort at all.',
+    benefit:'The lightest run in the library. Used on days before or after high-intensity sessions when legs need to move but not work.',
+    structure:[ stepTimeHr('Easy jog',20,Z.z1[0],Z.z1[1],0) ],
+    lines:[ '20 min very easy \u00b7 Z1' ],
+    blocks:[ ['rest',20] ]
+  });
+  add({
+    cat:'Recovery', name:'Recovery 45 min',
+    desc:'Forty-five minutes at genuine recovery pace. Slow enough to feel almost embarrassingly easy.',
+    benefit:'The medium recovery session. For higher-volume runners who need more time on feet on their easy day without raising intensity.',
+    structure:[ stepTimeHr('Easy jog',45,Z.z1[0],Z.z1[1],0) ],
+    lines:[ '45 min very easy \u00b7 Z1' ],
+    blocks:[ ['rest',45] ]
+  });
+  add({
+    cat:'Recovery', name:'Recovery 60 min',
+    desc:'An hour at genuine recovery pace \u2014 easy enough that you finish feeling better than when you started.',
+    benefit:'For well-trained runners who maintain high weekly volume, an hour of real recovery running between hard sessions keeps the legs moving without digging into the adaptation debt.',
+    structure:[ stepTimeHr('Easy jog',60,Z.z1[0],Z.z1[1],0) ],
+    lines:[ '60 min very easy \u00b7 Z1' ],
+    blocks:[ ['rest',60] ]
+  });
+  add({
+    cat:'Recovery', name:'Recovery 75 min',
+    desc:'Seventy-five minutes at genuine recovery pace. Only for experienced runners with very high weekly volume.',
+    benefit:'Keeps training load high on recovery days without adding intensity. Used by marathon and ultra runners in peak build weeks where every day needs to contribute volume.',
+    structure:[ stepTimeHr('Easy jog',75,Z.z1[0],Z.z1[1],0) ],
+    lines:[ '75 min very easy \u00b7 Z1' ],
+    blocks:[ ['rest',75] ]
+  });
   add({
     cat:'Recovery', name:'Recovery 30 min',
     desc:'Thirty genuinely slow minutes capped at the bottom HR zone. Slower than feels natural \u2014 that\u2019s the point. Walk breaks are allowed.',
@@ -1554,7 +2008,60 @@ function makeSessions(P, Z){
     blocks:[ ['easy',30], ['steady',25], ['tempo',15], ['easy',7] ]
   });
 
-  /* ---- more recovery & testing ---- */
+  add({
+    cat:'Threshold', name:'50-Minute Tempo',
+    desc:'A continuous 50-minute block at threshold pace. A genuinely hard sustained effort \u2014 only attempt this once the 30-minute tempo feels well controlled.',
+    benefit:'The longest single-block threshold session in the library. Builds exceptional lactate-clearance capacity and is the closest a runner gets to an aerobic time trial without racing.',
+    structure:[ wu(15), stepTimePace('Tempo',50,P.tempo[0],P.tempo[1]), cd(10) ],
+    lines:[ '15 min warm up', '50 min tempo @ ' + fmtBand(P.tempo), '10 min cool down' ],
+    blocks:[ ['easy',15], ['tempo',50], ['easy',10] ]
+  });
+
+  add({
+    cat:'Threshold', name:'3 \u00d7 20 min Cruise',
+    desc:'Three 20-minute threshold blocks with 3-minute jogs \u2014 an hour of threshold work broken into manageable pieces. A serious session for well-trained runners.',
+    benefit:'The highest-volume threshold session in the library. Used in the final weeks of marathon and ultra preparation when fitness is established and the body can absorb it.',
+    structure:[ wu(12), {loop:[stepTimePace('Cruise 20 min',20,P.tempo[0],P.tempo[1]), jog(3)], times:3}, cd(10) ],
+    lines:[ '12 min warm up', '3 \u00d7 [ 20 min @ ' + fmtBand(P.tempo) + ' \u00b7 3:00 jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(3).fill(0).flatMap(()=>[['tempo',20],['rest',3]]), ['easy',10] ]
+  });
+
+  add({
+    cat:'Intervals', name:'8 \u00d7 1 km',
+    desc:'Eight 1 km reps at interval pace with 2-minute jog recoveries. Substantially more total VO\u2082max work than the classic 5 \u00d7 1 km \u2014 a session for runners with a proper base.',
+    benefit:'The high-volume version of the 5 \u00d7 1 km. The extra reps demand more from fat metabolism and build serious mental toughness late in the set.',
+    structure:[ wu(12), {loop:[stepDistPace('1 km rep',1000,P.interval[0],P.interval[1]), jog(2)], times:8}, cd(10) ],
+    lines:[ '12 min warm up', '8 \u00d7 [ 1 km @ ' + fmtBand(P.interval) + ' \u00b7 2:00 jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(8).fill(0).flatMap(()=>[['interval',distMins(1000,P.interval)],['rest',2]]), ['easy',10] ]
+  });
+
+  add({
+    cat:'Intervals', name:'6 \u00d7 1200 m',
+    desc:'Six 1200 m reps at interval pace with 3-minute jog recoveries. Long reps, serious work \u2014 each one is 5\u20137 minutes at near-maximal aerobic intensity.',
+    benefit:'Maximises time at VO\u2082max per session. The volume here matches what elite athletes use in heavy 5K/10K preparation. Only for runners who have built proper base.',
+    structure:[ wu(12), {loop:[stepDistPace('1200 m rep',1200,P.interval[0],P.interval[1]), jog(3)], times:6}, cd(10) ],
+    lines:[ '12 min warm up', '6 \u00d7 [ 1200 m @ ' + fmtBand(P.interval) + ' \u00b7 3:00 jog ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(6).fill(0).flatMap(()=>[['interval',distMins(1200,P.interval)],['rest',3]]), ['easy',10] ]
+  });
+
+  add({
+    cat:'Intervals', name:'5 \u00d7 1 mile',
+    desc:'Five mile reps at interval pace with 3-minute jog recoveries. The longest interval session in the library \u2014 each rep is 6\u20139 minutes at high aerobic intensity.',
+    benefit:'For experienced runners targeting 10K to marathon, this builds the specific endurance to hold quality over the race distance. A landmark session when you can complete it well.',
+    structure:[ wu(15), {loop:[stepDistPace('1 mile rep',1609,P.interval[0],P.interval[1]), jog(3)], times:5}, cd(10) ],
+    lines:[ '15 min warm up', '5 \u00d7 [ 1 mile @ ' + fmtBand(P.interval) + ' \u00b7 3:00 jog ]', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(5).fill(0).flatMap(()=>[['interval',distMins(1609,P.interval)],['rest',3]]), ['easy',10] ]
+  });
+
+  add({
+    cat:'Fartlek', name:'Easy Run + 12 Strides',
+    desc:'40 minutes easy, then twelve 20-second strides with a minute\'s jog between \u2014 the higher-volume version of the strides session for runners who can absorb more.',
+    benefit:'More strides means more neuromuscular stimulus without any real fatigue cost. Good for runners who find 6 strides too short to feel like they\'ve done anything.',
+    structure:[ stepTimeHr('Easy run',40,Z.z1[0],Z.z2[1],0), {loop:[stepTimeOpen('Stride 20 s',1/3,0), stepTimeOpen('Walk / jog',1,1)], times:12}, cd(5) ],
+    lines:[ '40 min easy \u00b7 easy HR', '12 \u00d7 [ 20 s stride \u00b7 1:00 easy ]', '5 min cool down' ],
+    blocks:[ ['easy',40], ...Array(12).fill(0).flatMap(()=>[['max',.33],['rest',1]]), ['easy',5] ]
+  });
+
   add({
     cat:'Recovery', name:'20-Minute Shakeout',
     desc:'A short, very easy 20 minutes with four relaxed strides at the end. Legs turning over, effort minimal. Ideal the day before a race or hard session.',
@@ -1589,20 +2096,42 @@ function makeSessions(P, Z){
     blocks:[ ['easy',15], ['easy',3], ['max',distMins(10000,P.tempo)], ['easy',10] ]
   });
   add({
+    cat:'Testing', name:'5K Race',
+    desc:'A proper warm up with a few strides, then a lap-press while you get into the pen and wait for the gun, then 5 km flat out.',
+    benefit:'The event itself as a file on your wrist. The prep step means the clock starts when the race does, not when you finish warming up \u2014 so your splits are the race, not the jog to the start.',
+    structure:[ wu(15), {loop:[stepTimeOpen('Stride 20 s',1/3,0), stepTimeOpen('Walk back',1,1)], times:3},
+                stepLapOpen('In the pen \u2014 press lap on the gun'),
+                stepDistOpen('5 km \u2014 race',5000,0), cd(10) ],
+    lines:[ '15 min warm up', '3 \u00d7 [ 20 s stride \u00b7 walk back ]', 'On the start line \u2014 press lap on the gun', '5 km race', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(3).fill(0).flatMap(()=>[['max',.33],['rest',1]]), ['easy',2], ['max',22], ['easy',10] ]
+  });
+  add({
+    cat:'Testing', name:'10K Race',
+    desc:'Warm up thoroughly with strides, lap-press on the start line, then 10 km at race effort.',
+    benefit:'The event as a structured file. A 10K needs a real warm up \u2014 you are running near threshold from the first kilometre, and there is no easing into it.',
+    structure:[ wu(15), {loop:[stepTimeOpen('Stride 20 s',1/3,0), stepTimeOpen('Walk back',1,1)], times:3},
+                stepLapOpen('On the line \u2014 press lap on the gun'),
+                stepDistOpen('10 km \u2014 race',10000,0), cd(10) ],
+    lines:[ '15 min warm up', '3 \u00d7 [ 20 s stride \u00b7 walk back ]', 'On the start line \u2014 press lap on the gun', '10 km race', '10 min cool down' ],
+    blocks:[ ['easy',15], ...Array(3).fill(0).flatMap(()=>[['max',.33],['rest',1]]), ['easy',2], ['max',distMins(10000,P.tempo)], ['easy',10] ]
+  });
+  add({
     cat:'Testing', name:'Half Marathon Race',
-    desc:'A short warm up, 21.1 km at goal effort, then walk. Pace it from your calibrated bands and hold something back for the last 5 km.',
+    desc:'A short warm up, a lap-press while you wait for the start, then 21.1 km at goal effort. Pace it from your calibrated bands and hold something back for the last 5 km.',
     benefit:'The event itself, delivered to your watch as a structured file. Also a superb marathon-fitness gauge if you\u2019re using it as a tune-up race.',
-    structure:[ wu(10), stepDistOpen('Half marathon \u2014 race',21097,0), cd(10) ],
-    lines:[ '10 min warm up', '21.1 km at goal effort', '10 min walk / jog' ],
-    blocks:[ ['easy',10], ['max',distMins(21097,P.tempo)], ['easy',10] ]
+    structure:[ wu(10), stepLapOpen('On the line \u2014 press lap on the gun'),
+                stepDistOpen('Half marathon \u2014 race',21097,0), cd(10) ],
+    lines:[ '10 min warm up', 'On the start line \u2014 press lap on the gun', '21.1 km at goal effort', '10 min walk / jog' ],
+    blocks:[ ['easy',10], ['easy',2], ['max',distMins(21097,P.tempo)], ['easy',10] ]
   });
   add({
     cat:'Testing', name:'Marathon Race',
-    desc:'A brief jog to loosen up, then 42.2 km. Start slower than feels right, fuel from the first hour, and race the last 10 km rather than the first.',
+    desc:'A brief jog to loosen up, a lap-press in the start pen, then 42.2 km. Start slower than feels right, fuel from the first hour, and race the last 10 km rather than the first.',
     benefit:'The event itself as a file on your wrist. The warm-up is deliberately short \u2014 on marathon morning you want every match in your pocket.',
-    structure:[ wu(5), stepDistOpen('Marathon \u2014 race',42195,0), cd(10) ],
-    lines:[ '5 min gentle warm up', '42.2 km at goal effort', '10 min walk' ],
-    blocks:[ ['easy',5], ['max',distMins(42195,P.steady)], ['easy',10] ]
+    structure:[ wu(5), stepLapOpen('In the pen \u2014 press lap on the gun'),
+                stepDistOpen('Marathon \u2014 race',42195,0), cd(10) ],
+    lines:[ '5 min gentle warm up', 'On the start line \u2014 press lap on the gun', '42.2 km at goal effort', '10 min walk' ],
+    blocks:[ ['easy',5], ['easy',3], ['max',distMins(42195,P.steady)], ['easy',10] ]
   });
   add({
     cat:'Testing', name:'50K Ultra',
@@ -1654,12 +2183,27 @@ let state = null; // {vdot, paces, zones, sessions, filter}
 
 const CATS = ['All','Intervals','Threshold','Speed & Track','Hills','Fartlek','Endurance','Testing'];
 
+const DUR_FILTERS = [
+  { label:'Any length', min:0, max:9999 },
+  { label:'Under 45 min', min:0, max:45 },
+  { label:'45–60 min', min:45, max:60 },
+  { label:'60–75 min', min:60, max:75 },
+  { label:'75 min+', min:75, max:9999 }
+];
+
 function renderFilters(){
   $('filters').innerHTML = CATS.map(c =>
     `<button class="chip" data-cat="${c}" aria-pressed="${state && state.filter===c ? 'true':'false'}">${c}</button>`).join('');
   $('filters').querySelectorAll('.chip').forEach(b => b.onclick = () => {
     if (!state) return;
     state.filter = b.dataset.cat;
+    renderFilters(); renderGrid();
+  });
+  $('dur-filters').innerHTML = DUR_FILTERS.map((f,i) =>
+    `<button class="chip chip-sm" data-dur="${i}" aria-pressed="${state && (state.durFilter||0)===i ? 'true':'false'}">${f.label}</button>`).join('');
+  $('dur-filters').querySelectorAll('.chip-sm').forEach(b => b.onclick = () => {
+    if (!state) return;
+    state.durFilter = +b.dataset.dur;
     renderFilters(); renderGrid();
   });
 }
@@ -1707,10 +2251,39 @@ const LIB_HIDE_TESTING = new Set(['Half Marathon Race', 'Marathon Race',
                                   '50K Ultra', '50 Mile Ultra', '100K Ultra', '100 Mile Ultra']);
 function isLibraryWorkout(s){
   if (s.hidden) return false;                          // already-hidden ladder rungs
+  if (s.cat === 'Beginner') return false;             // the C25K programme has its own tab
   if (s.cat === 'Recovery') return false;             // recovery isn't a session
   if (s.cat === 'Endurance') return LIB_KEEP_ENDURANCE.has(s.name);
   if (s.cat === 'Testing')  return !LIB_HIDE_TESTING.has(s.name);
   return true;                                        // Intervals, Threshold, Speed, Hills, Fartlek
+}
+
+
+/* Ordering the library so it reads sensibly rather than in the order sessions
+   happened to be written. Sessions are grouped into families -- all the mile
+   reps together, all the tempos together -- and each family is ordered from
+   the gentlest version to the hardest, so the progression is visible at a
+   glance and picking a step up or down is obvious. */
+function sessionFamily(s){
+  const n = s.name
+    .replace(/^\d+\s*\u00d7\s*/, '')            // drop a leading rep count
+    .replace(/^\d+[-\u2013]?/, '')                // drop a leading number
+    .replace(/\d+/g, '#')                        // normalise remaining numbers
+    .trim().toLowerCase();
+  return s.cat + '|' + n;
+}
+function librarySorted(list){
+  const fam = {};
+  list.forEach(s => { (fam[sessionFamily(s)] = fam[sessionFamily(s)] || []).push(s); });
+  // families ordered by their easiest member, sessions within a family by load
+  return Object.values(fam)
+    .map(g => g.sort((a,b) => (qualityWorkMins(a) - qualityWorkMins(b)) || (sessionMins(a.blocks) - sessionMins(b.blocks))))
+    .sort((a,b) => {
+      const c = CATS.indexOf(a[0].cat) - CATS.indexOf(b[0].cat);
+      if (c) return c;
+      return (qualityWorkMins(a[0]) - qualityWorkMins(b[0])) || a[0].name.localeCompare(b[0].name);
+    })
+    .flat();
 }
 
 function renderGrid(){
@@ -1718,12 +2291,18 @@ function renderGrid(){
   if (!state){ grid.innerHTML=''; $('locked').style.display='block'; return; }
   $('locked').style.display='none';
   const q = (state.query || '').trim().toLowerCase();
+  const df = DUR_FILTERS[state.durFilter || 0];
   const list = state.sessions.filter(s => {
     if (!isLibraryWorkout(s)) return false;
     if (state.filter !== 'All' && s.cat !== state.filter) return false;
+    if (df.min > 0 || df.max < 9999){
+      const tot = sessionMins(s.blocks);
+      if (tot < df.min || tot > df.max) return false;
+    }
     if (!q) return true;
     return (s.name + ' ' + s.cat + ' ' + s.desc + ' ' + s.benefit).toLowerCase().includes(q);
   });
+  librarySorted(list).forEach((s,i) => { list[i] = s; });   // group families, easiest first
   const cnt = document.getElementById('lib-count');
   if (cnt) cnt.textContent = list.length + (list.length === 1 ? ' session' : ' sessions');
   if (!list.length){
@@ -1999,13 +2578,18 @@ function calibrate(){
   const fail = m => { err.textContent = m; err.classList.add('show'); };
   if (!t || t < 200) return fail('Enter a finish time as mm:ss (e.g. 26:57) or h:mm:ss.');
   const paceSecKm = t/(distM/1000);
-  if (paceSecKm < 150 || paceSecKm > 720) return fail('That works out to an unlikely pace \u2014 check the distance and time match.');
+  /* A 65-minute 5K is a real result and a real starting point. The old ceiling
+     of 12:00/km turned those runners away at the door. The %max curve gets
+     shakier for efforts much over half an hour, which the note below says. */
+  if (paceSecKm < 150 || paceSecKm > 960) return fail('That works out to an unlikely pace \u2014 check the distance and time match.');
   if (!maxHr || maxHr < 120 || maxHr > 230) return fail('Enter a max heart rate between 120 and 230 bpm.');
 
   const vdot = vdotFromRace(distM, t);
   const paces = buildPaces(vdot);
   const zones = buildHrZones(maxHr);
   state = { vdot, paces, zones, maxHr, benchDist: distM, benchTime: t, sessions: makeSessions(paces, zones), filter: state ? state.filter : 'All' };
+  // the beginner sessions are pace-free, so they join the library unchanged
+  state.sessions = state.sessions.concat(c25kSessions());
   state.byName = {};
   state.sessions.forEach((s, i) => { state.byName[s.name] = i; });
   renderPaces(); renderFilters(); renderGrid();
@@ -2038,7 +2622,7 @@ $('lib-q').addEventListener('input', e => {
    12-WEEK PLAN BUILDER
    Periodised block: Foundation -> Development -> Sharpening -> Taper.
    Places the long run on the chosen day, spaces quality sessions with
-   easy/recovery between them, inserts a down week every 4th week, and
+   easy/recovery between them, eases off roughly every fourth week (shifting that week when it would otherwise land just before your biggest long run), and
    references real library sessions so paces + .FIT flow straight through.
    =================================================================== */
 'use strict';
@@ -2064,29 +2648,29 @@ const BASE = {
 // the race; any time beyond that becomes base building. Session pools shift the
 // emphasis toward the demands of each distance.
 const RACE = {
-  '5k': { longPeak:90, label:'5K', spec:12, taper:1, tt:'5K Benchmark Test', race:'5K Benchmark Test',
-    devPrimary:   ['5 \u00d7 3 min Hard','6 \u00d7 800 m','5 \u00d7 1 km Classic','8 \u00d7 600 m','Pace Pyramid \u2014 up and down the gears'],
-    devSecondary: ['20-Minute Tempo','3 \u00d7 10 min Cruise','6 \u00d7 3 min Tempo Intervals','Gears \u2014 6 min Progression'],
+  '5k': { longPeak:90, label:'5K', spec:12, taper:1, tt:'5K Benchmark Test', race:'5K Race',
+    devPrimary:   ['5 \u00d7 3 min Hard','6 \u00d7 800 m','5 \u00d7 1 km Classic','8 \u00d7 600 m','Pace Pyramid \u2014 up and down the gears','6 \u00d7 2 min Hard','6 \u00d7 400 m','8 \u00d7 1 min On / 1 min Easy','4 \u00d7 2 km','20 \u00d7 400 m'],
+    devSecondary: ['20-Minute Tempo','3 \u00d7 10 min Cruise','6 \u00d7 3 min Tempo Intervals','Gears \u2014 6 min Progression','12-Minute Tempo','3 \u00d7 5 min Threshold','2 \u00d7 20 min Threshold'],
     specPrimary:  ['12 \u00d7 400 m','Cutdown 1600-1200-800-400','Pyramid 400-800-1200-800-400','Cut-Down 5 \u00d7 400 m','5 \u00d7 1 km Classic','8 \u00d7 600 m'],
-    specSecondary:['20-Minute Tempo','Mona Fartlek','10 \u00d7 1 min On / 1 min Float'],
+    specSecondary:['20-Minute Tempo','Mona Fartlek','10 \u00d7 1 min On / 1 min Float','12-Minute Tempo','3 \u00d7 5 min Threshold','5 \u00d7 2 km Threshold'],
     longPool:     ['Long Run 75 min','Long Run + Tempo Finish'] },
-  '10k': { longPeak:105, label:'10K', spec:12, taper:1, tt:'10K Time Trial', race:'10K Time Trial',
-    devPrimary:   ['6 \u00d7 800 m','5 \u00d7 1 km Classic','4 \u00d7 1200 m','5 \u00d7 3 min Hard','Pace Pyramid \u2014 up and down the gears'],
-    devSecondary: ['20-Minute Tempo','30-Minute Tempo','3 \u00d7 10 min Cruise','Gears \u2014 6 min Progression'],
+  '10k': { longPeak:105, label:'10K', spec:12, taper:2, tt:'10K Time Trial', race:'10K Race',
+    devPrimary:   ['6 \u00d7 800 m','5 \u00d7 1 km Classic','4 \u00d7 1200 m','5 \u00d7 3 min Hard','Pace Pyramid \u2014 up and down the gears','6 \u00d7 2 min Hard','4 \u00d7 800 m','4 \u00d7 2 km','10 \u00d7 1 km'],
+    devSecondary: ['20-Minute Tempo','30-Minute Tempo','3 \u00d7 10 min Cruise','Gears \u2014 6 min Progression','12-Minute Tempo','3 \u00d7 5 min Threshold','5 \u00d7 2 km Threshold','6 \u00d7 1 mile Threshold'],
     specPrimary:  ['5 \u00d7 1 km Classic','4 \u00d7 1200 m','3 \u00d7 1 mile','Cutdown 1600-1200-800-400','Cut-Down 5 \u00d7 400 m'],
-    specSecondary:['30-Minute Tempo','4 \u00d7 8 min Threshold','20-Minute Tempo'],
+    specSecondary:['30-Minute Tempo','4 \u00d7 8 min Threshold','20-Minute Tempo','3 \u00d7 5 min Threshold','5 \u00d7 2 km Threshold','60-Minute Tempo'],
     longPool:     ['Long Run 75 min','Long Run 90 min','Long Run + Tempo Finish'] },
-  'half': { longPeak:135, label:'Half', spec:14, taper:1, tt:'Half Marathon Race', race:'Half Marathon Race',
-    devPrimary:   ['5 \u00d7 1 km Classic','4 \u00d7 1200 m','3 \u00d7 1 mile'],
-    devSecondary: ['30-Minute Tempo','4 \u00d7 8 min Threshold','2 \u00d7 15 min Cruise'],
-    specPrimary:  ['3 \u00d7 1 mile','4 \u00d7 1200 m','Marathon-Pace 50 min','Progressive Long Run'],
-    specSecondary:['30-Minute Tempo','4 \u00d7 8 min Threshold','Long Run + Tempo Finish'],
+  'half': { longPeak:135, label:'Half', spec:14, taper:2, tt:'Half Marathon Race', race:'Half Marathon Race',
+    devPrimary:   ['5 \u00d7 1 km Classic','4 \u00d7 1200 m','3 \u00d7 1 mile','8 \u00d7 1 km','6 \u00d7 1200 m','3 \u00d7 1 km','4 \u00d7 800 m'],
+    devSecondary: ['30-Minute Tempo','4 \u00d7 8 min Threshold','2 \u00d7 15 min Cruise','50-Minute Tempo','3 \u00d7 20 min Cruise','20-Minute Tempo','4 \u00d7 10 min Threshold','2 \u00d7 20 min Threshold'],
+    specPrimary:  ['3 \u00d7 4 km at Half Pace','2 \u00d7 6 km at Half Pace','10 km at Half Pace','4 \u00d7 10 min Threshold','2 \u00d7 20 min Threshold','5 \u00d7 2 km Threshold','6 \u00d7 1 mile Threshold','3 \u00d7 1 mile','4 \u00d7 1200 m','3 \u00d7 1 km'],
+    specSecondary:['30-Minute Tempo','4 \u00d7 8 min Threshold','Long Run + Tempo Finish','50-Minute Tempo','20-Minute Tempo','3 \u00d7 5 min Threshold','60-Minute Tempo'],
     longPool:     ['Long Run 90 min','Progressive Long Run','Long Run + Tempo Finish'] },
   'marathon': { longPeak:180, label:'Marathon', spec:16, taper:2, tt:'Marathon Race', race:'Marathon Race',
-    devPrimary:   ['4 \u00d7 1200 m','3 \u00d7 1 mile','5 \u00d7 1 km Classic'],
-    devSecondary: ['30-Minute Tempo','4 \u00d7 8 min Threshold','Marathon-Pace 50 min'],
-    specPrimary:  ['Marathon-Pace 50 min','Progressive Long Run','Long Run + Tempo Finish'],
-    specSecondary:['30-Minute Tempo','4 \u00d7 8 min Threshold','Long Run 90 min'],
+    devPrimary:   ['4 \u00d7 1200 m','3 \u00d7 1 mile','5 \u00d7 1 km Classic','6 \u00d7 1200 m','8 \u00d7 1 km','5 \u00d7 1 mile','4 \u00d7 800 m','3 \u00d7 1 km','2 \u00d7 6 km Marathon Pace','6 \u00d7 1 mile Threshold'],
+    devSecondary: ['30-Minute Tempo','4 \u00d7 8 min Threshold','Marathon-Pace 50 min','50-Minute Tempo','3 \u00d7 20 min Cruise'],
+    specPrimary:  ['Marathon-Pace 50 min','2 \u00d7 6 km Marathon Pace','3 \u00d7 5 km Marathon Pace','Alternations \u2014 2 km MP / 1 km steady','5 \u00d7 1 mile','4 \u00d7 10 min Threshold','6 \u00d7 1 mile Threshold'],
+    specSecondary:['30-Minute Tempo','4 \u00d7 8 min Threshold','Long Run 90 min','50-Minute Tempo','20-Minute Tempo','3 \u00d7 5 min Threshold','60-Minute Tempo','6 \u00d7 1 mile Threshold'],
     longPool:     ['Long Run 90 min','Progressive Long Run','Long Run + Tempo Finish'] },
 
   /* --- ULTRAS ---
@@ -2095,7 +2679,7 @@ const RACE = {
      economy and leg strength rather than to sharpen for a fast finish. Long
      peaks are in minutes; back-to-back weekends switch on as the distance
      grows (handled in the plan builder). Longer specific blocks, longer tapers. */
-  '50k': { ultra:true, longPeak:210, b2bPeak:0, label:'50K', spec:14, taper:2, tt:'Marathon Race', race:'50K Ultra',
+  '50k': { ultra:true, longPeak:210, b2bPeak:75, label:'50K', spec:14, taper:2, tt:'Marathon Race', race:'50K Ultra',
     devPrimary:   ['5 \u00d7 2 min Hills','6 \u00d7 90 s Long Hills','4 \u00d7 1200 m','Rolling Hills 35 min'],
     devSecondary: ['30-Minute Tempo','4 \u00d7 8 min Threshold','Marathon-Pace 50 min'],
     specPrimary:  ['Rolling Hills 35 min','Marathon-Pace 50 min','Progressive Long Run','6 \u00d7 90 s Long Hills'],
@@ -2131,7 +2715,66 @@ function retestSession(){
 
 /* How much weekly volume a block should add by its peak. A 5K block barely
    needs to grow; a marathon block nearly doubles. Conservative on purpose. */
-const BUILD_FACTOR = { '5k':1.25, '10k':1.35, 'half':1.55, 'marathon':1.85,
+/* Which race distances are built on medium-long runs. A 5K runner is better
+   served by another easy day plus quality; from the half upward the midweek
+   endurance run is the backbone of the block. */
+const WANTS_MEDLONG = new Set(['half','marathon','50k','50mi','100k','100mi']);
+
+/* ---- what the athlete is actually training FOR ----
+   Availability is not the same as ambition. Somebody coming back from a break
+   who can free up seven days does not want to run seven days; somebody chasing
+   a personal best on the same seven days does. Intent decides how hard the plan
+   leans on the time available -- how fast volume grows, how eagerly extra days
+   get used, how much quality the week carries, and how big the hard sessions
+   get. It is the difference between a plan that respects a modest goal and one
+   that assumes everybody wants to race. */
+const INTENTS = {
+  finish:  { label:'Finish comfortably', growth:0.55, comfortRun:125, qCap:1, workScale:0.75, weeklyRate:0.025,
+             blurb:'Get round in one piece. Volume grows gently, one quality session a week at most, and the plan uses fewer of your available days.' },
+  improve: { label:'Progression',        growth:1.00, comfortRun:95,  qCap:2, workScale:1.00, weeklyRate:0.038,
+             blurb:'Steady, balanced progress. The default \u2014 real training without pushing the edges.' },
+  pb:      { label:'Chase a PB',         growth:1.30, comfortRun:75,  qCap:2, workScale:1.15, weeklyRate:0.048,
+             blurb:'Maximise what your time allows. Volume climbs harder, sessions run longer, and the plan will use every day you give it.' }
+};
+const intentOf = () => INTENTS[planState.intent] || INTENTS.improve;
+
+
+
+/* How much running a week is genuinely ENOUGH for each goal at each intent.
+
+   This is the number that should drive a plan, not a blanket multiplier. A
+   runner doing two hours a week over four days can already finish a 5K
+   comfortably -- telling them to add volume serves the model, not the runner.
+   The same runner chasing a personal best is a different question entirely.
+   Where somebody already runs enough, the block holds their volume steady and
+   spends its effort on the quality of the work instead. */
+const SUFFICIENT = {
+  '5k':       { finish: 90,  improve:180, pb:300 },
+  '10k':      { finish:120,  improve:230, pb:360 },
+  'half':     { finish:180,  improve:300, pb:430 },
+  'marathon': { finish:270,  improve:390, pb:540 },
+  '50k':      { finish:330,  improve:450, pb:600 },
+  '50mi':     { finish:400,  improve:540, pb:700 },
+  '100k':     { finish:460,  improve:620, pb:800 },
+  '100mi':    { finish:540,  improve:720, pb:900 }
+};
+const sufficientMins = () => {
+  const row = SUFFICIENT[planState.goal];
+  return row ? (row[planState.intent] || row.improve) : 300;
+};
+
+/* And how long the long run needs to get. Three hours is what a marathon PB
+   asks for; it is not what somebody aiming to finish one needs, and pretending
+   otherwise just makes the plan look unreachable. Ultras keep more of their
+   peak even at the gentler intents, because time on feet IS the event. */
+const longPeakFor = (prof) => {
+  const f = planState.intent === 'pb' ? 1
+          : planState.intent === 'finish' ? (prof.ultra ? 0.88 : 0.78)
+          : (prof.ultra ? 0.96 : 0.92);
+  return snapRung(prof.longPeak * f);
+};
+
+const BUILD_FACTOR = { '5k':1.40, '10k':1.48, 'half':1.62, 'marathon':1.85,
                        '50k':2.0, '50mi':2.2, '100k':2.4, '100mi':2.6 };
 /* A long run should not swallow the week. The 30-35% guideline assumes you run
    most days; on three run days the long run is legitimately a bigger slice of a
@@ -2145,27 +2788,137 @@ const LONG_SHARE_CAP = 0.35;
    The 30-35% guideline assumes you run five or six days. Run three times a week
    and the long run is legitimately a bigger slice of a smaller pie, so the cap
    scales with how often you run. */
-const longShareCap = () => {
-  // ultras are built around one dominant long effort (plus its back-to-back),
-  // so the long run is legitimately a much larger slice of the week
+/* A long run should not swallow the week -- but what counts as "swallowing"
+   depends far more on how much you run than on how many days you run it over.
+   Ninety minutes out of a four-hour week is a perfectly normal long run for a
+   low-mileage runner; ninety minutes out of a ten-hour week would mean the rest
+   of the week was barely doing anything. So the share scales down as volume
+   rises, with a small allowance for the fact that more running days give more
+   places to put the miles. */
+const longShareCap = (weekMins) => {
   if (raceProfile().ultra) return 0.60;
+  const m = weekMins || 300;
+  const byVolume = m < 240 ? 0.46
+                 : m < 360 ? 0.42
+                 : m < 480 ? 0.37
+                 : m < 660 ? 0.33
+                 :           0.30;
   const n = runDaysOf().length;
-  return n >= 5 ? 0.35 : (n === 4 ? 0.40 : 0.48);
+  /* Fewer running days means fewer places to put the volume, so the long run is
+     legitimately a bigger slice; more days means it needn't carry as much. */
+  const byDays = n <= 3 ? 0.06 : n === 4 ? 0.02 : n === 5 ? -0.015 : -0.03;
+  return byVolume + byDays;
 };
 
-const durOf = n => (state && state.byName && state.byName[n] != null)
-  ? sessionMins(state.sessions[state.byName[n]].blocks) : 0;
 
-/* Weekly running minutes the plan is aiming for, built from what the athlete
-   actually runs today rather than from an assumed starting point. */
+/* Sessions come from the calibrated library when it exists, and from the
+   beginner set otherwise -- so a Couch to 5K plan can be built, charted and
+   exported before the athlete has any benchmark to calibrate from. */
+function sessionByName(n){
+  if (state && state.byName && state.byName[n] != null) return state.sessions[state.byName[n]];
+  return C25K_BY_NAME[n] || null;
+}
+const durOf = n => { const s = sessionByName(n); return s ? sessionMins(s.blocks) : 0; };
+
+/* --- how many days should THIS week run? ---
+   The day grid is a ceiling, not an instruction. Two things decide how much of
+   it gets used: where the athlete is starting from, and whether the week's
+   volume actually needs another day.
+
+   A runner going from 3 days to 5 shouldn't jump on week one -- frequency and
+   volume rising together is how people get hurt. So the plan ramps frequency
+   across the base and early development weeks, then holds it steady while the
+   work gets harder.
+
+   On top of that ramp, a day is only used if the volume needs it: if the week's
+   target divides into comfortable runs across fewer days, fewer days are used.
+   Someone running 4h over 3 days is doing 80-minute runs, which is fine -- they
+   don't need a fourth day until the average would get uncomfortable. */
+/* Above this average, a week wants another running day. Intent moves it: a
+   runner just wanting to finish is happy with longer, fewer runs; someone
+   chasing a time wants the volume spread over more days. */
+const COMFORTABLE_RUN = 95;
+const comfortableRun = () => intentOf().comfortRun;
+
+function daysForWeek(w, N, volumeSoFar, curDays, availDays, phaseEnd){
+  if (availDays <= curDays) return availDays;
+  // ramp finishes by the end of base, or a third of the way in if there's no base
+  const rampEnd = Math.max(2, Math.min(phaseEnd || Math.ceil(N/3), Math.ceil(N/2)));
+  const frac    = Math.min(1, (w - 1) / Math.max(1, rampEnd - 1));
+  const ramped  = Math.round(curDays + frac * (availDays - curDays));
+  /* The volume gate uses the highest target the plan has reached so far, not
+     this week's. A recovery week means shorter runs, not one fewer running day
+     -- dropping a day and putting it back the following week would make the
+     shape of the athlete's week flicker for no training reason. */
+  const needed  = Math.max(curDays, Math.ceil(volumeSoFar / comfortableRun()));
+  return Math.max(curDays, Math.min(availDays, ramped, Math.max(needed, curDays)));
+}
+/* Where does progression come from for this athlete? Average session length
+   tells you: a 6-day runner at 60 min a session has room to add minutes; a
+   3-day runner already averaging two hours does not, and has to progress by
+   making the work inside those runs harder instead. */
+function growthHeadroom(currentMins, curDays){
+  const avg = currentMins / Math.max(1, curDays);
+  if (avg < 55)  return 1.00;   // short sessions: full volume growth available
+  if (avg < 85)  return 0.85;   // mixed
+  if (avg < 115) return 0.65;   // quality-led: duration nearly capped
+  return 0.45;                  // at the practical ceiling of a single run
+}
 function weeklyTargets(N, specEnd, taperWeeks, prof, isDownWeek, currentMins){
-  const peak = Math.round(currentMins * (BUILD_FACTOR[planState.goal] || 1.3));
-  const span = Math.max(1, specEnd - 1);
+  /* The race distance says how much MORE volume this athlete should be doing by
+     race day. How much of that they can actually absorb depends on how their
+     current volume is spread: someone running 6 hours over six days has room in
+     every session, while someone running the same 6 hours over three days is
+     already doing two-hour runs and has almost none. The second athlete still
+     improves -- but through the quality of the work, not the clock. */
+  /* What this athlete actually needs to run for this goal at this intent. If
+     they already do that much, the block holds volume where it is and the work
+     goes into the sessions -- more running is not automatically better
+     training, and someone comfortably running enough for a 5K does not need to
+     be told to run more to finish one. */
+  const enough     = sufficientMins();
+  const headroom   = growthHeadroom(currentMins, planState.currentDays || 3);
+  const rawWanted  = enough / Math.max(1, currentMins);
+  /* Even a runner who already runs enough needs a little room. The long run
+     doubles across a block whatever the weekly total does, and if the total is
+     pinned exactly flat those extra long-run minutes have to be taken off the
+     midweek runs -- so the medium-long run shrinks while the long run grows,
+     which is backwards. A modest allowance funds the long run's growth without
+     turning a "hold steady" block into a build. */
+  const HELD_ALLOWANCE = 1.12;
+  const wanted     = Math.max(HELD_ALLOWANCE, 1 + (rawWanted - 1) * headroom);
+  /* Volume can only grow as fast as the weeks allow. An eight-week block asking
+     for a marathon's worth of build would need about 8% more running every
+     week, which is how people get hurt; a thirty-week block can reach the same
+     place at a stroll. So the growth the race wants is capped by what the block
+     length can safely deliver, and the plan says so rather than quietly
+     over-reaching. */
+  const buildWeeks = Math.max(1, specEnd - 1);
+  const safeRate   = intentOf().weeklyRate;
+  const affordable = Math.pow(1 + safeRate, buildWeeks);
+  const growth     = Math.min(wanted, affordable);
+  const peak = Math.round(currentMins * growth);
   const out = [0];
+  // how long a block would have to be to reach what the distance actually asks
+  out.growthWanted = wanted;
+  out.growthUsed   = growth;
+  out.sufficient   = enough;
+  out.volumeHeld   = wanted <= HELD_ALLOWANCE + 0.01;
+  out.weeksForFull = (wanted > affordable + 0.01)
+    ? Math.ceil(Math.log(wanted) / Math.log(1 + safeRate)) + 1 + taperWeeks
+    : null;
+  const span = Math.max(1, specEnd - 1);
   for (let w=1; w<=N; w++){
     if (w > specEnd){
       const idx = w - specEnd;
-      out[w] = Math.round(peak * ((taperWeeks === 2 && idx === 1) ? 0.65 : 0.42));
+      /* Taper depth. The old numbers dropped to ~42% of peak (and lower once
+         easy runs hit their floor), which leaves runners flat rather than
+         fresh. Around 80/60/40% over three weeks, 75/55% over two, is the
+         standard shape. */
+      const taperFrac = taperWeeks >= 3 ? [0.80, 0.60, 0.45]
+                      : taperWeeks === 2 ? [0.75, 0.52]
+                      : [0.60];
+      out[w] = Math.round(peak * (taperFrac[idx-1] !== undefined ? taperFrac[idx-1] : taperFrac[taperFrac.length-1]));
       continue;
     }
     let t = currentMins + ((w-1)/span) * (peak - currentMins);
@@ -2190,27 +2943,34 @@ function longCapacity(cap){
   if (nRun < 2) return LONG_RUNGS[0];
   const q = (nRun >= 4) ? 2 : (nXt >= 2 ? 2 : 1);
   const easyDays = Math.max(0, nRun - 1 - q);
-  // everything in the week that isn't the long run: quality, easy days, bike
-  const rest = q * 60 + easyDays * 50 + nXt * XT_MINS;   // easy days include 30-min recovery jogs
+  /* The most the rest of the week could hold if every other day ran at its
+     practical ceiling. This is a shape limit, not a volume one: it stops a
+     two-run week claiming a three-hour long run, without second-guessing a
+     six-day week that genuinely has room for one. */
+  const rest = q * 95 + easyDays * EASY_RUNGS[EASY_RUNGS.length-1] + nXt * XT_MINS;
   return Math.max(LONG_RUNGS[0], cap * rest / (1 - cap));
 }
 
 function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
   // start where the athlete already is, peak where the goal needs -- but never
   // beyond what this week shape or this athlete's volume can support
-  const cap   = longShareCap();
-  const start = Math.max(LONG_RUNGS[0], snapRung(Math.min(60, Math.max(targets[1] * cap, LONG_RUNGS[0]))));
+  // the cap is evaluated at the volume it applies to: the opening week for the
+  // starting rung, the peak week for the ceiling
+  const capStart = longShareCap(targets[1]);
+  const cap      = longShareCap(targets.peak);
+  const start = Math.max(LONG_RUNGS[0], snapRung(Math.min(60, Math.max(targets[1] * capStart, LONG_RUNGS[0]))));
   const byVolume = snapRung(targets.peak * cap);      // limited by weekly hours
   const byShape  = snapRung(longCapacity(cap));       // limited by the week's shape
-  const peak  = Math.max(start, Math.min(prof.longPeak, byVolume, byShape));
+  const goalLong = longPeakFor(prof);
+  const peak  = Math.max(start, Math.min(goalLong, byVolume, byShape));
   // Which limit actually bit? Adding running days only relieves the shape limit;
   // if weekly volume is what's holding the long run back, more days achieve
   // nothing and the athlete needs to raise the hours they start from.
-  const limitedBy = (peak >= prof.longPeak - 5) ? null
+  const limitedBy = (peak >= goalLong - 5) ? null
                   : (byVolume <= byShape ? 'volume' : 'shape');
   const span = Math.max(1, specEnd - 1);
   const out = [0];
-  let lastBuild = 0;
+  let lastBuild = 0, bound = 0;
   for (let w = 1; w <= N; w++){
     if (w > specEnd){
       const idx = w - specEnd;                    // 1 = first taper week
@@ -2225,6 +2985,14 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
     }
     const target = start + ((w - 1) / span) * (peak - start);
     let m = Math.min(snapRung(target), peak);
+    /* Also hold each week's long run to a sensible share of THAT week's volume.
+       Without this an early week can carry a long run sized for the peak, which
+       is how you end up with a 95-minute long run in a two-hour week. The bound
+       only ever rises (it tracks the running maximum), so the long run still
+       climbs monotonically. */
+    const wkCap = snapRung((targets[w] || 0) * longShareCap(targets[w]));
+    bound = Math.max(bound, wkCap);
+    m = Math.min(m, Math.max(bound, LONG_RUNGS[0]));
     // never below where the build has already reached: the long run climbs,
     // even if only five minutes at a time
     m = Math.max(m, lastBuild);
@@ -2246,8 +3014,8 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
 const NOT_LOAD = ['xt','race','timetrial','bRace','cRace'];
 /* Days that carry real intensity, and so must not sit next to each other. */
 const HARDK = ['primary','secondary','long','longdown','retest','bRace','cRace'];
-const cellsMins = cells => cells.reduce((a,c) => a + (NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name)), 0);
-const trainingMins = cells => cells.reduce((a,c) => a + (c.kind === 'xt' ? XT_MINS : (NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name))), 0);
+const cellsMins = cells => cells.reduce((a,c) => a + (NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name)) + (c.double ? c.double.mins : 0), 0);
+const trainingMins = cells => cells.reduce((a,c) => a + (c.kind === 'xt' ? XT_MINS : (NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name))) + (c.double ? c.double.mins : 0), 0);
 
 /* Enforce the long-run share against what the week ACTUALLY totals, not against
    a target the week may be unable to reach. Stepping the long run down always
@@ -2260,7 +3028,7 @@ function capLongShare(cells){
     const tot = cellsMins(cells);
     if (!tot) break;
     const lm = durOf(cells[li].name);
-    if (lm / tot <= longShareCap() + 0.01) break;
+    if (lm / tot <= longShareCap(tot) + 0.01) break;
     const rung = parseInt(cells[li].name.replace(/\D+/g,''), 10);
     const i = LONG_RUNGS.indexOf(rung);
     if (i <= 0) break;                          // already at the shortest rung
@@ -2318,15 +3086,109 @@ function trimWeekTo(cells, maxMins){
 /* Size the easy runs so the week lands near its volume target. This is what
    turns a list of sessions into a week with a planned load, and it is where
    the mid-week medium-long run comes from in half and marathon blocks. */
+
+/* Race week has the right total but needs the right shape.
+
+   Spreading the target evenly gives three identical 80-minute runs with the
+   last of them two days before a marathon -- correct volume, badly distributed.
+   The days closest to the race have to be the smallest, so each flexible day is
+   weighted by how far it sits from race day and the whole week is scaled to
+   land on target. Anything inside the final two days becomes a short shakeout. */
+function shapeRaceWeek(cells, targetMins, raceIdx){
+  if (!state || raceIdx == null) return cells;
+  const flex = cells.map((c,i) => ['easy','recovery','medlong','shakeout'].includes(c.kind) ? i : -1).filter(i => i >= 0);
+  if (!flex.length) return cells;
+  const fixed = cells.reduce((a,c,i) => a + (NOT_LOAD.includes(c.kind) || flex.includes(i) ? 0 : durOf(c.name)), 0);
+  const remain = Math.max(0, targetMins - fixed);
+  // weight by days out from the race: the further away, the bigger the run
+  const weightOf = i => {
+    const out = raceIdx - cells[i].idx;
+    if (out <= 1) return 0.35;          // day before: shakeout only
+    if (out === 2) return 0.6;
+    return Math.min(2.2, 0.8 + 0.35 * out);
+  };
+  const total = flex.reduce((a,i) => a + weightOf(i), 0);
+  const out = cells.slice();
+  flex.forEach(i => {
+    const want = total ? remain * weightOf(i) / total : 0;
+    const c = cells[i];
+    const daysOut = raceIdx - c.idx;
+    if (daysOut >= 0 && daysOut <= 1){
+      out[i] = { ...c, kind:'shakeout', name:'20-Minute Shakeout' };
+      return;
+    }
+    if (c.kind === 'recovery' || want < 35){
+      const m = [20,25,30,35,40,45].reduce((a,b) => Math.abs(b-want) < Math.abs(a-want) ? b : a);
+      out[i] = { ...c, kind:'recovery', name:'Recovery ' + m + ' min' };
+    } else {
+      /* Even the furthest day from the race stays modest: race week is for
+         arriving fresh, not for a last block of volume. */
+      out[i] = { ...c, kind:'easy', name: easyName(snapEasy(Math.max(EASY_RUNGS[0], Math.min(60, want)))) };
+    }
+  });
+  return out;
+}
+
 function fitEasyRuns(cells, targetMins){
   if (!state) return cells;
-  const easyIdx = cells.map((c,i) => c.kind === 'easy' ? i : -1).filter(i => i >= 0);
-  if (!easyIdx.length) return cells;
-  const fixed = cells.reduce((a,c) => a + (c.kind === 'easy' || NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name)), 0);
-  const per = (targetMins - fixed) / easyIdx.length;
-  const m = snapEasy(Math.max(EASY_RUNGS[0], Math.min(EASY_RUNGS[EASY_RUNGS.length-1], per)));
+  const easyIdx     = cells.map((c,i) => c.kind === 'easy'     ? i : -1).filter(i => i >= 0);
+  const recoveryIdx = cells.map((c,i) => c.kind === 'recovery' ? i : -1).filter(i => i >= 0);
+  const medIdx      = cells.map((c,i) => c.kind === 'medlong'  ? i : -1).filter(i => i >= 0);
+  if (!easyIdx.length && !recoveryIdx.length && !medIdx.length) return cells;
+  // fixed load = everything the week can't resize
+  const NOT_FLEX = [...NOT_LOAD, 'easy', 'recovery', 'medlong'];
+  const fixed = cells.reduce((a,c) => a + (NOT_FLEX.includes(c.kind) ? 0 : durOf(c.name)), 0);
+  const remain = targetMins - fixed;
+  /* The flexible days share what's left, weighted by what each is for: a
+     medium-long run should be roughly twice an easy run, and a recovery jog a
+     quarter of one. Solving it as weighted shares rather than fixed sizes lets
+     the same week shape serve a three-hour runner and an eight-hour one. */
+  /* Weights for sharing out the week's flexible minutes. Recovery used to be
+     weighted so far below the rest that it took the entire squeeze whenever the
+     long run grew -- collapsing to its floor while the medium-long run inflated
+     to its cap. A recovery run is shorter than an easy run, not a token. */
+  const W_EASY = 4, W_MED = 6, W_REC = 2.5;
+  const easyCount = easyIdx.length, recCount = recoveryIdx.length, medCount = medIdx.length;
+  const totalW = easyCount * W_EASY + medCount * W_MED + recCount * W_REC;
+  const per = w => totalW ? remain * w / totalW : 0;
+  /* Nothing flexible may outgrow the long run. An "easy" day that runs longer
+     than the week's long run is a contradiction, and it happens easily when a
+     big target has only one easy slot to pour the remainder into. */
+    const longCell = cells.find(c => c.kind === 'long' || c.kind === 'longdown');
+  const longMins = longCell ? durOf(longCell.name) : Infinity;
+  const easyCap  = Math.min(EASY_RUNGS[EASY_RUNGS.length-1], longMins);
+  const medCap   = Math.min(MEDLONG_RUNGS[MEDLONG_RUNGS.length-1], longMins);
+  /* The day before the long run is held to an hour however much volume is
+     going spare: two big days back to back is how the long run gets ruined. */
+  const PRE_LONG_CAP = 60;
+  const preIdx  = easyIdx.filter(i => cells[i].preLong);
+  const freeIdx = easyIdx.filter(i => !cells[i].preLong);
+  const easyMinsFor = i => cells[i].preLong ? Math.min(easyMinsFree, PRE_LONG_CAP) : easyMinsFree;
+  // solve the free slots first, then hand the capped ones whatever they can take
+  const freeW  = freeIdx.length * W_EASY + medCount * W_MED + recCount * W_REC;
+  const preUse = preIdx.length * Math.min(PRE_LONG_CAP, EASY_RUNGS[0] + 20);
+  const remainFree = Math.max(0, remain - preUse);
+  const perFree = w => freeW ? remainFree * w / freeW : 0;
+  const easyMinsFree = snapEasy(Math.max(EASY_RUNGS[0], Math.min(easyCap, perFree(W_EASY))));
+  const easyMins = easyMinsFree;
+  const medMins  = snapMedLong(Math.max(MEDLONG_RUNGS[0], Math.min(medCap, perFree(W_MED))));
+  const RECOVERY_RUNGS = [20, 30, 45, 60, 75];
+  const snapRec = m => RECOVERY_RUNGS.reduce((a,b) => Math.abs(b-m) < Math.abs(a-m) ? b : a);
+  /* A recovery run has a job and a size. Once the week is stripped back --
+     taper weeks especially -- the weighted share can push it to its ceiling,
+     and two consecutive 75-minute Z1 runs are easy runs wearing the wrong
+     label. Cap recovery at 45 minutes when the week has an easy run that could
+     carry the volume instead. */
+  /* Two 75-minute Z1 runs in a row are easy runs wearing the wrong label. Cap
+     recovery whenever the week has somewhere else for the volume to go -- an
+     easy run, or simply a second recovery cell sharing the load. */
+  const recCeiling = (easyCount || recCount > 1) ? 45 : 75;
+  const recMins  = snapRec(Math.max(25, Math.min(recCeiling, perFree(W_REC))));
+  const recName  = n => 'Recovery ' + n + ' min';
   const out = cells.slice();
-  easyIdx.forEach(i => { out[i] = { ...out[i], name: easyName(m) }; });
+  easyIdx.forEach(i     => { out[i] = { ...out[i], name: easyName(snapEasy(easyMinsFor(i))) }; });
+  medIdx.forEach(i      => { out[i] = { ...out[i], name: medLongName(medMins) }; });
+  recoveryIdx.forEach(i => { out[i] = { ...out[i], name: recName(recMins) }; });
   return out;
 }
 
@@ -2344,19 +3206,20 @@ const PHASE_META = {
    piece of judgement applied: strength stays off the day before the long run,
    because heavy legs and a long run make a bad pair. Labels and guidance change
    per day; the scheduling itself does not -- an XT day is an XT day. */
+/* Cross-training is one thing as far as the plan is concerned: aerobic work
+   that isn't running. Whether that's a bike, a swim, a rower or a session in
+   the gym is the athlete's business -- the plan can't sensibly prescribe it and
+   naming it added a setting without adding any information. What matters is
+   which days it falls on and how long it lasts, and both of those are still
+   set. */
 const XT_TYPES = {
-  bike:     { label:'Bike / Zwift',  short:'bike',  target:'easy \u00b7 Z1\u2013Z2' },
-  strength: { label:'Strength',      short:'gym',   target:'full body \u00b7 controlled' },
-  swim:     { label:'Swim',          short:'swim',  target:'easy \u00b7 technique focus' },
-  row:      { label:'Rowing',        short:'row',   target:'easy \u00b7 Z1\u2013Z2' }
+  xt: { label:'Cross-training', short:'XT', target:'easy aerobic \u00b7 your choice' }
 };
-const xtSelected = () => (Array.isArray(planState.xtTypes) && planState.xtTypes.length)
-  ? planState.xtTypes.filter(t => XT_TYPES[t])
-  : ['bike'];
-const xtMetaOf = c => XT_TYPES[(c && c.xtKind)] || XT_TYPES[xtSelected()[0]] || XT_TYPES.bike;
+const xtSelected = () => ['xt'];
+const xtMetaOf = () => XT_TYPES.xt;
 let planState = { dayMode:['off','run','off','run','off','run','run'], longDay:6, raceDate:null, goal:'5k', planType:'road',
-                  xtTypes:['bike'], baseWeeks:0, speedDay:-1,
-                  currentMins:180, xtMins:45, races:[], overrides:{}, flips:{}, done:{}, generated:null };
+                  xtTypes:['xt'], baseWeeks:null, speedDay:-1, doubles:false, intent:'improve',
+                  currentMins:180, currentDays:3, xtMins:45, races:[], overrides:{}, flips:{}, done:{}, generated:null };
 // "any" days are counted as run days for capacity (long-run share, frequency),
 // since the plan will lean on them for running whenever the week needs it
 const runDaysOf = () => planState.dayMode.map((m,i)=>(m==='run'||m==='any')?i:-1).filter(i=>i>=0);
@@ -2412,16 +3275,100 @@ function pickQualityDays(available, longDay, count){
   return best.slice().sort((a,b) => dayDist(b,longDay) - dayDist(a,longDay));
 }
 
-function resolveName(kind, phase, weekNo, prof){
+/* How much genuinely hard running a session contains -- the minutes spent at
+   tempo pace or faster, ignoring warm-up, jogs and cool-down. */
+/* A minute at threshold and a minute at VO2max are not the same purchase.
+   Weighting them equally meant the workload matcher's window (target +/- 4 min)
+   could never admit a 30-minute tempo or 4 x 10 min threshold, so half and
+   marathon blocks silently became 5K blocks. Threshold now counts at a bit over
+   half an interval minute, which is roughly its relative cost. */
+const WORK_WEIGHT = { steady:0.5, tempo:0.55, interval:1, max:1 };
+function qualityWorkMins(s){
+  if (!s || !s.blocks) return 0;
+  /* Steady (marathon-pace) running counts, but at a discount: an hour at
+     marathon pace is real work and shouldn't read as zero, yet it is plainly
+     more sustainable per minute than an hour at threshold. Without the
+     discount the matcher would hand marathon-pace blocks to every athlete as
+     if they were free. */
+  return s.blocks.reduce((a,[lvl,m]) => a + m * (WORK_WEIGHT[lvl] || 0), 0);
+}
+
+/* The same prescription is a very different session at different abilities: six
+   800s takes a VDOT 25 runner about twenty-seven minutes of hard running and a
+   VDOT 65 runner about thirteen. The slower athlete is doing twice the work
+   from the same line on the page, which is backwards -- they can absorb less,
+   not more. So the plan aims each athlete at a sensible amount of hard running
+   and picks the session from the pool that lands closest to it. */
+function targetWorkMins(){
+  const v = (state && state.vdot) ? state.vdot : 40;
+  return Math.max(9, Math.min(34, (11 + (v - 28) * 0.42) * intentOf().workScale));
+}
+
+function resolveName(kind, phase, weekNo, prof, longCapMins){
   prof = prof || raceProfile();
-  const pick = pool => pool[weekNo % pool.length];
+  /* Rotate through the pool for variety, but bias the choice toward sessions
+     whose workload suits the athlete: the pool is ordered by how far each
+     session sits from the right amount of hard running, then the usual
+     week-by-week rotation runs over the better-matched half. */
+  const fitsLong = n => {
+    if (!longCapMins) return true;
+    const s = sessionByName(n);
+    return !s || sessionMins(s.blocks) <= longCapMins;
+  };
+  const pick = pool => {
+    if (!state || !pool || !pool.length) return pool[weekNo % Math.max(1,pool.length)];
+    if (pool.length < 2) return fitsLong(pool[0]) ? pool[0] : shortestOf(pool);
+    const target = targetWorkMins();
+    const scored = pool
+      .map(n => ({ n, d: Math.abs(qualityWorkMins(sessionByName(n)) - target) }))
+      .sort((a,b) => a.d - b.d);
+    /* Keep the sessions that genuinely suit this athlete -- everything within a
+       few minutes of the right workload -- and fall back to the closest three
+       if the pool has nothing that near. Three is enough that the block still
+       varies week to week without drifting into sessions that are the wrong
+       size for the runner doing them. */
+    /* Sustained sessions get a wider window. A 4-minute tolerance is right for
+       reps, where a couple of extra intervals changes the session's character;
+       it is far too tight for threshold blocks, where 26 versus 16 work-minutes
+       is a difference of degree. Without this the biggest threshold sessions in
+       a pool could never be selected at all. */
+    const sustained = n => { const s = sessionByName(n); return s && ['Threshold','Endurance'].includes(s.cat); };
+    /* Race-pace rehearsals are exempt from the workload budget entirely. Their
+       size is set by the event -- 10 km at half-marathon effort is 10 km at
+       half-marathon effort -- so measuring them against a "minutes of hard
+       running" target just rules them out for everyone, which is exactly what
+       happened to the half-pace sessions when they were first added. */
+    const raceSpecific = n => /at Half Pace|Marathon Pace|Marathon-Pace|Alternations/.test(n);
+    const near = scored.filter(x => raceSpecific(x.n) || x.d <= (sustained(x.n) ? 10 : 4)).map(x => x.n);
+    let keep = near.length >= 3 ? near : scored.slice(0, 3).map(x => x.n);
+    /* A midweek session must never be longer than the week's long run. Without
+       this, fast-finish and progressive long runs -- which live in the marathon
+       pools legitimately -- get placed on a Thursday alongside the weekend long
+       run, and the week overshoots its target by half. */
+    if (longCapMins){
+      const fits = keep.filter(n => { const s = sessionByName(n); return !s || sessionMins(s.blocks) <= longCapMins; });
+      if (fits.length) keep = fits;
+      else {
+        // nothing in the window fits: take the shortest thing in the whole pool
+        const byLen = pool.slice().sort((a,b) => {
+          const sa = sessionByName(a), sb = sessionByName(b);
+          return (sa ? sessionMins(sa.blocks) : 0) - (sb ? sessionMins(sb.blocks) : 0);
+        });
+        keep = [byLen[0]];
+      }
+    }
+    return keep[weekNo % keep.length];
+  };
   switch(kind){
     case 'long':      return phase === 'base' ? pick(BASE.longPool) : pick(prof.longPool);
     case 'longdown':  return phase === 'base' ? 'Easy Aerobic 60 min' : 'Long Run 75 min';
     case 'b2b':       return b2bName(90);
     case 'easy':      return 'Easy Aerobic 40 min';
     case 'recovery':  return 'Recovery 30 min';
-    case 'xt':        return XT_TYPES[xtSelected()[0]].label;
+    case 'shakeout':  return '20-Minute Shakeout';
+    case 'medlong':   return medLongName(MEDLONG_RUNGS[0]);
+    case 'c25k':      return '';   // beginner cells carry their own name
+    case 'xt':        return XT_TYPES.xt.label;
     case 'strides':   return 'Easy Run + 6 Strides';
     case 'sharpener': return '8 \u00d7 200 m';
     case 'primary':   return phase === 'base' ? pick(BASE.primary)
@@ -2441,6 +3388,9 @@ function kindColor(kind, phase){
     case 'b2b':       return 'var(--lv-steady)';
     case 'easy':
     case 'strides':   return 'var(--lv-easy)';
+    case 'shakeout':  return 'var(--lv-rest)';
+    case 'medlong':   return 'var(--lv-steady)';
+    case 'c25k':      return 'var(--lv-steady)';
     case 'recovery':  return 'var(--lv-rest)';
     case 'xt':        return 'var(--xt)';
     case 'secondary': return 'var(--lv-tempo)';
@@ -2467,6 +3417,9 @@ function kindTarget(kind, phase, cell){
     case 'longdown':  return 'easy \u00b7 HR band';
     case 'b2b':       return 'very easy \u00b7 HR band';
     case 'easy':      return 'easy';
+    case 'shakeout':  return 'very easy \u00b7 loosen off';
+    case 'medlong':   return 'easy to steady \u00b7 HR band';
+    case 'c25k':      return 'run/walk \u00b7 easy effort, no pace target';
     case 'recovery':  return 'very easy';
     case 'strides':   return 'easy + 6 strides';
     case 'race':      return (state && state.goalTime && state.goalDist === RACE_DIST_M[planState.goal])
@@ -2480,22 +3433,132 @@ function kindTarget(kind, phase, cell){
   return '';
 }
 
+
+/* ---- double days ----
+   A second short run on a day that already has one. Genuinely useful, and
+   genuinely easy to get wrong: filling every spare slot with a junk jog is how
+   plans get people injured. So doubles are opt-in, only offered to athletes
+   with the volume and frequency to absorb them, and placed sparingly.
+
+   The second run is always a short recovery jog, never quality. It goes on
+   easy or medium-long days only -- never the long run, never a hard session,
+   never the day before the long run -- and never on consecutive days. */
+const DOUBLE_MIN_MINS = 360;   // 6 hours a week
+const DOUBLE_MIN_DAYS = 5;
+function doublesEligible(){
+  const goalOk = WANTS_MEDLONG.has(planState.goal);   // half upward
+  return goalOk
+      && (planState.currentMins || 0) >= DOUBLE_MIN_MINS
+      && runDaysOf().length >= DOUBLE_MIN_DAYS;
+}
+
+/* What the second run of the day actually is.
+
+   Not every double is a shuffle round the block. On a day whose main session
+   was hard, the second run is genuine recovery and nothing else. But on an easy
+   or medium-long day, an athlete carrying eight or ten hours a week can take a
+   proper second easy run, and once the week is big enough a steady second run
+   is a normal part of the load rather than an indulgence. Sizing follows the
+   gap the week actually has to fill. */
+const DOUBLE_RUNGS = [20,25,30,35,40,45,50,60];   // every one exists as a session
+const snapDouble = m => DOUBLE_RUNGS.reduce((a,b) => Math.abs(b-m) < Math.abs(a-m) ? b : a);
+function doubleSessionFor(cell, need, weekMins){
+  const mins = snapDouble(Math.max(20, Math.min(60, need)));
+  const afterHard = ['primary','secondary','retest'].includes(cell.kind);
+  if (afterHard)          return { mins, name:'Recovery ' + Math.min(mins,45) + ' min', kind:'recovery' };
+  if (weekMins >= 540 && mins >= 40)
+                          return { mins, name:'Steady Second Run ' + mins + ' min', kind:'steady' };
+  if (mins >= 35)         return { mins, name:easyName(mins), kind:'easy' };
+  return { mins, name:'Recovery ' + mins + ' min', kind:'recovery' };
+}
+
+function addDoubles(weeks, targets){
+  if (!doublesEligible()) return weeks;
+  weeks.forEach(wk => {
+    if (wk.isDown || wk.isTaper) return;
+    /* Normally doubles are earned rather than given, so they stay out of the
+       base phase. The exception is an athlete who ALREADY runs this much: a
+       ten-hour week doesn't stop being ten hours because it's week one, and
+       refusing to double there just produces a plan that can't hold the volume
+       the runner already does. */
+    const alreadyThere = (planState.currentMins || 0) >= DOUBLE_MIN_MINS;
+    if (wk.phase === 'base' && !alreadyThere) return;
+    const longCell = wk.cells.find(c => c.kind === 'long' || c.kind === 'longdown');
+    const longIdx  = longCell ? longCell.idx : -1;
+    const target = targets[wk.w] || 0;
+    let shortfall = target - cellsMins(wk.cells);
+    /* Doubles are automatic once the week genuinely cannot hold its volume in
+       single runs -- at eight or ten hours across seven days there is no honest
+       alternative. Below that they only appear if the athlete asked for them. */
+    const forced = shortfall >= 45;
+    if (!forced && !planState.doubles) return;
+    if (shortfall < 30) return;
+    const cand = wk.cells.filter(c =>
+      ['easy','medlong','primary','secondary'].includes(c.kind) &&
+      !c.preLong &&
+      c.idx !== longIdx &&
+      dayDist(c.idx, longIdx) >= 2);
+    if (!cand.length) return;
+    /* Put the second run on the LIGHTEST days first. Sorting by session type
+       alone meant a 120-minute medium-long day could pick up another hour while
+       two 20-minute jogs sat untouched either side of it -- the opposite of
+       spreading the load. */
+    cand.sort((a,b) => durOf(a.name) - durOf(b.name));
+    // a very short week may want two doubles; never more
+    const maxDoubles = shortfall >= 100 ? 2 : 1;
+    /* Doubling the same day every week is good -- it becomes a routine. What
+       must not happen is two doubles on days next to each other, which stacks
+       the load instead of spreading it. */
+    let placed = 0; const usedDays = [];
+    for (const day of cand){
+      if (placed >= maxDoubles || shortfall < 30) break;
+      if (usedDays.some(d => dayDist(d, day.idx) < 2)) continue;
+      const sess = doubleSessionFor(day, shortfall / (maxDoubles - placed), target);
+      day.double = sess;
+      shortfall -= sess.mins;
+      usedDays.push(day.idx);
+      placed++;
+    }
+  });
+  return weeks;
+}
+
 function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDayIdx, isTimeTrial, prof, longMins, targetMins){
   const cells = {};
   runAv.forEach(d => cells[d] = { kind:'easy' });
 
   if (isTaper){
-    const sorted = runAv.slice().sort((a,b)=>a-b);
-    if (sorted.length) cells[sorted[0]] = { kind:'sharpener' };
-    // first week of a two-week taper still carries a reduced long run
-    if (longMins > 0 && longDay !== raceDayIdx && cells[longDay]) cells[longDay] = { kind:'long' };
+    /* Order matters here. Carve out the race day and its rest day FIRST, then
+       place the sharpener on a day that survives. Doing it the other way round
+       put the sharpener on the earliest run day and then deleted that same day
+       as the pre-race rest -- which, with a midweek race, could empty the whole
+       week except the race itself. */
     if (raceDayIdx != null){
       cells[raceDayIdx] = { kind: isTimeTrial ? 'timetrial' : 'race' };
       const before = (raceDayIdx+6)%7;
-      if (cells[before] && cells[before].kind !== 'race' && cells[before].kind !== 'timetrial') delete cells[before]; // rest day before
-      // nothing prescribed after race day in race week
-      for (let d = raceDayIdx+1; d <= 6; d++) delete cells[d];
+      const preRace = runAv.filter(d => d < raceDayIdx);
+      /* The day before the race: a shakeout if it's the only running day left
+         before race morning (better than nothing at all), otherwise a rest day. */
+      if (cells[before] && !['race','timetrial'].includes(cells[before].kind)){
+        if (preRace.length <= 1) cells[before] = { kind:'shakeout' };
+        else delete cells[before];
+      }
+      // clear the two days immediately after the race...
+      for (let d = raceDayIdx+1; d <= Math.min(6, raceDayIdx+1); d++) delete cells[d];
+      for (let d = raceDayIdx+2; d <= 6; d++) delete cells[d];
+      /* ...then give back the first available day two clear days later as an
+         easy jog. An empty second half of race week is not a taper, it's a gap. */
+      const after = runAv.find(d => d >= raceDayIdx + 2);
+      if (after != null) cells[after] = { kind:'recovery' };
+
     }
+    // the sharpener goes on the earliest SURVIVING run day, two clear days out
+    const openDays = runAv.filter(d => cells[d] && !['race','timetrial','recovery'].includes(cells[d].kind)
+                                    && (raceDayIdx == null || dayDist(d, raceDayIdx) >= 2));
+    if (openDays.length) cells[openDays[0]] = { kind:'sharpener' };
+    // first week of a two-week taper still carries a reduced long run
+    if (longMins > 0 && longDay !== raceDayIdx && cells[longDay]
+        && !['race','timetrial','sharpener'].includes(cells[longDay].kind)) cells[longDay] = { kind:'long' };
   } else {
     cells[longDay] = { kind: isDown ? 'longdown' : 'long' };
     const runDays = runAv.length;
@@ -2510,6 +3573,12 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
     else if (runDays === 4) q = (phase === 'base') ? 1 : 2;
     else if (runDays === 3) q = (xtDays >= 2 && phase !== 'base') ? 2 : 1;
     else                    q = 1;
+    // intent caps how much quality the week carries
+    q = Math.min(q, intentOf().qCap);
+    /* On two running days the long run is one of them, so a second quality
+       session would mean the athlete never runs easy at all. One quality day
+       plus the long run is the only sane shape. */
+    if (runAv.length <= 2) q = Math.min(q, 1);
     // down weeks: one quality session keeps the intensity, volume comes down
     if (isDown) q = 1;
     // a small week can't carry two quality sessions and a long run as well
@@ -2536,11 +3605,49 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
       if (gap < 2){ q = 1; qd = pickQualityDays(runAv, longDay, 1); }
     }
     qd.forEach((d,i) => { cells[d] = { kind: i === 0 ? 'primary' : 'secondary' }; });
-    // day after any hard run day becomes recovery
-    [longDay, ...qd].forEach(h => {
-      const nxt = (h+1)%7;
-      if (cells[nxt] && cells[nxt].kind === 'easy') cells[nxt] = { kind:'recovery' };
-    });
+    /* The day after the long run is genuine recovery. The day after a quality
+       session is an EASY run -- that is what easy running is for. Typing every
+       post-hard day as recovery meant a well-spaced five-day week ended up with
+       no easy runs in it at all, and the whole week's aerobic volume collapsed
+       into 20-minute shuffles. */
+    const afterLong = (longDay+1)%7;
+    if (cells[afterLong] && cells[afterLong].kind === 'easy') cells[afterLong] = { kind:'recovery' };
+    /* Mark the day before the long run. It stays an easy run -- the week needs
+       the volume -- but it gets capped short when the sizing happens, so you
+       don't end up with a two-hour easy run the day before a three-hour long
+       run. */
+    const eve = (longDay+6)%7;
+    if (cells[eve] && cells[eve].kind === 'easy') cells[eve].preLong = true;
+    /* The midweek medium-long run.
+
+       Half and marathon fitness is built on this far more than on a second
+       interval session, so from the development phase onward it TAKES the
+       secondary quality slot rather than competing for a leftover easy day.
+       That slot is already positioned with proper spacing from the long run,
+       and the result is the week those distances are actually trained on:
+       one quality session, one medium-long run, one long run.
+
+       Base weeks keep both quality sessions -- that phase is for building the
+       engine that the endurance work will later use. */
+    /* Only once the long run is clearly the biggest day of the week: early on,
+       when the long run is barely over an hour, a "medium-long" run would be
+       the same size as it, which makes the label meaningless. */
+    const wantsMed = WANTS_MEDLONG.has(planState.goal) && !isDown && !isTaper
+                     && phase !== 'base' && targetMins >= 240
+                     && longMins >= MEDLONG_RUNGS[0] + 10;
+    if (wantsMed){
+      const sec = runAv.find(d => cells[d] && cells[d].kind === 'secondary');
+      if (sec != null){
+        cells[sec] = { kind:'medlong' };
+      } else {
+        // no second quality day to convert: take a spare easy day if one sits
+        // far enough from the long run to be worth running long on
+        const spare = runAv
+          .filter(d => cells[d] && cells[d].kind === 'easy' && dayDist(d, longDay) >= 2 && d !== (longDay+1)%7)
+          .sort((a,b) => dayDist(b, longDay) - dayDist(a, longDay));
+        if (spare.length) cells[spare[0]] = { kind:'medlong' };
+      }
+    }
     // base phase: turn one leftover easy day into strides
     if (phase === 'base'){
       const e = runAv.find(d => cells[d] && cells[d].kind === 'easy');
@@ -2557,28 +3664,28 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
   const raceCut = (isTaper && raceDayIdx != null) ? raceDayIdx : 99;
   xtAv.forEach(d => { if (!cells[d] && d < raceCut) cells[d] = { kind:'xt' }; });
 
-  // spread the chosen cross-training types across this week's XT days,
-  // rotating the starting type week by week for variety. Strength stays off
-  // the day before the long run when there's an alternative to give it.
-  const sel = xtSelected();
-  const xtIdxs = Object.keys(cells).map(Number).filter(d => cells[d].kind === 'xt').sort((a,b)=>a-b);
-  xtIdxs.forEach((d, i) => {
-    let t = sel[(i + weekNo) % sel.length];
-    if (t === 'strength' && sel.length > 1 && d === longDay - 1){
-      t = sel.find(x => x !== 'strength') || t;
-    }
-    cells[d].xtKind = t;
-  });
+  /* Cross-training in race week is load like any other. An hour on the bike two
+     days before a marathon costs freshness and buys nothing, so anything within
+     three days of the race goes and at most one cross-training day survives. */
+  if (raceDayIdx != null){
+    const xtDays = Object.keys(cells).map(Number)
+      .filter(d => cells[d].kind === 'xt')
+      .sort((a,b) => dayDist(b, raceDayIdx) - dayDist(a, raceDayIdx));
+    xtDays.forEach((d, i) => { if (i > 0 || dayDist(d, raceDayIdx) <= 3) delete cells[d]; });
+  }
+
+  Object.keys(cells).map(Number).filter(d => cells[d].kind === 'xt')
+    .forEach(d => { cells[d].xtKind = 'xt'; });
 
   const idxs = new Set(Object.keys(cells).map(Number));
   return [...idxs].sort((a,b)=>a-b).map(d => {
     const c = cells[d];
     const name = c.kind === 'race' ? ((prof && prof.race) || '5K Benchmark Test')
                : c.kind === 'timetrial' ? ((prof && prof.tt) || '5K Benchmark Test')
-               : c.kind === 'xt' ? XT_TYPES[c.xtKind].label
+               : c.kind === 'xt' ? XT_TYPES.xt.label
                : (c.kind === 'long' || c.kind === 'longdown') ? (longMins ? longName(longMins) : resolveName(c.kind, phase, weekNo, prof))
-               : resolveName(c.kind, phase, weekNo, prof);
-    return { idx:d, kind:c.kind, name, xtKind:c.xtKind };
+               : resolveName(c.kind, phase, weekNo, prof, longMins);
+    return { idx:d, kind:c.kind, name, xtKind:c.xtKind, preLong:c.preLong };
   });
 }
 
@@ -2605,6 +3712,7 @@ function timeTrialOptions(prof){
   return opts;
 }
 function candidatesFor(kind, phase, prof, curName){
+  if (kind === 'c25k') return [];          // the programme is fixed; nothing to swap
   prof = prof || raceProfile();
   if (kind === 'timetrial') return withCurrent(timeTrialOptions(prof), curName);
   if (SWAP_FIXED[kind]) return withCurrent(SWAP_FIXED[kind], curName);
@@ -2653,6 +3761,21 @@ const flipKey = (w, idx) => w + ':' + idx;
 const doneKey = (w, idx) => w + ':' + idx;
 
 // shortest session in a pool, measured from real session data
+
+/* The recovery-week version of a session: same kind of work, less of it.
+   Sorting the pool by workload and stepping down about a third keeps the
+   stimulus and drops the cost, where simply taking the shortest option can
+   hand a well-trained runner ten minutes of work that maintains nothing. */
+function downWeekVersion(pool, current){
+  if (!pool || !pool.length) return current;
+  const cur = qualityWorkMins(sessionByName(current));
+  const want = cur ? cur * 0.65 : 0;
+  const scored = pool.map(n => ({ n, w: qualityWorkMins(sessionByName(n)) }))
+                     .filter(x => x.w > 0)
+                     .sort((a,b) => Math.abs(a.w - want) - Math.abs(b.w - want));
+  return scored.length ? scored[0].n : shortestOf(pool);
+}
+
 function shortestOf(names){
   if (!state || !state.byName || !names || !names.length) return null;
   let best = null, bestMin = Infinity;
@@ -2803,7 +3926,7 @@ function buildCalendar(){
               <span class="cal-name">${r.session}</span>
               <span class="cal-meta">${fmtHrs(r.mins)}</span></div>`;
           }
-          const sess = state && state.byName[r.session] != null ? state.sessions[state.byName[r.session]] : null;
+          const sess = sessionByName(r.session);
           const km = sess ? sessionKm(sess) : null;
           const isRace = ['race','timetrial','bRace','cRace'].includes(r.kind);
           return `<div class="cal-item${isRace ? ' cal-race' : ''}" style="border-left-color:${col}">
@@ -2853,12 +3976,259 @@ function printCalendar(size){
     setTimeout(() => document.body.classList.remove('printing-calendar'), 300);
   }, 60);
 }
+/* The nine weeks, three sessions each. Weeks 5 and 6 vary day to day; the rest
+   repeat the same session. This table IS the programme -- no scaling, no
+   personalisation, because the thing that makes it work is that it asks the
+   same small amount of everyone. */
+
+/* The beginner sessions are built independently of calibration: every target is
+   open (effort-based), so unlike every other session in the library they need
+   no paces and no VDOT. That matters -- somebody who cannot yet run 5K has no
+   benchmark to give, and the programme has to work before the rest of the app
+   does. */
+function c25kSessions(){
+  const out = [];
+  /* ---------- COUCH TO 5K ----------
+     A fixed nine-week run/walk progression. Deliberately not generated: this
+     programme works because it is unvarying and unambitious, and every attempt
+     to make it cleverer makes it worse. Targets are open (effort-based) rather
+     than paced -- a beginner has no meaningful VDOT yet, and telling someone on
+     their first week to hit 6:15/km would be both meaningless and unkind. */
+  const rw = (runMin, walkMin, times, label) => ({
+    steps: [ stepTimeOpen('Brisk walk \u2014 warm up', 5, INT_WARMUP),
+             {loop:[ stepTimeOpen('Run \u2014 easy, conversational', runMin, INT_ACTIVE),
+                     stepTimeOpen('Walk \u2014 recover', walkMin, INT_REST) ], times},
+             stepTimeOpen('Brisk walk \u2014 cool down', 5, INT_COOLDOWN) ],
+    blocks: [ ['rest',5], ...Array(times).fill(0).flatMap(()=>[['easy',runMin],['rest',walkMin]]), ['rest',5] ],
+    line: label
+  });
+
+  const addC25K = (name, weekNo, desc, benefit, spec, lines) => out.push({
+    cat:'Beginner', name, c25k:true, c25kWeek:weekNo, desc, benefit,
+    structure: spec.steps, lines, blocks: spec.blocks
+  });
+
+  out.push({
+    cat:'Beginner', name:'First 5K \u2014 beginner benchmark', c25k:true, c25kWeek:9,
+    desc:'Five minutes of brisk walking, a couple of minutes easy jogging to loosen off, then a lap-press when you reach your start point, then 5 km at whatever pace you can hold. Walk breaks are completely fine.',
+    benefit:'This is the number that unlocks everything else. It does not need to be fast \u2014 it needs to be finished. Enter the time on the Calibrate tab and the full planner opens with paces and zones built around it.',
+    structure:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+                stepTimeOpen('Easy jog \u2014 loosen off',2,INT_ACTIVE),
+                stepLapOpen('Get to your start \u2014 press lap when ready'),
+                stepDistOpen('5 km \u2014 steady, walk if you need to',5000,0),
+                stepTimeOpen('Walk \u2014 well done',5,INT_COOLDOWN) ],
+    lines:[ '5 min brisk walk', '2 min easy jog', 'At the start \u2014 press lap when ready', '5 km \u2014 walk breaks allowed', '5 min walk' ],
+    blocks:[ ['rest',5], ['easy',2], ['easy',38], ['rest',5] ]
+  });
+
+  addC25K('C25K W1 \u2014 60 s runs', 1,
+    'Five minutes of brisk walking, then eight rounds of one minute running and ninety seconds walking, then five minutes walking to finish.',
+    'The running is short on purpose. The point of week one is not fitness \u2014 it is teaching your joints, tendons and habits that this happens three times a week.',
+    rw(1, 1.5, 8), ['5 min brisk walk', '8 \u00d7 [ 60 s run \u00b7 90 s walk ]', '5 min walk']);
+
+  addC25K('C25K W2 \u2014 90 s runs', 2,
+    'Six rounds of ninety seconds running and two minutes walking, topped and tailed with five minutes of brisk walking.',
+    'A small step up. Longer runs, longer walks \u2014 the total running time barely changes, which is exactly why it works.',
+    rw(1.5, 2, 6), ['5 min brisk walk', '6 \u00d7 [ 90 s run \u00b7 2 min walk ]', '5 min walk']);
+
+  addC25K('C25K W3 \u2014 90 s and 3 min', 3,
+    'Two rounds of: ninety seconds running, ninety seconds walking, three minutes running, three minutes walking.',
+    'The first three-minute run. It will feel like a landmark, and it is \u2014 but notice the walk after it is just as long.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              {loop:[ stepTimeOpen('Run',1.5,INT_ACTIVE), stepTimeOpen('Walk',1.5,INT_REST),
+                      stepTimeOpen('Run',3,INT_ACTIVE),   stepTimeOpen('Walk',3,INT_REST) ], times:2},
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5], ...Array(2).fill(0).flatMap(()=>[['easy',1.5],['rest',1.5],['easy',3],['rest',3]]), ['rest',5] ] },
+    ['5 min brisk walk', '2 \u00d7 [ 90 s run \u00b7 90 s walk \u00b7 3 min run \u00b7 3 min walk ]', '5 min walk']);
+
+  addC25K('C25K W4 \u2014 building to 5 min', 4,
+    'Three minutes running, ninety seconds walking, five minutes running, two and a half minutes walking, three minutes running, ninety seconds walking, five minutes running.',
+    'Sixteen minutes of running in total. Four weeks ago that was eight separate minutes \u2014 the shape of a runner is starting to appear.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run',3,INT_ACTIVE), stepTimeOpen('Walk',1.5,INT_REST),
+              stepTimeOpen('Run',5,INT_ACTIVE), stepTimeOpen('Walk',2.5,INT_REST),
+              stepTimeOpen('Run',3,INT_ACTIVE), stepTimeOpen('Walk',1.5,INT_REST),
+              stepTimeOpen('Run',5,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',3],['rest',1.5],['easy',5],['rest',2.5],['easy',3],['rest',1.5],['easy',5],['rest',5] ] },
+    ['5 min brisk walk', '3 min run \u00b7 90 s walk', '5 min run \u00b7 2\u00bd min walk', '3 min run \u00b7 90 s walk', '5 min run', '5 min walk']);
+
+  addC25K('C25K W5.1 \u2014 3 \u00d7 5 min', 5,
+    'Three five-minute runs with three minutes of walking between each.',
+    'Week five is where the programme changes character. Three runs, each one long enough to settle into.',
+    rw(5, 3, 3), ['5 min brisk walk', '3 \u00d7 [ 5 min run \u00b7 3 min walk ]', '5 min walk']);
+
+  addC25K('C25K W5.2 \u2014 2 \u00d7 8 min', 5,
+    'Two eight-minute runs with five minutes of walking between them.',
+    'Fewer, longer efforts. Eight minutes is long enough that pacing starts to matter \u2014 go slower than feels natural.',
+    rw(8, 5, 2), ['5 min brisk walk', '2 \u00d7 [ 8 min run \u00b7 5 min walk ]', '5 min walk']);
+
+  addC25K('C25K W5.3 \u2014 20 min continuous', 5,
+    'Twenty minutes of continuous running. No walk breaks.',
+    'The session everyone remembers. Nothing in the previous fortnight suggests you can do this, and you can. Start slower than you think you should.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 no walk breaks, go slowly',20,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',20],['rest',5] ] },
+    ['5 min brisk walk', '20 min continuous run', '5 min walk']);
+
+  addC25K('C25K W6.1 \u2014 5, 8, 5', 6,
+    'Five minutes running, three minutes walking, eight minutes running, three minutes walking, five minutes running.',
+    'A step back to intervals after last week\u2019s twenty minutes. That is deliberate, not a demotion \u2014 the programme is consolidating.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run',5,INT_ACTIVE), stepTimeOpen('Walk',3,INT_REST),
+              stepTimeOpen('Run',8,INT_ACTIVE), stepTimeOpen('Walk',3,INT_REST),
+              stepTimeOpen('Run',5,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',5],['rest',3],['easy',8],['rest',3],['easy',5],['rest',5] ] },
+    ['5 min brisk walk', '5 min run \u00b7 3 min walk', '8 min run \u00b7 3 min walk', '5 min run', '5 min walk']);
+
+  addC25K('C25K W6.2 \u2014 2 \u00d7 10 min', 6,
+    'Two ten-minute runs with three minutes of walking between them.',
+    'Twenty minutes of running again, but in two pieces. The walk in the middle is short \u2014 use it, then get going again.',
+    rw(10, 3, 2), ['5 min brisk walk', '2 \u00d7 [ 10 min run \u00b7 3 min walk ]', '5 min walk']);
+
+  addC25K('C25K W6.3 \u2014 25 min continuous', 6,
+    'Twenty-five minutes of continuous running.',
+    'Five minutes more than the week five landmark, and it will feel easier than that one did. That is what four weeks of consistency buys.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 steady and slow',25,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',25],['rest',5] ] },
+    ['5 min brisk walk', '25 min continuous run', '5 min walk']);
+
+  addC25K('C25K W7 \u2014 25 min', 7,
+    'Twenty-five minutes of continuous running, three times this week.',
+    'Repetition is the whole point now. The distance will creep up on its own as running gets more efficient \u2014 do not chase it.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 conversational',25,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',25],['rest',5] ] },
+    ['5 min brisk walk', '25 min continuous run', '5 min walk']);
+
+  addC25K('C25K W8 \u2014 28 min', 8,
+    'Twenty-eight minutes of continuous running.',
+    'Three minutes more than last week. The increments are small on purpose \u2014 this is the last full week before the target.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 conversational',28,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',28],['rest',5] ] },
+    ['5 min brisk walk', '28 min continuous run', '5 min walk']);
+
+  addC25K('C25K W9 \u2014 30 min', 9,
+    'Thirty minutes of continuous running. For most people the third of these covers five kilometres.',
+    'The finish line. Whether the distance reads 5.0 km or 4.4 km matters far less than the fact that you have run three times a week for nine weeks.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 this is the one',30,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',30],['rest',5] ] },
+    ['5 min brisk walk', '30 min continuous run', '5 min walk']);
+
+
+  addC25K('C25K W7.2 \u2014 with pickups', 7,
+    'Twenty-five minutes running, with four relaxed thirty-second pickups in the middle where you lift the pace a little and then settle back.',
+    'The first time you deliberately change gear. Not a hard session \u2014 the pickups just remind your legs they can move faster than jogging.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 settle in',8,INT_ACTIVE),
+              {loop:[ stepTimeOpen('Pick up the pace 30 s',0.5,INT_ACTIVE),
+                      stepTimeOpen('Settle back 2 min',2,INT_ACTIVE) ], times:4},
+              stepTimeOpen('Run \u2014 easy to finish',7,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',8],...Array(4).fill(0).flatMap(()=>[['steady',.5],['easy',2]]),['easy',7],['rest',5] ] },
+    ['5 min brisk walk', '8 min easy run', '4 \u00d7 [ 30 s pickup \u00b7 2 min easy ]', '7 min easy run', '5 min walk']);
+
+  addC25K('C25K W8.2 \u2014 hills', 8,
+    'Twenty-eight minutes with six short uphill efforts in the middle. Find any modest slope \u2014 a road bridge will do \u2014 run up it steadily for forty seconds, walk back down.',
+    'Hills are strength work disguised as running, and they are gentler on the legs than flat speed. Six is plenty the first time.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run to your hill',9,INT_ACTIVE),
+              {loop:[ stepTimeOpen('Uphill \u2014 steady effort',0.67,INT_ACTIVE),
+                      stepTimeOpen('Walk down',1.5,INT_REST) ], times:6},
+              stepTimeOpen('Run home easy',6,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',9],...Array(6).fill(0).flatMap(()=>[['steady',.67],['rest',1.5]]),['easy',6],['rest',5] ] },
+    ['5 min brisk walk', '9 min easy run', '6 \u00d7 [ 40 s uphill \u00b7 walk down ]', '6 min easy run', '5 min walk']);
+
+  addC25K('C25K W9.2 \u2014 30 min relaxed', 9,
+    'Thirty minutes running, deliberately comfortable. Nothing to prove this week.',
+    'The week before your 5K is not the week to find fitness \u2014 it is the week to arrive fresh. Keep it genuinely easy.',
+    { steps:[ stepTimeOpen('Brisk walk \u2014 warm up',5,INT_WARMUP),
+              stepTimeOpen('Run \u2014 comfortable throughout',30,INT_ACTIVE),
+              stepTimeOpen('Brisk walk \u2014 cool down',5,INT_COOLDOWN) ],
+      blocks:[ ['rest',5],['easy',30],['rest',5] ] },
+    ['5 min brisk walk', '30 min relaxed run', '5 min walk']);
+
+  return out;
+}
+const C25K_BY_NAME = (() => { const m = {}; c25kSessions().forEach(s => m[s.name] = s); return m; })();
+
+const C25K_WEEKS = [
+  ['C25K W1 \u2014 60 s runs',      'C25K W1 \u2014 60 s runs',      'C25K W1 \u2014 60 s runs'],
+  ['C25K W2 \u2014 90 s runs',      'C25K W2 \u2014 90 s runs',      'C25K W2 \u2014 90 s runs'],
+  ['C25K W3 \u2014 90 s and 3 min', 'C25K W3 \u2014 90 s and 3 min', 'C25K W3 \u2014 90 s and 3 min'],
+  ['C25K W4 \u2014 building to 5 min','C25K W4 \u2014 building to 5 min','C25K W4 \u2014 building to 5 min'],
+  ['C25K W5.1 \u2014 3 \u00d7 5 min', 'C25K W5.2 \u2014 2 \u00d7 8 min',  'C25K W5.3 \u2014 20 min continuous'],
+  ['C25K W6.1 \u2014 5, 8, 5',      'C25K W6.2 \u2014 2 \u00d7 10 min', 'C25K W6.3 \u2014 25 min continuous'],
+  ['C25K W7 \u2014 25 min',         'C25K W7.2 \u2014 with pickups',  'C25K W7 \u2014 25 min'],
+  ['C25K W8 \u2014 28 min',         'C25K W8.2 \u2014 hills',         'C25K W8 \u2014 28 min'],
+  ['C25K W9 \u2014 30 min',         'C25K W9.2 \u2014 30 min relaxed','First 5K \u2014 beginner benchmark']
+];
+
+function generateC25K(){
+  pd('pl-err').classList.remove('show');
+  const runAv = runDaysOf().sort((a,b) => a-b);
+  // three days, spread as evenly as the athlete's availability allows
+  let days = runAv.slice();
+  if (days.length < 3) days = [0, 2, 4];              // sensible default Mon/Wed/Fri
+  if (days.length > 3){
+    // keep the three most evenly spaced days
+    let best = null, bestScore = -1;
+    for (let i=0; i<days.length-2; i++)
+      for (let j=i+1; j<days.length-1; j++)
+        for (let k=j+1; k<days.length; k++){
+          const gaps = [days[j]-days[i], days[k]-days[j], 7-(days[k]-days[i])];
+          const score = Math.min(...gaps);
+          if (score > bestScore){ bestScore = score; best = [days[i],days[j],days[k]]; }
+        }
+    days = best;
+  }
+  const start = planStartMonday();
+  const weeks = C25K_WEEKS.map((names, i) => {
+    const w = i + 1;
+    const wkStart = addDays(start, i*7);
+    const cells = days.map((d, n) => ({ idx:d, kind:'c25k', name:names[n], c25kFinal:(w === 9 && n === 2) }));
+    return {
+      w, wkStart, wkEnd: addDays(wkStart, 6),
+      phase: w <= 4 ? 'base' : w <= 6 ? 'development' : 'specific',
+      isDown: false, isTaper: false, namePhase:'base', cells,
+      note: w === 5 ? 'Week five ends with twenty unbroken minutes. It is the step everyone dreads and almost everyone makes.'
+          : w === 9 ? 'Final week. The last session is your 5K \u2014 run it, then enter the time on the Calibrate tab and the full planner opens up.'
+          : '',
+      noteCls: w === 9 ? 'retest' : '',
+      target: 0, hasRace: w === 9
+    };
+  });
+  planState.generated = {
+    weeks, N:9, start, longDay:days[2], raceDateObj:null, underVolume:false,
+    baseEnd:4, devEnd:6, specEnd:9, prof:'Couch to 5K', crowded:false, allQuality:false,
+    targets:{peak:0}, longCapped:false, raceWarns:[], goalLong:30, peakLong:30,
+    longLimit:null, ultra:false, b2bMissed:false, c25k:true
+  };
+  planState.sig = 'c25k|' + ymd(start) + '|' + days.join('');
+  renderPlan();
+  pd('c25k-export').style.display = '';
+}
 function generatePlan(){
+  // the beginner programme is a fixed table, not a generated block
+  if (planState.planType === 'c25k') return generateC25K();
   pd('pl-err').classList.remove('show');
   XT_MINS = planState.xtMins || 45;
   const runAv = runDaysOf().sort((a,b)=>a-b);
   const xtAv  = xtDaysOf();
-  if (runAv.length < 2) return planError('Set at least two run days (tap a day once for Run).');
+  /* Two running days can hold a long run and one quality session and nothing
+     else -- no easy running at all, which is not a training plan, it's two hard
+     days a week for twelve weeks. Three is the floor for anything structured. */
+  if (runAv.length < 3) return planError('Set at least three days you could run. On two days a week every run has to be either the long run or a hard session, with no easy running at all \u2014 that\u2019s a recipe for staleness and injury rather than a plan. If three is genuinely all you can manage, mark a third day as Either and the plan will use it only when it needs to.');
   let longDay = planState.longDay;
   if (!runAv.includes(longDay)) longDay = runAv[runAv.length-1];
 
@@ -2891,7 +4261,15 @@ function generatePlan(){
   } else {
     // no race date: a focused block sized to the goal, plus any base-building
     // weeks the athlete asked for up front (the return-from-injury on-ramp)
-    N = prof.spec + (planState.baseWeeks || 0);
+    /* Everybody gets some base unless they've said otherwise. Starting week one
+       of a rolling block in the development phase means a runner fresh off
+       Couch to 5K opens with interval work; a few easy weeks first is the
+       single cheapest safety measure in the whole plan. */
+    /* Unset means "give me a sensible default"; an explicit zero means none.
+       Conflating the two made the dropdown's own "None" option silently add
+       four weeks of base. */
+    const autoBase = (planState.baseWeeks == null) ? 4 : planState.baseWeeks;
+    N = prof.spec + autoBase;
     raceDayIdx = runAv.includes(6) ? 6 : runAv[runAv.length-1];
   }
 
@@ -2910,13 +4288,30 @@ function generatePlan(){
                      : w <= devEnd ? 'development'
                      : 'specific';
 
-  const isDownWeek = w => { const p = phaseOf(w); return p !== 'taper' && w % 4 === 0 && w < specEnd; };
+  /* Recovery weeks every fourth week -- but never immediately before the peak
+     long run. Deloading and then asking for the biggest run of the block seven
+     days later gets the sequencing backwards; the peak long run wants a normal
+     week in front of it and two to three weeks of taper behind it. */
+  const peakLongWeek = Math.max(1, specEnd - 1);
+  const isDownWeek = w => {
+    const p = phaseOf(w);
+    if (p === 'taper' || w >= specEnd) return false;
+    /* Deload every fourth week, but never immediately before the peak long run
+       -- when that lands badly the week is MOVED one earlier rather than
+       dropped, so the 3:1 rhythm survives instead of leaving six consecutive
+       full weeks before the taper. */
+    if (w === peakLongWeek - 1) return false;
+    if (w % 4 === 0) return true;
+    return (w + 1) % 4 === 0 && (w + 1) === peakLongWeek - 1;
+  };
   const targets    = weeklyTargets(N, specEnd, taperWeeks, prof, isDownWeek, planState.currentMins);
   let longLadder = longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets);
 
   // Two passes: build once to learn what each week actually totals, then rebuild
   // with a long-run ladder capped against those real numbers and forced upward.
   function buildAllWeeks(ladder, allowCap){
+    let freqFloor = 0;   // most running days the plan has used so far
+    let medFloor  = 0;   // the medium-long run never goes backwards
   const weeks = [];
   for (let w=1; w<=N; w++){
     const phase   = phaseOf(w);
@@ -2928,36 +4323,79 @@ function generatePlan(){
     const basePhase = isTaper ? 'specific' : phase;
     const namePhase = (isDown && basePhase === 'specific') ? 'development' : basePhase;
     // per-week run <-> cross-train flips
-    const modeW = planState.dayMode.map((m,i) => planState.flips[flipKey(w,i)] || m);
+    let modeW = planState.dayMode.map((m,i) => planState.flips[flipKey(w,i)] || m);
 
-    // "either" days let the plan decide run vs bike. Fixed runs come first;
-    // then flexible days become runs until the week has enough to carry its
-    // long run plus a quality session (4 run days is a comfortable ceiling for
-    // that), and any remaining flexible days become cross-training.
-    const fixedRun = modeW.map((m,i) => m === 'run' ? i : -1).filter(i => i >= 0);
-    const flexible = modeW.map((m,i) => m === 'any' ? i : -1).filter(i => i >= 0);
-    // Theory first: scale run days with the week's target minutes (a ~75-minute
-    // average run day is comfortable), between four and five. Four is the floor
-    // because three-run weeks can leave every quality slot jammed against the
-    // long run.
-    const desired  = isTaper ? 3 : Math.min(5, Math.max(4, Math.ceil((targets[w] || 0) / 75)));
-    let wantRun    = Math.max(0, desired - fixedRun.length);
-    const flexByUse = flexible.slice().sort((a,b) => Math.abs(a-longDay) - Math.abs(b-longDay));
+    /* THE DAY GRID IS AVAILABILITY, NOT A PRESCRIPTION.
+       Marking a day Run says "I could run then", not "give me a run". So the
+       plan works out how many running days the training actually needs and uses
+       that many -- no more. Somebody running two and a half hours over three
+       days who ticks all seven boxes and only wants to finish should get three
+       runs a week that grow, not seven token half-hours. Availability is a
+       ceiling at both ends of the block. */
+    const availRun = modeW.map((m,i) => (m === 'run' || m === 'any') ? i : -1).filter(i => i >= 0);
+    const markedRun = modeW.map((m,i) => m === 'run' ? i : -1).filter(i => i >= 0);
+    /* Three is the floor. A two-day week can only hold the long run and one
+       quality session, so every run in it is hard -- which is the shape the
+       three-day minimum on the grid exists to prevent. */
+    const curDays  = Math.max(3, Math.min(availRun.length, planState.currentDays || 3));
+    // highest target reached so far, so frequency ratchets up and never dips back
+    let volSoFar = 0;
+    for (let k = 1; k <= w; k++) volSoFar = Math.max(volSoFar, targets[k] || 0);
+    const useDays  = daysForWeek(w, N, volSoFar, curDays, availRun.length, baseEnd);
+
+    /* How many running days does the training genuinely want this week? It
+       starts where the athlete already is and only grows when the volume needs
+       spreading -- how eagerly is set by what they're training for. */
+    const byVolume  = isTaper ? 3 : Math.max(3, Math.ceil((targets[w] || 0) / 75));
+    const dayCeiling = Math.max(curDays, Math.ceil(volSoFar / comfortableRun()));
+    const desired = isTaper
+      ? Math.min(availRun.length, Math.max(curDays - 1, 3))
+      : Math.min(availRun.length, dayCeiling, Math.max(byVolume, useDays, freqFloor));
+
+    /* Which days, given we want `n` of them. The long-run day always runs.
+       After that, days marked Run are preferred over Either -- the athlete has
+       told us those are their natural running days -- and within each group the
+       choice spreads across the week so the running isn't bunched together with
+       a run of empty days beside it. */
+    const chooseDays = (n) => {
+      const chosen = [longDay];
+      const rank = d => (markedRun.includes(d) ? 0 : 1);
+      const pool = availRun.filter(d => d !== longDay);
+      while (chosen.length < n && pool.length){
+        let best = 0, bestKey = null;
+        pool.forEach((d, i) => {
+          const gap = Math.min(...chosen.map(t => dayDist(d, t)));
+          const key = [rank(d), -gap];             // prefer marked Run, then best spacing
+          if (!bestKey || key[0] < bestKey[0] || (key[0] === bestKey[0] && key[1] < bestKey[1])){
+            bestKey = key; best = i;
+          }
+        });
+        chosen.push(pool.splice(best, 1)[0]);
+      }
+      if (planState.speedDay >= 0 && availRun.includes(planState.speedDay) && !chosen.includes(planState.speedDay)){
+        chosen.push(planState.speedDay);
+      }
+      return chosen.sort((a,b) => a-b);
+    };
+
     const longMins = ladder[w];
     // only the final week holds the race; earlier taper weeks are reduced
     // training weeks, not a second race day
     const isRaceWeek = isTaper && w === N;
     const taperTrain = isTaper && !isRaceWeek;
-    const makeCells = (nFlex) => {
-      const flexRun = new Set(flexByUse.slice(0, nFlex));
-      // a fixed speed-session day that landed on a flexible day must become a run
-      if (planState.speedDay >= 0 && modeW[planState.speedDay] === 'any') flexRun.add(planState.speedDay);
-      const runW = modeW.map((m,i) => (m === 'run' || (m === 'any' && flexRun.has(i))) ? i : -1).filter(i => i >= 0);
-      const xtW  = modeW.map((m,i) => (m === 'xt'  || (m === 'any' && !flexRun.has(i))) ? i : -1).filter(i => i >= 0);
+    const makeCells = (nDays) => {
+      const runW = chooseDays(nDays);
+      /* Only days the athlete explicitly marked for cross-training become
+         cross-training. An available day the plan doesn't need is a rest day --
+         quietly filling it with a bike session would be exactly the kind of
+         automatic load this grid is meant to avoid. */
+      const xtW = modeW.map((m,i) => (m === 'xt' && !runW.includes(i)) ? i : -1).filter(i => i >= 0);
       const longW = runW.includes(longDay) ? longDay : (runW.length ? runW[runW.length-1] : longDay);
       return buildWeek(runW, xtW, longW, namePhase, isDown || taperTrain, isRaceWeek, w,
                        isRaceWeek ? raceDayIdx : null, isRaceWeek && !raceDateObj && !prof.ultra, prof, longMins, targets[w]);
     };
+    let wantRun = desired;
+
     let cells = makeCells(wantRun);
     // ...then reality: theory can't know what the built week actually holds
     // (session lengths are quantised, early easy runs are short). If the week
@@ -2966,7 +4404,12 @@ function generatePlan(){
     // flexible days run out. Recovery and taper weeks are left deliberately
     // light, so they don't retry.
     if (!isTaper && !isDown){
-      while (wantRun < flexByUse.length && cellsMins(cells) < (targets[w] || 0) * 0.9){
+      /* The week may still land under target because session lengths are
+         quantised. Adding a day is allowed, but never past the ceiling the
+         athlete's goal implies -- chasing volume is not a reason to turn a
+         four-day plan into a seven-day one. */
+      const ceiling = Math.min(availRun.length, dayCeiling);
+      while (wantRun < ceiling && cellsMins(cells) < (targets[w] || 0) * 0.9){
         wantRun++;
         cells = makeCells(wantRun);
       }
@@ -2976,13 +4419,21 @@ function generatePlan(){
     if (isDown && state){
       cells = cells.map(c => {
         if (!['primary','secondary'].includes(c.kind)) return c;
-        const sh = shortestOf(candidatesFor(c.kind, namePhase, prof, c.name));
+        /* A recovery week wants less volume at the SAME intensity, not the
+           feeblest session in the pool. Pick the smallest session that is still
+           genuinely of the same type -- around two thirds of the week's normal
+           workload -- rather than whatever happens to be shortest. */
+        const sh = downWeekVersion(candidatesFor(c.kind, namePhase, prof, c.name), c.name);
         return sh ? { ...c, name: sh } : c;
       });
     }
     let note = '', noteCls = '';
     if (isDown) note = 'Recovery week — ease the volume back and let the adaptations land.';
-    const isRetest = (!isTaper) && ((baseWeeks > 0 && w === baseEnd) || w === devEnd);
+    /* A benchmark test is a race in all but name; scheduling one inside the
+       last three weeks would sit an all-out effort on top of the taper it is
+       supposed to be sharpening. */
+    const isRetest = (!isTaper) && ((N - w) >= 3)
+                     && ((baseWeeks > 0 && w === baseEnd) || w === devEnd);
     if (isRetest){
       note = 'Benchmark week \u2014 the test is in your calendar below. Run it, enter the time on the Calibrate tab, and every pace in the rest of this plan re-tightens.';
       noteCls = 'retest';
@@ -3004,11 +4455,18 @@ function generatePlan(){
     if (!isRaceWeek){
       // grow the week if needed so the long run keeps its proper share of it
       const xtMins = cells.filter(c => c.kind === 'xt').length * XT_MINS;
-      const need = longMins ? (longMins / longShareCap()) - xtMins : 0;
+      const need = longMins ? (longMins / longShareCap(longMins / 0.42)) - xtMins : 0;
       cells = fitEasyRuns(cells, Math.max(targets[w], need));
       if (allowCap) cells = capLongShare(cells);
     } else {
-      cells = cells.map(c => c.kind === 'easy' ? { ...c, name: easyName(30) } : c);
+      /* Taper and race weeks get sized against their target like every other
+         week. Hardcoding every easy run to 30 minutes delivered roughly a
+         quarter of peak volume against a target of just over half -- the same
+         over-taper the target fractions were changed to prevent, and now
+         contradicted by the plan's own printed number. */
+      cells = isRaceWeek
+        ? shapeRaceWeek(fitEasyRuns(cells, targets[w] || 0), targets[w] || 0, raceDayIdx)
+        : fitEasyRuns(cells, targets[w] || 0);
     }
     // A recovery week must come in under the week before it, and a taper week
     // under the biggest build week. Trimming easy runs raises the long run's
@@ -3025,13 +4483,15 @@ function generatePlan(){
         // don't pile volume on the week you're trying to run a fast test in
         cells = trimWeekTo(cells, lastNormal * 0.95);
       } else if (taperTrain && weeks.length){
+        /* A ceiling, not a second taper. The weekly targets already carry the
+           taper shape (~80/60/45% over three weeks, 75/52% over two); this used
+           to impose its own harsher curve on top, so the delivered weeks came
+           out around a quarter of peak against a target of half and runners
+           arrived flat. It now only stops a taper week exceeding its own
+           target, with a little headroom for rounding. */
         const maxBuild = Math.max(...weeks.filter(x => !x.isTaper).map(x => cellsMins(x.cells)), 0);
-        // step the cap down across the taper so each week is clearly lighter than
-        // the last: first taper week ~0.72, then falling toward race week
-        const taperTotal = prof.taper;                 // number of taper weeks incl race week
-        const taperPos = w - (N - taperTotal);          // 1-based position within the taper
-        const factor = Math.max(0.4, 0.78 - 0.15 * taperPos);
-        if (maxBuild) cells = trimWeekTo(cells, maxBuild * factor);
+        const ceiling = (targets[w] || 0) * 1.08;
+        if (maxBuild && ceiling) cells = trimWeekTo(cells, Math.min(ceiling, maxBuild));
       }
       if (!isRaceWeek && allowCap) cells = capLongShare(cells);
     }
@@ -3050,20 +4510,84 @@ function generatePlan(){
         if (after && (after.kind === 'easy' || after.kind === 'recovery')){
           const frac = Math.min(1, (w - baseEnd) / Math.max(1, specEnd - baseEnd));
           const b2bMax = prof.b2bPeak;
-          const b2bMins = snapB2B(Math.max(60, 60 + frac * (b2bMax - 60)));
+          /* Start the back-to-back at about half its peak and climb from
+             there. Anchoring the bottom of the ladder at a flat 60 minutes left
+             a 50K plan sitting on the same second run for most of the block. */
+          const b2bFloor = Math.max(45, Math.round(b2bMax * 0.5));
+          const b2bMins = snapB2B(b2bFloor + frac * (b2bMax - b2bFloor));
           after.kind = 'b2b';
           after.name = b2bName(b2bMins);
         }
       }
     }
 
+    /* Final guard: nothing in the week may be longer than the long run.
+       fitEasyRuns caps this when it sizes the flexible days, but the week can
+       be touched by several passes afterwards (volume padding, down-week
+       remaps, session swaps), and a "medium-long" run that is longer than the
+       long run is a contradiction whichever route produced it. */
+    /* The medium-long run climbs like the long run does. Sized week by week it
+       ends up absorbing whatever the long run's growth costs, so it oscillates
+       -- 90, 70, 80 -- which reads as noise rather than a plan. Holding it to a
+       non-decreasing ladder (stepping back in recovery weeks, like the long run)
+       makes the progression visible and stops it being the shock absorber. */
+    if (!isDown && !isTaper){
+      const mi = cells.findIndex(c => c.kind === 'medlong');
+      if (mi >= 0){
+        const lc0 = cells.find(c => c.kind === 'long' || c.kind === 'longdown');
+        const roof = lc0 ? durOf(lc0.name) : 0;
+        /* The medium-long run gets a ladder of its own, pegged to the long run
+           rather than to whatever volume happens to be left over. Around 60% of
+           the week's long run is the classic relationship -- big enough to
+           matter midweek, small enough to recover from before the weekend --
+           and like the long run it never steps backwards. Sizing it from the
+           remainder made it the week's shock absorber, so it held flat for nine
+           weeks while the long run climbed past it. */
+        const want = roof ? roof * 0.62 : durOf(cells[mi].name);
+        const aim  = Math.max(want, medFloor);
+        const ok   = MEDLONG_RUNGS.filter(r => !roof || r <= roof);
+        const use  = (ok.length ? ok : MEDLONG_RUNGS)
+          .reduce((a,b) => Math.abs(b-aim) < Math.abs(a-aim) ? b : a);
+        cells[mi] = { ...cells[mi], name: medLongName(use) };
+        medFloor = use;
+      }
+    }
+    (() => {
+      const lc = cells.find(c => c.kind === 'long' || c.kind === 'longdown');
+      if (!lc) return;
+      const lm = durOf(lc.name);
+      if (!lm) return;
+      cells.forEach((c, i) => {
+        if (c.kind === 'medlong' && durOf(c.name) > lm){
+          const fit = MEDLONG_RUNGS.filter(r => r <= lm);
+          cells[i] = { ...c, name: medLongName(fit.length ? fit[fit.length-1] : MEDLONG_RUNGS[0]) };
+        }
+        if (c.kind === 'easy' && durOf(c.name) > lm){
+          const fit = EASY_RUNGS.filter(r => r <= lm);
+          cells[i] = { ...c, name: easyName(fit.length ? fit[fit.length-1] : EASY_RUNGS[0]) };
+        }
+      });
+    })();
+    if (!isTaper) freqFloor = Math.min(dayCeiling, Math.max(freqFloor, cells.filter(c => c.kind !== 'xt').length));
     weeks.push({ w, phase, namePhase, isDown, isTaper, wkStart, wkEnd:addDays(wkStart,6),
-                 cells, note, noteCls, target: targets[w] });
+                 cells, note, noteCls,
+                 /* Taper and race weeks aren't aiming at a volume number: their
+                    shape is set by proximity to the race, and the sizing caps
+                    that produce that shape make the arithmetic target
+                    unreachable by construction. Recording what the week
+                    actually asks for keeps the plan's own numbers honest. */
+                 target: isTaper ? Math.round(cellsMins(cells)) : targets[w] });
   }
   return weeks;
   }
 
-  const weeks = buildAllWeeks(longLadder, false);
+  /* Built with the post-hoc share cap OFF. The week is already grown to protect
+     the long run's share (see the `need` calculation in buildAllWeeks), which
+     fixes the ratio the right way round -- by adding easy volume rather than by
+     shrinking the long run. Trimming it afterwards would let a later week come
+     out shorter than an earlier one, and a long run that goes backwards mid
+     block is worse than one that runs a little long for the week it sits in. */
+  const weeks = addDoubles(buildAllWeeks(longLadder, false), targets);
 
   // does this week shape force two hard days together?
   let crowded = false, allQuality = false;
@@ -3093,8 +4617,19 @@ function generatePlan(){
   }
 
   const wk1 = weeks[0];
-  const underVolume = state && wk1 && cellsMins(wk1.cells) < planState.currentMins * 0.85;
-  const longCapped = longLadder.peakLong < prof.longPeak - 5;
+  /* Does week one fall short of what the athlete already runs? Only worth
+     saying if there's something they could do about it -- and never alongside
+     the note telling them they already run enough, which was the flat
+     contradiction this used to produce at high volume. */
+  const wk1Mins = wk1 ? cellsMins(wk1.cells) : 0;
+  /* Is there actually a day they could give the plan? Either an available day
+     it isn't using, or an off day they could mark. If every day of the week is
+     already spoken for, telling them to "add a run day" is just noise. */
+  const usedRunDays = wk1 ? wk1.cells.filter(c => c.kind !== 'xt').length : 0;
+  const markedDays  = planState.dayMode.filter(m => m !== 'off').length;
+  const spareDays   = Math.max(runDaysOf().length - usedRunDays, 7 - markedDays);
+  const underVolume = state && wk1 && wk1Mins < planState.currentMins * 0.85 && spareDays > 0;
+  const longCapped = longLadder.peakLong < longPeakFor(prof) - 5;
   // ultra plans want back-to-back long runs; they only fit if the long-run day
   // has a run day immediately after it. Flag when that didn't happen.
   // Sunday long runs put the second half of the back-to-back on Monday of the
@@ -3113,7 +4648,8 @@ function generatePlan(){
       const mon = nw.cells.find(c => c.idx === 0 && (c.kind === 'easy' || c.kind === 'recovery'));
       if (!mon) continue;
       const frac = Math.min(1, (wk.w - baseEnd) / Math.max(1, specEnd - baseEnd));
-      const mins = snapB2B(Math.max(60, 60 + frac * (prof.b2bPeak - 60)));
+      const floorMins = Math.max(45, Math.round(prof.b2bPeak * 0.5));
+      const mins = snapB2B(floorMins + frac * (prof.b2bPeak - floorMins));
       mon.kind = 'b2b';
       mon.name = b2bName(mins);
     }
@@ -3126,7 +4662,9 @@ function generatePlan(){
   // prompt already tells the user what to do. Only a genuine day-layout problem
   // (calibrated, but the long run is the last run of the week) should warn.
   const b2bMissed = !!state && wantsB2B && !gotB2B;
-  planState.generated = { weeks, N, start, longDay, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: prof.longPeak, peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed };
+  planState.generated = { weeks, N, start, longDay, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: longPeakFor(prof), peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed,
+    weeksForFull: targets.weeksForFull, growthWanted: targets.growthWanted, growthUsed: targets.growthUsed,
+    sufficient: targets.sufficient, volumeHeld: targets.volumeHeld };
   // a rebuild can change what each day is for, so stale swaps are dropped
   const sig = [planState.goal, planState.dayMode.join(''), longDay, N, ymd(start), planState.currentMins, planState.xtMins, planState.speedDay, JSON.stringify(planState.races||[])].join('|');
   if (planState.sig && planState.sig !== sig){
@@ -3141,19 +4679,31 @@ function generatePlan(){
 function renderPlan(){
   const g = planState.generated;
   if (!g){ return; }
-  const out = pd('plan-out');
+  /* The beginner programme belongs on its own page. Rendering it into the plan
+     builder meant a nine-week run/walk plan appeared under a settings panel
+     full of controls that don't apply to it, and the only way back to a normal
+     plan was a toggle nobody would think to press. */
+  const out = pd(g.c25k ? 'c25k-out' : 'plan-out');
 
-  // phase overview strip
+  // phase overview strip -- the beginner programme has its own three stages,
+  // described in its own terms rather than as road periodisation
+  const C25K_META = {
+    base:        { label:'Run / walk',    color:'var(--lv-easy)',     why:'Short runs with generous walking breaks. Building the habit and letting joints adapt.' },
+    development: { label:'Longer efforts',color:'var(--lv-steady)',   why:'Runs stretch out, walks shorten. Week five ends with twenty unbroken minutes.' },
+    specific:    { label:'Continuous',    color:'var(--lv-tempo)',    why:'No more walk breaks. Twenty-five to thirty minutes, three times a week.' }
+  };
+  const META = g.c25k ? C25K_META : PHASE_META;
   const spans = { base:[1,g.baseEnd], development:[g.baseEnd+1,g.devEnd], specific:[g.devEnd+1,g.specEnd], taper:[g.specEnd+1,g.N] };
   const order = ['base','development','specific','taper'];
-  const strip = order.filter(p => spans[p][0] <= spans[p][1] && spans[p][1] <= g.N && spans[p][0] >= 1).map(p => {
-    const m = PHASE_META[p], s = spans[p];
+  const strip = order.filter(p => META[p] && spans[p][0] <= spans[p][1] && spans[p][1] <= g.N && spans[p][0] >= 1).map(p => {
+    const m = META[p], s = spans[p];
     const wk = s[0] === s[1] ? `Week ${s[0]}` : `Weeks ${s[0]}\u2013${s[1]}`;
     return `<div class="phase-card" style="border-left-color:${m.color}">
       <div class="pnm">${m.label}</div><div class="pwk">${wk}</div><div class="ppz">${m.why}</div></div>`;
   }).join('');
 
-  const notCalibrated = !state;
+  const isC25K = !!g.c25k;
+  const notCalibrated = !state && !isC25K;
   const banner = notCalibrated
     ? `<div class="wk-note" style="border-radius:var(--radius);border:1px solid var(--line);margin-bottom:16px">
          <span>\u2691</span><span>Structure is ready. <b>Calibrate</b> (first tab) to fill in target paces and turn on one-tap .FIT downloads for each day.</span></div>`
@@ -3162,10 +4712,57 @@ function renderPlan(){
   const modelNote = (g.allQuality && !g.crowded)
     ? `<div class="plan-note-info"><b>Every run is a quality run.</b> With three running days and cross-training filling the gaps, each run earns its place \u2014 speed, threshold and the long run \u2014 and your bike days carry the recovery. It\u2019s a proven structure, but it leaves no easy running: keep the cross-training genuinely easy, and if the legs feel flat, swap a quality session for an easy run rather than pushing through.</div>`
     : '';
-  const longNote = (g.longCapped && !g.underVolume)
+  /* When the long run can't get anywhere near what the event needs, the honest
+     message is not "this is capped" -- it's "this distance isn't available from
+     where you're starting". Saying it plainly is kinder than a plan that quietly
+     cannot work. */
+  const FAR_SHORT = { marathon:0.75, '50k':0.7, '50mi':0.7, '100k':0.7, '100mi':0.7, half:0.6 };
+  const shortRatio = g.goalLong ? g.peakLong / g.goalLong : 1;
+  const wayShort = FAR_SHORT[planState.goal] && shortRatio < FAR_SHORT[planState.goal];
+  const goalUnreachable = wayShort
+    ? `<div class="plan-warn"><b>This distance isn\u2019t reachable from where you\u2019re starting \u2014 not in this block.</b>
+        Your long run can only build to about ${fmtHrs(g.peakLong)} from ${fmtHrs(planState.currentMins)} a week, and a ${g.prof} needs something closer to ${fmtHrs(g.goalLong)}. That isn\u2019t a limitation of the plan; it\u2019s the gap between where you are now and what the event asks.
+        <br><br>The way through is a season, not a block: build to a half marathon first, hold that volume for a few months, then come back to this. Run this plan as written and you\u2019ll be a much stronger runner at the end of it \u2014 just don\u2019t enter the ${g.prof} at the end of it.</div>`
+    : '';
+  const longNote = (g.longCapped && !g.underVolume && !wayShort)
     ? (g.longLimit === 'volume'
         ? `<div class="plan-note-info"><b>Long run peaks at ${fmtHrs(g.peakLong)}.</b> A ${g.prof} block would ideally build to ${fmtHrs(g.goalLong)}, but you\u2019re starting from about ${fmtHrs(planState.currentMins)} a week, and this block builds to roughly ${fmtHrs(g.targets.peak)}. A long run bigger than this would swallow too much of the week to recover from. <b>Adding running days won\u2019t change this</b> \u2014 the limit is total weekly hours, so raise "what you run now" (or come back to this goal once you\u2019re running more), and the long run will build further.</div>`
         : `<div class="plan-note-info"><b>Long run peaks at ${fmtHrs(g.peakLong)}.</b> A ${g.prof} block would ideally build to ${fmtHrs(g.goalLong)}, but on ${runDaysOf().length} running days that would make the long run too big a share of your week \u2014 a reliable way to get hurt. Add a running day (or a cross-training day) and it will build further.</div>`)
+    : '';
+  /* When the block is simply too short to build safely to what the distance
+     asks -- and there's no race date pinning the end -- the honest answer is
+     not a warning, it's more weeks. The plan works out how many and offers to
+     add them. */
+  /* Three different things can be true about the size of the build, and each
+     deserves a different tone. Sometimes the athlete already runs enough and
+     should be told so. Sometimes the block is short and can simply be made
+     longer. And sometimes the race date is fixed and the block is what it is --
+     in which case the honest message is that this will still make them fitter,
+     not that they have failed a target they never set. */
+  const heldButShort = g.volumeHeld && g.underVolume;
+  const volumeHeldNote = heldButShort
+    ? `<div class="plan-warn"><b>You already run enough for this \u2014 but not on these days.</b>
+        ${fmtHrs(planState.currentMins)} a week is a sound platform for ${g.prof}, so this block doesn\u2019t need to add volume. The problem is fitting it in: the days you\u2019ve picked can\u2019t hold that much running, so the plan would start you below where you already are.
+        Mark another day as <b>Run</b> or <b>Either</b> and it will hold your volume where it belongs.</div>`
+    : g.volumeHeld
+    ? `<div class="plan-note-info"><b>You already run enough for this.</b>
+        ${fmtHrs(planState.currentMins)} a week across ${planState.currentDays} days is a sound platform for ${
+          planState.intent === 'finish' ? 'getting round a ' + g.prof + ' comfortably'
+          : 'the progression you\u2019re after at ' + g.prof}, so this block holds your volume roughly where it is and puts the work into the sessions instead.
+        More running is not automatically better training \u2014 the gains here come from the quality of what you do, not from adding hours.
+        ${planState.intent !== 'pb' ? 'If you later decide you want to race it hard, switch the goal above to <b>Chase a PB</b> and the plan will build volume as well.' : ''}</div>`
+    : '';
+  const shortBlock = (!g.volumeHeld && !g.raceDateObj && g.weeksForFull && g.weeksForFull > g.N)
+    ? `<div class="plan-note-info"><b>A longer block would build further.</b>
+        Going from ${fmtHrs(planState.currentMins)} a week to what a ${g.prof} ideally wants would mean adding volume faster than is sensible over ${g.N} weeks, so the plan builds at a rate you can absorb and peaks a little lower.
+        That is still a real block that will make you fitter \u2014 but with <b>${g.weeksForFull} weeks</b> it can reach the full build.
+        <button class="ghost-btn" id="extend-plan" data-n="${g.weeksForFull}" style="margin-top:10px">Extend to ${g.weeksForFull} weeks</button></div>`
+    : '';
+  /* Race date fixed: no offer to make, so say the useful thing instead. */
+  const fixedDateNote = (!g.volumeHeld && g.raceDateObj && g.weeksForFull && g.weeksForFull > g.N)
+    ? `<div class="plan-note-info"><b>${g.N} weeks is what your race date allows \u2014 and it\u2019s enough to arrive fitter.</b>
+        A full ${g.prof} build from ${fmtHrs(planState.currentMins)} a week would want around ${g.weeksForFull} weeks, so rather than cramming the volume in, this block grows at a rate you can absorb and puts the rest of its effort into sharper, more race-specific sessions.
+        You\u2019ll go into race day better prepared than you are today, with your long run up to ${fmtHrs(g.peakLong)} and your paces re-tightened along the way. Treat the time as the constraint it is, run the sessions as written, and race what you\u2019ve got.</div>`
     : '';
   const crowdWarn = g.crowded
     ? `<div class="plan-warn"><b>Heads up:</b> the days you\u2019ve chosen sit close together, so a hard day lands next to your long run. That\u2019s workable, but spreading your runs across the week \u2014 or dropping one \u2014 would recover better.</div>`
@@ -3181,8 +4778,8 @@ function renderPlan(){
     const isNow  = today >= wk.wkStart && today <= addDays(wk.wkEnd, 0);
     const isPast = addDays(wk.wkEnd, 0) < today;
     const m = PHASE_META[wk.phase];
-    const badge = wk.isDown ? 'Recovery' : m.label;
-    const badgeColor = wk.isDown ? 'var(--lv-steady)' : m.color;
+    const badge = wk.isDown ? 'Recovery' : ((g.c25k && C25K_META[wk.phase]) ? C25K_META[wk.phase].label : m.label);
+    const badgeColor = wk.isDown ? 'var(--lv-steady)' : ((g.c25k && C25K_META[wk.phase]) ? C25K_META[wk.phase].color : m.color);
     const phaseForCol = wk.isTaper ? 'specific' : wk.phase;
     const phaseForSwap = wk.namePhase || phaseForCol;
 
@@ -3216,13 +4813,14 @@ function renderPlan(){
            </select>`
         : `<span class="pl-sess${isRace?' race':''}">${label}</span>`;
       const chartIcon = '<svg viewBox="0 0 14 14" width="13" height="13" aria-hidden="true"><rect x="1" y="7" width="2.6" height="6" rx="0.5"/><rect x="5.7" y="3.5" width="2.6" height="9.5" rx="0.5"/><rect x="10.4" y="1" width="2.6" height="12" rx="0.5"/></svg>';
-      const dl = (!notCalibrated && c.kind !== 'xt' && c.name && state.byName[c.name] != null)
+      const dl = (state && state.byName && c.kind !== 'xt' && c.name && state.byName[c.name] != null)
         ? `<button class="pl-chart" data-i="${state.byName[c.name]}" title="See the session structure" aria-label="See the session structure">${chartIcon}</button><button class="pl-dl" data-i="${state.byName[c.name]}" data-date="${ymd(addDays(wk.wkStart, c.idx))}" data-week="${wk.w}" title="Download .FIT">FIT</button>` : '';
       const isDone = !!planState.done[doneKey(wk.w, c.idx)];
+      const noFlip = c.kind === 'c25k';
       const flipTo = c.kind === 'xt' ? 'run' : 'xt';
-      const flipLbl = c.kind === 'xt' ? 'Make it a run' : ('Make it a ' + (xtSelected().length === 1 ? XT_TYPES[xtSelected()[0]].short : 'cross-training') + ' day');
-      const flipTxt = c.kind === 'xt' ? '\u21c4 run' : ('\u21c4 ' + (xtSelected().length === 1 ? XT_TYPES[xtSelected()[0]].short : 'XT'));
-      const canFlip = c.kind !== 'race' && c.kind !== 'timetrial';
+      const flipLbl = c.kind === 'xt' ? 'Make it a run' : 'Make it a cross-training day';
+      const flipTxt = c.kind === 'xt' ? '\u21c4 run' : '\u21c4 XT';
+      const canFlip = c.kind !== 'race' && c.kind !== 'timetrial' && !noFlip;
       const flip = canFlip
         ? `<button class="pl-flip" data-w="${wk.w}" data-idx="${c.idx}" data-to="${flipTo}" title="${flipLbl}">${flipTxt}</button>` : '';
       return `<div class="pl-day${isDone?' is-done':''}">
@@ -3232,7 +4830,17 @@ function renderPlan(){
         <div class="pl-name">${nameHtml}</div>
         <span class="pl-tgt">${tgt}</span>
         <span class="pl-flipslot">${flip}</span>
-        <span class="pl-actions">${dl}</span></div>`;
+        <span class="pl-actions">${dl}</span></div>${c.double ? `
+      <div class="pl-day pl-second">
+        <span class="pl-tick-sp"></span>
+        <span class="pl-dow">pm</span>
+        <span class="pl-dot" style="background:${kindColor(c.double.kind, phaseForCol)}"></span>
+        <div class="pl-name">${c.double.name}</div>
+        <span class="pl-tgt">${kindTarget(c.double.kind, phaseForCol, c)}</span>
+        <span class="pl-flipslot"></span>
+        <span class="pl-actions">${state && state.byName[c.double.name] != null
+          ? `<button class="pl-chart" data-i="${state.byName[c.double.name]}" title="See the session structure" aria-label="See the session structure">${chartIcon}</button><button class="pl-dl" data-i="${state.byName[c.double.name]}" data-date="${ymd(addDays(wk.wkStart, c.idx))}" data-week="${wk.w}" data-second="1" title="Download .FIT">FIT</button>` : ''}</span>
+      </div>` : ''}`;
     }).join('');
     return `<article class="wk-card${wk.isDown?' is-down':''}${wk.isTaper?' is-taper':''}${isNow?' is-now':''}${isPast?' is-past':''}"${isNow?' id="week-now"':''}>
       <div class="wk-head">
@@ -3258,8 +4866,11 @@ function renderPlan(){
   }, {run:0, xt:0}) : null;
   const raceWarn = (g.raceWarns && g.raceWarns.length)
     ? `<div class="plan-warn"><b>About your races.</b><ul>${g.raceWarns.map(w=>`<li>${w}</li>`).join('')}</ul></div>` : '';
-  const volWarn = g.underVolume
-    ? `<div class="plan-warn"><b>Not enough running days.</b> You said you run about ${fmtHrs(planState.currentMins)} a week, but the days you\u2019ve chosen can\u2019t hold that much. Add a run day, or the plan will start below where you already are.</div>`
+  /* Never shown next to "you already run enough" -- those two together were a
+     flat contradiction, and the one that actually helps is this one only when
+     there's an unused day to point at. */
+  const volWarn = (g.underVolume && !g.volumeHeld)
+    ? `<div class="plan-warn"><b>Not enough running days.</b> You said you run about ${fmtHrs(planState.currentMins)} a week, but the days you\u2019ve chosen can\u2019t hold that much. Mark another day as Run or Either, and the plan will start where you already are rather than below it.</div>`
     : '';
   const totalDays = g.weeks.reduce((a,wk)=>a+wk.cells.length,0);
   const doneDays = Object.keys(planState.done).filter(k=>planState.done[k]).length;
@@ -3273,12 +4884,18 @@ function renderPlan(){
     : '';
 
   out.innerHTML =
-    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${b2bNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${weeksHtml}
-     <div class="plan-tip"><h4>How to run it</h4>
-       Two quality days a week, never back to back — the day after anything hard stays easy, recovery or cross-training. Hills and strides in the base weeks build the strength that makes the sharp sessions bite later. Every fourth week eases off on purpose: that\u2019s when you actually absorb the training.
-       <br><br><b>Swap freely.</b> Any session with a dropdown can be exchanged for another of the same purpose — a different interval flavour, a longer easy run — without breaking the week\u2019s structure. Swaps are saved with your plan. Tap <b>FIT</b> to send that exact session to your watch.
-       <br><br><b>The long run builds.</b> It climbs rung by rung toward a peak set by your goal \u2014 90 minutes for a 5K, three hours for a marathon \u2014 stepping back one rung in each recovery week and dropping away entirely in race week. Your easy runs stretch out in the second half of the block too, so weekly volume genuinely progresses rather than drifting.
-       <br><br>Weekly volume is estimated from the sessions themselves; the kilometre figure assumes easy pace, so treat it as indicative rather than exact.</div>`;
+    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${weeksHtml}
+     ${g.c25k ? `<div class="plan-tip"><h4>How to run it</h4>
+       <b>Three runs a week, with a rest day between each.</b> The walking is not a failure or a fallback \u2014 it is the part that lets you come back two days later, which is the only thing that actually matters over nine weeks.
+       <br><br><b>Go slower than feels right.</b> Almost everyone who struggles with this programme is running their intervals too fast. You should be able to talk. If you cannot, slow down until you can \u2014 there is no pace target here on purpose.
+       <br><br><b>Repeat a week if you need to.</b> Nothing breaks if week five takes a fortnight. The programme assumes you finish each week feeling like you could have done a little more, not a little less.
+       <br><br><b>When you finish</b>, run your 5K, then enter the time on the Calibrate tab. That single number unlocks the full planner \u2014 pace bands, heart-rate zones, and a proper block for whatever you want to do next.</div>`
+     : `<div class="plan-tip"><h4>How to run it</h4>
+       Two quality days a week, never back to back \u2014 the day after anything hard stays easy, recovery or cross-training. Hills and strides in the base weeks build the strength that makes the sharp sessions bite later. Every fourth week eases off on purpose: that\u2019s when you actually absorb the training.
+       <br><br><b>Swap freely.</b> Any session with a dropdown can be exchanged for another of the same purpose \u2014 a different interval flavour, a longer easy run \u2014 without breaking the week\u2019s structure. Swaps are saved with your plan. Tap <b>FIT</b> to send that exact session to your watch.
+       ${g.ultra ? `<br><br><b>Train on the terrain you'll race on.</b> This plan prescribes time and effort, not ground \u2014 and for an ultra the ground is most of the difficulty. Run your long runs and back-to-backs on terrain that matches your race wherever you can: the climbs, the descents, the underfoot conditions and the time of day. Practise hiking the steep sections deliberately, because on race day you will hike them whether you planned to or not, and the runners who hike well finish faster than the ones who don't. Treat the paces here as a guide on the flat and effort as the real target everywhere else.` : ''}
+       <br><br><b>The long run builds.</b> It climbs rung by rung toward a peak set by your goal and what you want from the block \u2014 a marathon you intend to race asks for close to three hours, one you intend to finish rather less \u2014 stepping back one rung in each recovery week and dropping away entirely in race week. Your easy runs stretch out in the second half of the block too, so weekly volume genuinely progresses rather than drifting.
+       <br><br>Weekly volume is estimated from the sessions themselves; the kilometre figure assumes easy pace, so treat it as indicative rather than exact.</div>`}`;
 
   out.querySelectorAll('.pl-dl').forEach(b => b.onclick = () => {
     const i = +b.dataset.i;
@@ -3308,12 +4925,35 @@ function renderPlan(){
   });
   out.querySelectorAll('.pl-chart').forEach(b => b.onclick = () => showSessionChart(+b.dataset.i));
   out.querySelectorAll('.wk-zip').forEach(b => b.onclick = () => exportZip(+b.dataset.w));
+  const ext = pd('extend-plan');
+  if (ext) ext.onclick = () => {
+    /* Lengthen the block by adding base weeks in front of it: the focused part
+       stays the length the distance needs, and the extra time goes where extra
+       time belongs -- building the engine before the sharp work starts. */
+    const want = +ext.dataset.n;
+    const prof = raceProfile();
+    planState.baseWeeks = Math.max(0, want - prof.spec);
+    const sel = pd('base-weeks');
+    if (sel && !Array.from(sel.options).some(o => +o.value === planState.baseWeeks)){
+      const o = document.createElement('option');
+      o.value = String(planState.baseWeeks);
+      o.textContent = planState.baseWeeks + ' weeks of base';
+      sel.appendChild(o);
+    }
+    if (sel) sel.value = String(planState.baseWeeks);
+    planState.sig = null;
+    generatePlan();
+  };
   if (!planState._scrolled){
     const now = document.getElementById('week-now');
     if (now && now.scrollIntoView){ planState._scrolled = true; setTimeout(() => now.scrollIntoView({block:'center'}), 60); }
   }
   saveBackup();
 }
+
+/* The last road/ultra choice, so returning to the builder after looking at the
+   beginner programme puts things back where they were. */
+let lastBuilderType = 'road';
 
 /* ---- plan input wiring ---- */
 function refreshLongDayOptions(){
@@ -3355,41 +4995,85 @@ const GOAL_OPTS = {
 };
 function setPlanType(type){
   planState.planType = type;
+  if (type !== 'c25k') lastBuilderType = type;
   document.querySelectorAll('#plan-type .seg-opt').forEach(b => {
     const on = b.dataset.type === type;
     b.classList.toggle('is-on', on);
     b.setAttribute('aria-pressed', on);
   });
+  const c25k = type === 'c25k';
+  /* The beginner programme is fixed: nine weeks, three days, no volume to set
+     and no race to aim at. Showing those controls would imply choices that
+     don't exist, so they go away. */
+  document.body.classList.toggle('c25k-mode', c25k);
   const sel = pd('goal');
-  sel.innerHTML = GOAL_OPTS[type].map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
-  // keep the current goal if it belongs to this type, else default to the first
-  if (!GOAL_OPTS[type].some(([v]) => v === planState.goal)) planState.goal = GOAL_OPTS[type][0][0];
-  sel.value = planState.goal;
-  pd('plan-type-hint').textContent = type === 'ultra'
+  if (!c25k){
+    sel.innerHTML = GOAL_OPTS[type].map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    // keep the current goal if it belongs to this type, else default to the first
+    if (!GOAL_OPTS[type].some(([v]) => v === planState.goal)) planState.goal = GOAL_OPTS[type][0][0];
+    sel.value = planState.goal;
+  }
+  pd('plan-type-hint').textContent = c25k
+    ? 'Nine weeks of run/walk from nothing to a continuous 5K \u2014 three sessions a week, no benchmark needed'
+    : type === 'ultra'
     ? '50K to 100 miles \u2014 time on feet, hills, and back-to-back long runs'
     : '5K to marathon, on the road or track';
 }
 document.querySelectorAll('#plan-type .seg-opt').forEach(b => {
   b.onclick = () => setPlanType(b.dataset.type);
 });
-pd('cur-vol').onchange = e => { planState.currentMins = +e.target.value; };
-pd('xt-mins').onchange = e => { planState.xtMins = +e.target.value; };
-pd('base-weeks').onchange = e => { planState.baseWeeks = +e.target.value; };
-pd('speed-day').onchange = e => { planState.speedDay = +e.target.value; };
-function syncXtChips(){
-  document.querySelectorAll('#xt-chips .xt-chip').forEach(b =>
-    b.classList.toggle('is-on', xtSelected().includes(b.dataset.t)));
+pd('cur-vol').onchange = e => { planState.currentMins = +e.target.value; updateCurAvg(); refreshDoublesVisibility(); if (planState.generated) generatePlan(); };
+pd('cur-days').onchange = e => { planState.currentDays = +e.target.value; updateCurAvg(); refreshDoublesVisibility(); if (planState.generated) generatePlan(); };
+
+/* A quiet piece of feedback that tells the athlete something true about their
+   own training before the plan says anything: what their runs actually average,
+   and therefore where their next improvement has to come from. */
+function updateCurAvg(){
+  const mins = planState.currentMins || 180, days = planState.currentDays || 3;
+  const avg = Math.round(mins / days);
+  let note;
+  if (avg < 55)       note = 'Around ' + avg + ' min a run \u2014 short enough that there\u2019s room to add minutes as the plan builds.';
+  else if (avg < 85)  note = 'Around ' + avg + ' min a run \u2014 a good balance. The long run grows, the rest hold steady and sharpen.';
+  else if (avg < 115) note = 'Around ' + avg + ' min a run \u2014 already substantial. Expect progress to come more from the work inside the runs than from extra minutes.';
+  else                note = 'Around ' + avg + ' min a run \u2014 you\u2019re at the practical limit of a single session. The plan will build quality rather than length — mark a day as Either if you could add one.';
+  pd('cur-avg-hint').textContent = note;
 }
-document.querySelectorAll('#xt-chips .xt-chip').forEach(b => {
+pd('xt-mins').onchange = e => { planState.xtMins = +e.target.value; };
+pd('base-weeks').onchange = e => { planState.baseWeeks = e.target.value === 'auto' ? null : +e.target.value; };
+pd('speed-day').onchange = e => { planState.speedDay = +e.target.value; };
+function setIntent(k){
+  planState.intent = INTENTS[k] ? k : 'improve';
+  document.querySelectorAll('#intent-toggle .seg-opt').forEach(b => {
+    const on = b.dataset.intent === planState.intent;
+    b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on);
+  });
+  pd('intent-hint').textContent = intentOf().blurb;
+}
+document.querySelectorAll('#intent-toggle .seg-opt').forEach(b => {
+  b.onclick = () => { setIntent(b.dataset.intent); if (planState.generated) generatePlan(); };
+});
+document.querySelectorAll('#doubles-toggle .seg-opt').forEach(b => {
   b.onclick = () => {
-    const t = b.dataset.t, cur = new Set(xtSelected());
-    if (cur.has(t) && cur.size === 1) return;          // keep at least one type
-    cur.has(t) ? cur.delete(t) : cur.add(t);
-    planState.xtTypes = ['bike','strength','swim','row'].filter(x => cur.has(x));
-    syncXtChips();
-    if (planState.generated) generatePlan();           // re-spread types across the week
+    planState.doubles = b.dataset.dbl === '1';
+    document.querySelectorAll('#doubles-toggle .seg-opt').forEach(x => {
+      const on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on);
+    });
+    if (planState.generated) generatePlan();
   };
 });
+/* The doubles option only appears once the athlete's volume and frequency make
+   it a sensible question. Offering it to someone running three hours a week
+   would just be an invitation to overreach. */
+function refreshDoublesVisibility(){
+  const show = doublesEligible();
+  pd('doubles-field').style.display = show ? '' : 'none';
+  if (!show && planState.doubles){
+    planState.doubles = false;
+    document.querySelectorAll('#doubles-toggle .seg-opt').forEach(x => {
+      const on = x.dataset.dbl === '0'; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on);
+    });
+  }
+}
 pd('build-plan').onclick = generatePlan;
 
 /* ---- start date (snaps to Monday) ---- */
@@ -3421,7 +5105,7 @@ function flashHint(msg){
 }
 function collectSnapshot(){
   return {
-    app: 'session-forge', version: 9, savedAt: new Date().toISOString(),
+    app: 'session-forge', version: 12, savedAt: new Date().toISOString(),
     benchmark: {
       distM: +pd('dist').value,
       time:  pd('time').value.trim(),
@@ -3433,9 +5117,12 @@ function collectSnapshot(){
       goal:        planState.goal,
       planType:    planState.planType || 'road',
       xtTypes:     xtSelected(),
-      baseWeeks:   planState.baseWeeks || 0,
+      baseWeeks:   planState.baseWeeks == null ? null : planState.baseWeeks,
       speedDay:    (typeof planState.speedDay === 'number') ? planState.speedDay : -1,
+      doubles:     !!planState.doubles,
+      intent:      planState.intent || 'improve',
       currentMins: planState.currentMins,
+      currentDays: planState.currentDays || 3,
       xtMins:      planState.xtMins,
       races:       (planState.races || []).map(r => ({ ...r })),
       dayMode:     planState.dayMode.slice(),
@@ -3508,7 +5195,7 @@ function applySnapshot(s){
   const savedGoal = RACE[p.goal] ? p.goal : '5k';
   const inferredType = (RACE[savedGoal] && RACE[savedGoal].ultra) ? 'ultra' : 'road';
   planState.goal = savedGoal;
-  setPlanType(p.planType === 'ultra' || p.planType === 'road' ? p.planType : inferredType);
+  setPlanType(['ultra','road','c25k'].includes(p.planType) ? p.planType : inferredType);
   planState.goal = savedGoal;
   pd('goal').value = planState.goal;
   if (p.longDay != null) planState.longDay = p.longDay;
@@ -3521,17 +5208,24 @@ function applySnapshot(s){
   if (b.time && b.maxHr) calibrate();
   planState.currentMins = (typeof p.currentMins === 'number') ? p.currentMins : 180;
   pd('cur-vol').value = planState.currentMins;
+  planState.currentDays = (typeof p.currentDays === 'number') ? Math.max(3, p.currentDays) : 3;
+  pd('cur-days').value = String(planState.currentDays);
+  updateCurAvg();
   planState.xtMins = (typeof p.xtMins === 'number') ? p.xtMins : 45;
   pd('xt-mins').value = planState.xtMins;
-  // v9 stores an array; v8 stored a single string ('mixed' folds into bike)
-  planState.xtTypes = Array.isArray(p.xtTypes) ? p.xtTypes.filter(t => XT_TYPES[t])
-                    : (XT_TYPES[p.xtType] ? [p.xtType] : ['bike']);
-  if (!planState.xtTypes.length) planState.xtTypes = ['bike'];
-  syncXtChips();
-  planState.baseWeeks = (typeof p.baseWeeks === 'number') ? p.baseWeeks : 0;
-  pd('base-weeks').value = String(planState.baseWeeks);
+  // older files named the cross-training type; there's only one kind now
+  planState.xtTypes = ['xt'];
+  planState.baseWeeks = (p.baseWeeks === null || typeof p.baseWeeks === 'number') ? p.baseWeeks : null;
+  pd('base-weeks').value = planState.baseWeeks == null ? 'auto' : String(planState.baseWeeks);
   planState.speedDay = (typeof p.speedDay === 'number') ? p.speedDay : -1;
   pd('speed-day').value = String(planState.speedDay);
+  setIntent(INTENTS[p.intent] ? p.intent : 'improve');
+  planState.doubles = !!p.doubles;
+  document.querySelectorAll('#doubles-toggle .seg-opt').forEach(x => {
+    const on = (x.dataset.dbl === '1') === planState.doubles;
+    x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on);
+  });
+  refreshDoublesVisibility();
   planState.races = Array.isArray(p.races) ? p.races.map(r => ({ ...r })) : [];
   renderRaces();
   planState.sig = null;                                   // don't wipe restored swaps
@@ -3661,6 +5355,7 @@ function makeZip(files){
    calendar and CSV must all resolve them the same way -- otherwise the plan
    shows one workout and the export sends another. */
 function effectiveName(wk, c){
+  if (c.kind === 'c25k') return c.name;      // the programme is fixed
   if (c.kind === 'xt') return c.name || xtMetaOf(c).label;
   const ov = planState.overrides[swapKey(wk.w, c.idx)];
   if (!ov) return c.name;
@@ -3685,22 +5380,33 @@ function planRows(){
         target: kindTarget(c.kind, phaseForCol, c),
         mins: (c.kind === 'xt') ? XT_MINS : durOf(name)
       });
+      // the second run of a double is a session in its own right: it gets a
+      // row, a target, and its own file
+      if (c.double){
+        rows.push({
+          date, week: wk.w, phase: wk.isDown ? 'recovery' : wk.phase,
+          dow: DOW[c.idx], kind: c.double.kind, second: true,
+          session: c.double.name,
+          target: kindTarget(c.double.kind, phaseForCol, c),
+          mins: durOf(c.double.name)
+        });
+      }
     });
   });
   return rows;
 }
 
 function exportZip(weekNo){
-  if (!state) return planError('Calibrate first \u2014 the .FIT files need your paces.');
+  const beginner = planState.generated && planState.generated.c25k;
+  if (!state && !beginner) return planError('Calibrate first \u2014 the .FIT files need your paces.');
   const g = planState.generated; if (!g) return;
   const rows = planRows().filter(r => (weekNo == null || r.week === weekNo) && r.kind !== 'xt');
   if (!rows.length) return planError('Nothing to export for that week.');
   const seen = {}, dayCount = {}, files = [];
   rows.forEach(r => {
-    const i = state.byName[r.session]; if (i == null) return;
-    const sess = state.sessions[i];
+    const sess = sessionByName(r.session); if (!sess) return;
     // filename sorts chronologically and shows the calendar slot at a glance
-    let base = ymd(r.date) + '_W' + String(r.week).padStart(2,'0') + '-' + DOW[DOW.indexOf(r.dow)] + '_' + slug(r.session);
+    let base = ymd(r.date) + '_W' + String(r.week).padStart(2,'0') + '-' + DOW[DOW.indexOf(r.dow)] + (r.second ? '_pm' : '') + '_' + slug(r.session);
     if (seen[base]) base += '-' + (++seen[base]); else seen[base] = 1;
     // Each file needs a distinct serial/timestamp or a watch treats a batch as
     // one file and keeps only the last. Date drives it, plus a counter so two
@@ -4027,15 +5733,50 @@ function showView(v){
   pd('view-calibrate').style.display = v === 'calibrate' ? '' : 'none';
   pd('view-sessions').style.display  = v === 'sessions' ? '' : 'none';
   pd('view-plan').style.display      = v === 'plan' ? '' : 'none';
+  pd('view-start').style.display     = v === 'start' ? '' : 'none';
+  pd('nav-start').setAttribute('aria-selected', v === 'start');
   pd('nav-calibrate').setAttribute('aria-selected', v === 'calibrate');
   pd('nav-sessions').setAttribute('aria-selected', v === 'sessions');
   pd('nav-plan').setAttribute('aria-selected', v === 'plan');
 }
+/* Looking at the beginner tab is not the same as choosing the beginner
+   programme. Setting the plan type on tab-click meant a curious visit to "New
+   to running" left the plan builder with every setting hidden -- goal, race
+   date, days, the lot -- with no indication that the Road/Ultra toggle was what
+   brought them back. The type is now set when a C25K plan is actually built,
+   and reverts when the athlete returns to the builder. */
+pd('nav-start').onclick     = () => showView('start');
 pd('nav-calibrate').onclick = () => showView('calibrate');
 pd('nav-sessions').onclick  = () => showView('sessions');
-pd('nav-plan').onclick      = () => showView('plan');
+pd('nav-plan').onclick      = () => {
+  if (planState.planType === 'c25k') setPlanType(lastBuilderType);
+  showView('plan');
+};
+
+
+/* ---- new-to-running tab ---- */
+pd('start-date-c25k').value = ymd(planStartMonday());
+pd('build-c25k').onclick = () => {
+  const pick = pd('start-days').value.split('').map(Number);
+  planState.dayMode = ['off','off','off','off','off','off','off'];
+  pick.forEach(d => planState.dayMode[d] = 'run');
+  planState.planType = 'c25k';
+  planState.longDay  = pick[pick.length-1];
+  planState.overrides = {}; planState.flips = {}; planState.done = {}; planState.sig = null;
+  const d = pd('start-date-c25k').value;
+  if (d) pd('start-date').value = d;
+  generateC25K();
+  pd('c25k-out').scrollIntoView({ behavior:'smooth', block:'start' });
+};
+
+pd('c25k-zip').onclick = () => exportZip(null);
+pd('c25k-ics').onclick = () => exportIcs();
+pd('c25k-a4').onclick  = () => printCalendar('a4');
 
 // offer to restore a browser backup from a previous visit
+updateCurAvg();
+setIntent('improve');
+refreshDoublesVisibility();
 checkBackup();
 </script>
 </body>
