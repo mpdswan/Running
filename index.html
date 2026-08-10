@@ -88,6 +88,66 @@ h1 .accent{color:var(--flame)}
 /* ---------- benchmark panel ---------- */
 .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);position:sticky;top:16px}
 .c25k-main{min-width:0}
+.shift-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:center;margin-bottom:12px}
+.shift-row input[data-f="code"]{grid-column:1/3;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.shift-row .del{grid-column:2;justify-self:end;width:30px}
+.shift-row input{width:100%}
+.shift-row .del{border:1px solid var(--line);background:var(--white);border-radius:6px;color:var(--ink-soft);font-size:15px;line-height:1}
+.shift-preview{margin-bottom:18px}
+.sp-grid{display:flex;flex-wrap:wrap;gap:3px}
+.sp-day{width:26px;height:30px;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;border:1px solid var(--line)}
+.sp-D{background:#FFE9DC;border-color:#F0B18A}
+.sp-N{background:#DEE2F5;border-color:#9FA9DA}
+.sp-E{background:#FFF3C4;border-color:#E2C65A}
+.sp-O{background:#E4F5E9;border-color:#8FCBA4}
+.sp-H{background:#F2F4FA}
+.sp-x{opacity:.35}
+.sp-key{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);margin-top:8px}
+.sp-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+/* ---- shift bank: one tickable box per slot of the rotation ---- */
+.sb-pat{margin-bottom:14px}
+.sb-pat-h{font-size:12.5px;color:var(--ink-soft);margin-bottom:6px}
+.sb-pat-h b{color:var(--ink);font-family:var(--mono);letter-spacing:.1em}
+.sb-grid{display:flex;flex-wrap:wrap;gap:5px}
+.sb-slot{width:52px;border:1px solid var(--line);border-radius:7px;background:var(--white);padding:5px 0 4px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--ink-soft);line-height:1.1;user-select:none}
+.sb-slot .sb-n{font-size:9px;opacity:.7}
+.sb-slot .sb-c{font-size:14px;font-weight:700;color:var(--ink)}
+.sb-slot input{margin:0;width:13px;height:13px}
+.sb-slot.sb-on{border-color:#8FCBA4;background:#EDF8F1}
+.sb-slot.sb-D .sb-c{color:#B05A18}
+.sb-slot.sb-N .sb-c{color:#3B47A0}
+.sb-slot.sb-E .sb-c{color:#8A6D00}
+.sb-slot.sb-O .sb-c{color:#2E7D4F}
+.sb-tools{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.sb-tools .ghost-btn{padding:4px 10px;font-size:12px}
+.sb-count{font-size:12.5px;color:var(--ink-soft);margin-top:8px}
+.sb-count b{color:var(--ink)}
+/* Both columns of the shift tab run long -- a rotation of settings on the left,
+   a whole block of rotations on the right -- so each one scrolls on its own
+   rather than dragging the other along with it. Only where there are genuinely
+   two columns and enough height to be worth it. */
+/* The settings column carries a lot: a rotation, a bank of tick boxes, three
+   segmented buttons and four rows of export controls. It needs room to breathe
+   and a proper inner margin, which the bare .panel never had. */
+#view-shift{max-width:1140px}
+#view-shift > .panel{padding:18px 20px 20px}
+#view-shift .panel-h{font-family:var(--disp);text-transform:uppercase;font-size:22px;font-weight:700;letter-spacing:.02em}
+#view-shift .panel-sub{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin:4px 0 16px}
+@media(min-width:821px){#view-shift{grid-template-columns:412px 1fr}}
+@media(min-width:921px){
+  #view-shift{padding-bottom:24px}
+  #view-shift > .panel,
+  #view-shift > .c25k-main{max-height:calc(100vh - 40px);overflow-y:auto;overscroll-behavior:contain;
+                           position:sticky;top:16px}
+  #view-shift > .c25k-main{padding-right:4px}
+  #view-shift > .panel::-webkit-scrollbar,
+  #view-shift > .c25k-main::-webkit-scrollbar{width:9px}
+  #view-shift > .panel::-webkit-scrollbar-thumb,
+  #view-shift > .c25k-main::-webkit-scrollbar-thumb{background:#D8DEEC;border-radius:5px}
+  #view-shift > .panel::-webkit-scrollbar-thumb:hover,
+  #view-shift > .c25k-main::-webkit-scrollbar-thumb:hover{background:#BFC8DE}
+}
+.check-row{display:flex;align-items:center;gap:8px;font-weight:500}
 .c25k-main .plan-out{margin-top:0}
 #view-start .footnote{margin-top:22px}
 @media(max-width:820px){.c25k-main{margin-top:20px}}
@@ -309,7 +369,9 @@ h1 .accent{color:var(--flame)}
 .wk-days{display:flex;flex-direction:column}
 .pl-day{display:grid;grid-template-columns:16px 30px 11px minmax(0,1fr) auto 74px 62px;align-items:center;gap:11px;padding:9px 16px;border-bottom:1px solid #EEF1F8}
 .pl-day:last-child{border-bottom:none}
-.pl-dow{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink-soft);text-transform:uppercase}
+.pl-dow{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;white-space:nowrap}
+.wk-card.is-rota .pl-day{grid-template-columns:16px 64px 11px minmax(0,1fr) auto 74px 62px}
+.pl-shiftch{font-style:normal;display:inline-block;min-width:11px;margin-left:4px;color:var(--track);opacity:.85}
 .pl-dot{width:11px;height:11px;border-radius:3px}
 .pl-name{min-width:0;overflow:hidden}
 .pl-sess{font-size:14.5px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -364,7 +426,13 @@ h1 .accent{color:var(--flame)}
 .cal-grid td{border:1px solid #C3C9D8;vertical-align:top;padding:3px 4px;height:96px;overflow:hidden}
 .cal-blank{background:#F7F8FB}
 .cal-rest{background:#fff}
-.cal-daynum{font-family:var(--mono);font-size:9pt;font-weight:700;color:var(--ink);margin-bottom:2px}
+.cal-daynum{font-family:var(--mono);font-size:9pt;font-weight:700;color:var(--ink);margin-bottom:2px;display:flex;align-items:baseline;gap:4px}
+/* the shift each day falls on, printed beside the date on a rotation calendar */
+.cal-shift{font-family:var(--mono);font-size:6.6pt;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:1px 4px;color:#3E4658;background:#F2F4FA;border:1px solid #E2E7F2}
+.cal-sw-D{background:#FFE9DC;border-color:#F0B18A;color:#8A3D0B}
+.cal-sw-N{background:#DEE2F5;border-color:#9FA9DA;color:#2C3585}
+.cal-sw-E{background:#FFF3C4;border-color:#E2C65A;color:#6E5400}
+.cal-sw-O{background:#E4F5E9;border-color:#8FCBA4;color:#1F6B42}
 .cal-item{margin-bottom:3px;line-height:1.2;border-left:3px solid var(--lv-easy);padding-left:4px}
 .cal-name{display:block;font-size:8.4pt;font-weight:600;color:var(--ink);word-wrap:break-word}
 .cal-meta{display:block;font-family:var(--mono);font-size:7.4pt;color:var(--ink-soft)}
@@ -422,6 +490,7 @@ h1 .accent{color:var(--flame)}
       <button class="nav-tab" id="nav-start" role="tab" aria-selected="false">New to running</button>
       <button class="nav-tab" id="nav-calibrate" role="tab" aria-selected="true">Calibrate</button>
       <button class="nav-tab" id="nav-plan" role="tab" aria-selected="false">Build a plan</button>
+      <button class="nav-tab" id="nav-shift" role="tab" aria-selected="false">Shift work</button>
       <button class="nav-tab" id="nav-sessions" role="tab" aria-selected="false">Session library</button>
     </nav>
   </div>
@@ -592,7 +661,7 @@ h1 .accent{color:var(--flame)}
       <div class="hint">Snaps to the Monday of that week</div>
     </div>
 
-    <button class="cta" id="build-c25k">Build my nine weeks</button>
+    <button class="go" id="build-c25k">Build my nine weeks</button>
 
     
   </div>
@@ -616,6 +685,85 @@ h1 .accent{color:var(--flame)}
       <p><b>Go slower than feels right.</b> Nearly everyone who struggles with this programme is running too fast. You should be able to hold a conversation. There are deliberately no pace targets here.</p>
       <p><b>Repeat any week you need to.</b> Nothing breaks if week five takes a fortnight. Finishing matters, the calendar doesn't.</p>
       <p><b>At the end you run a 5K.</b> Enter that time on the Calibrate tab and the rest of this app &mdash; pace bands, heart-rate zones, and plans for anything up to a hundred miles &mdash; opens up around it.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ shift worker view ============ -->
+<section class="cal-wrap" id="view-shift" style="display:none" aria-label="Shift work planner">
+  <div class="panel">
+    <h2 class="panel-h">Training around shifts</h2>
+    <p class="panel-sub">Tell the planner your rotation and it works out the training around it &mdash; long runs land in your rest banks, hard sessions avoid the days you can't do them, and the block still periodises properly across the whole thing.</p>
+
+    <div class="field">
+      <label>Your rotation</label>
+      <div id="shift-rows"></div>
+      <button class="ghost-btn" id="shift-add" style="margin-top:8px">Add another pattern</button>
+      <div class="hint">Write the pattern as letters &mdash; <b>D</b> day, <b>N</b> night, <b>E</b> evening, <b>O</b> off. <code>DDNNOOOOOO</code> is two days, two nights, six off. The <b>from</b> date is where the first letter lands, so set it to a day you know you were on the first shift of the cycle. Add a second pattern if your rotation changes with the season.</div>
+    </div>
+
+    <div class="field">
+      <label>Your shift bank &mdash; tick the days you could run</label>
+      <div id="shift-bank"></div>
+      <div class="hint" id="shift-bank-hint">One box for every day of the rotation, in order. Tick the ones where a run is realistic and leave the rest clear &mdash; it isn't all-or-nothing, so if your <b>first night</b> has a whole day in front of it, tick it: that's often the best slot in the bank for a hard session. The plan still only uses the days it needs.</div>
+    </div>
+
+    <div class="field">
+      <label for="shift-speed-slot">Hardest session of the bank</label>
+      <select id="shift-speed-slot"></select>
+      <div class="hint">Leave it on <b>Any</b> and the plan puts your speed session wherever it sits furthest from the long run. Pick a slot if you know one suits you &mdash; the first night with a clear day in front of it, say, or your second day off. It can't sit right beside the long run, and if the bank can't fit it there on a given rotation the plan places it sensibly instead.</div>
+    </div>
+
+    <div class="field">
+      <label for="shift-goal">Goal race</label>
+      <select id="shift-goal"></select>
+    </div>
+    <div class="field">
+      <label>What do you want from it?</label>
+      <div class="seg-toggle" id="shift-intent-toggle" role="group" aria-label="Training intent">
+        <button type="button" class="seg-opt" data-intent="finish" aria-pressed="false">Finish</button>
+        <button type="button" class="seg-opt is-on" data-intent="improve" aria-pressed="true">Progression</button>
+        <button type="button" class="seg-opt" data-intent="pb" aria-pressed="false">Chase a PB</button>
+      </div>
+      <div class="hint" id="shift-intent-hint"></div>
+    </div>
+    <div class="field">
+      <label for="shift-race-date">Race date (optional)</label>
+      <input id="shift-race-date" type="date">
+    </div>
+    <div class="field">
+      <label for="shift-start">Start date</label>
+      <input id="shift-start" type="date">
+      <div class="hint">Snaps forward to the next start of your rotation, so every block of the plan lines up with the same point in the pattern.</div>
+    </div>
+
+    <button class="go" id="build-shift">Build my plan</button>
+    <div class="plan-err" id="shift-err"></div>
+  </div>
+
+  <div class="c25k-main">
+    <div id="shift-preview" class="shift-preview"></div>
+    <div id="shift-out" class="plan-out"></div>
+    <div class="field" id="shift-export" style="display:none">
+      <label>Take it with you</label>
+      <div class="save-row">
+        <button class="ghost-btn" id="shift-zip">All .FIT</button>
+        <button class="ghost-btn" id="shift-ics">Calendar</button>
+        <button class="ghost-btn" id="shift-csv">CSV</button>
+      </div>
+      <label style="margin-top:14px">Save it</label>
+      <div class="save-row">
+        <button class="ghost-btn" id="shift-save">Save to file</button>
+        <button class="ghost-btn" id="shift-load">Load from file</button>
+      </div>
+      <div class="hint">Saves your rotation, your shift bank and every tick and swap. Load it back any time.</div>
+      <label style="margin-top:14px">Print a wall calendar</label>
+      <div class="save-row">
+        <button class="ghost-btn" id="shift-a4">A4 landscape</button>
+        <button class="ghost-btn" id="shift-a3">A3 landscape</button>
+      </div>
+      <div class="hint">A proper month grid with your rotation's sessions on the days they fall &mdash; the one to put on the fridge.</div>
     </div>
   </div>
 </section>
@@ -2938,8 +3086,13 @@ function weeklyTargets(N, specEnd, taperWeeks, prof, isDownWeek, currentMins){
    Solving  long <= cap * (long + rest)  gives  long <= cap*rest/(1-cap).
    Without this a three-day-a-week runner is handed a three-hour long run
    inside a three-hour week. */
+/* A shift build has no fixed day grid to read the week's shape from, so it
+   hands the ladder the weekly-equivalent shape its rotation actually gives:
+   available days per block, expressed per seven days. */
+let SHAPE_DAYS = null;
 function longCapacity(cap){
-  const nRun = runDaysOf().length, nXt = xtDaysOf().length;
+  const nRun = SHAPE_DAYS ? SHAPE_DAYS.run : runDaysOf().length;
+  const nXt  = SHAPE_DAYS ? SHAPE_DAYS.xt  : xtDaysOf().length;
   if (nRun < 2) return LONG_RUNGS[0];
   const q = (nRun >= 4) ? 2 : (nXt >= 2 ? 2 : 1);
   const easyDays = Math.max(0, nRun - 1 - q);
@@ -3218,12 +3371,36 @@ const XT_TYPES = {
 const xtSelected = () => ['xt'];
 const xtMetaOf = () => XT_TYPES.xt;
 let planState = { dayMode:['off','run','off','run','off','run','run'], longDay:6, raceDate:null, goal:'5k', planType:'road',
-                  xtTypes:['xt'], baseWeeks:null, speedDay:-1, doubles:false, intent:'improve',
+                  xtTypes:['xt'], baseWeeks:null, shiftMode:false, shiftPatterns:[], shiftSpeedSlot:-1, speedDay:-1, doubles:false, intent:'improve',
                   currentMins:180, currentDays:3, xtMins:45, races:[], overrides:{}, flips:{}, done:{}, generated:null };
 // "any" days are counted as run days for capacity (long-run share, frequency),
 // since the plan will lean on them for running whenever the week needs it
 const runDaysOf = () => planState.dayMode.map((m,i)=>(m==='run'||m==='any')?i:-1).filter(i=>i>=0);
 const xtDaysOf  = () => planState.dayMode.map((m,i)=>m==='xt' ?i:-1).filter(i=>i>=0);
+
+/* ---- one settings record per planner tab ----
+   The three planners are separate tools that happen to share an engine. Picking
+   a half marathon on the shift tab used to write straight into the single
+   shared state, so the plan builder came back locked to whatever the other tab
+   had last chosen. Each tab now owns its own goal, race date, start date and
+   intent; the engine is handed the right record at build time, and nothing but
+   the calibration (paces, zones, what you currently run) crosses between them. */
+const TAB_PREFS = {
+  plan:  { goal:'5k', planType:'road', raceDate:null, start:null, intent:'improve' },
+  shift: { goal:'5k', planType:'road', raceDate:null, start:null, intent:'improve' },
+  c25k:  { goal:'5k', planType:'c25k', raceDate:null, start:null, intent:'improve' }
+};
+/* Which planner does the state on screen belong to? The beginner programme
+   announces itself through the plan type; otherwise the shift flag decides. */
+const currentTab = () => planState.planType === 'c25k' ? 'c25k'
+                       : planState.shiftMode ? 'shift' : 'plan';
+function applyTabPrefs(which){
+  const p = TAB_PREFS[which] || TAB_PREFS.plan;
+  planState.goal     = RACE[p.goal] ? p.goal : '5k';
+  planState.planType = p.planType;
+  planState.raceDate = p.raceDate || null;
+  planState.intent   = INTENTS[p.intent] ? p.intent : 'improve';
+}
 
 const pd = id => document.getElementById(id);
 const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
@@ -3236,7 +3413,19 @@ function planStartMonday(){
   return (mon < now) ? addDays(mon,7) : mon;
 }
 
-function dayDist(a,b){ const d = Math.abs(a-b); return Math.min(d, 7-d); }
+/* ---- the length of a training block, in days ----
+   Everybody on a calendar week trains in sevens. A shift worker doesn't: their
+   rotation is the unit that actually repeats, so for them the block is the
+   rotation and every day-arithmetic in the engine has to wrap at its length
+   rather than at seven. CYCLE is that length; it is 7 for every normal plan,
+   and is set to the rotation length for the duration of a shift build. */
+let CYCLE = 7;
+const setCycle = n => { CYCLE = Math.max(2, Math.round(n) || 7); };
+/* Weekly-equivalent scaling: a target expressed per week becomes a target per
+   block simply by lengthening it in proportion. */
+const perCycle = mins => Math.round((mins || 0) * CYCLE / 7);
+
+function dayDist(a,b){ const d = Math.abs(a-b); return Math.min(d, CYCLE-d); }
 
 /* Choose quality days so that all hard days (including the long run) are as
    far apart as possible. The candidate set is tiny (at most 2 chosen from <=6),
@@ -3247,7 +3436,7 @@ function pickQualityDays(available, longDay, count){
   if (count <= 0) return [];
   const pool = available.filter(d => d !== longDay);
   if (!pool.length) return [];
-  const afterLong = (longDay+1)%7;
+  const afterLong = (longDay+1)%CYCLE;
 
   const combos = [];
   const build = (start, acc) => {
@@ -3523,6 +3712,169 @@ function addDoubles(weeks, targets){
   return weeks;
 }
 
+
+/* ============ SHIFT PATTERNS ============
+
+   A shift worker doesn't have a Monday-to-Sunday week. They have a rotation --
+   two days, two nights, six off -- that slides through the calendar and repeats
+   every ten days, so "my long run is on Saturday" is meaningless to them. What
+   they have instead is banks of rest days that fall wherever they fall.
+
+   Forcing that into a seven-day week was the wrong call. It made every week a
+   different shape, so the plan lurched between a week with six rest days and a
+   week with two and had to redistribute volume to paper over it. The rotation
+   is the thing that actually repeats, so the rotation is the block: for a
+   DDNNOOOOOO worker one "week" of the plan is ten days, every block has exactly
+   the same shape, and the periodisation -- volume ramp, deloads, long-run
+   ladder, taper -- runs over rotations instead of over Mondays.
+
+   The trade is real and deliberate: a ten-day block means about ten days
+   between long runs rather than seven. The block is bigger to compensate, the
+   extra volume goes into medium and easy runs inside the same bank, and each
+   bank still carries its two quality sessions. Progression per unit of TIME is
+   unchanged -- it is just measured in rotations.
+
+   Availability is per SLOT of the rotation, not per shift type. "I can never
+   run on nights" is too blunt: the first night has a whole day in front of it
+   and is often the best session of the bank, while the last one is followed by
+   a day nobody should run. Each slot is ticked individually.
+
+   Any date not covered by a pattern's date range counts as leave: fully
+   available. That's deliberate -- people book holidays around their rotation,
+   and those are the days they can train properly. */
+
+const SHIFT_LETTERS = { D:'Day shift', N:'Night shift', E:'Evening / late', O:'Off', H:'Leave' };
+/* The same thing said in one word, for the wall calendar. */
+const SHIFT_WORD = { D:'Day', N:'Night', E:'Evening', O:'Off', H:'Leave' };
+
+/* One rotation, running between two dates. `code` is the repeating pattern and
+   `from` is both the start of the range and the day the pattern's first
+   character lands on, which keeps the anchoring obvious rather than hiding a
+   separate offset field. */
+const shiftValidPatterns = () =>
+  (planState.shiftPatterns || []).filter(p => cleanCode(p.code) && p.from && p.to);
+const cleanCode = c => String(c || '').toUpperCase().replace(/[^A-Z]/g,'');
+
+/* Which slot of which pattern does this date land on? Returns null when the
+   date sits outside every rotation -- that's leave, and leave is free. */
+function shiftSlotOn(date){
+  for (const p of shiftValidPatterns()){
+    const from = parseYmd(p.from), to = parseYmd(p.to);
+    if (!from || !to || date < from || date > to) continue;
+    const code = cleanCode(p.code);
+    const days = Math.round((date - from) / 86400000);
+    const i = ((days % code.length) + code.length) % code.length;
+    return { pat:p, i, ch:code[i], len:code.length };
+  }
+  return null;
+}
+function shiftCharOn(date){
+  const s = shiftSlotOn(date);
+  return s ? s.ch : 'H';         // outside every rotation: leave
+}
+
+/* Sensible opening ticks for a freshly typed pattern. Off days are available;
+   the off day immediately after the last night is not, because nobody trains
+   well straight off a run of nights; and a night with a clear day in front of
+   it IS available, because that day is one of the best training slots the
+   rotation offers. Every one of these is a default, not a rule -- the athlete
+   overrides any box they disagree with. */
+function defaultSlots(code){
+  const c = cleanCode(code), L = c.length;
+  if (!L) return [];
+  const prev = i => c[(i + L - 1) % L];
+  return Array.from({length:L}, (_,i) => {
+    const ch = c[i];
+    if (ch === 'O' || ch === 'H') return prev(i) !== 'N';   // not straight off nights
+    if (ch === 'N') return prev(i) !== 'N' && prev(i) !== 'D' && prev(i) !== 'E';
+    return false;                                            // day / evening shifts
+  });
+}
+/* Keep the tick list the same length as the pattern, preserving what the
+   athlete has already said wherever the code hasn't changed underneath it. */
+function syncSlots(p){
+  const L = cleanCode(p.code).length;
+  if (!L){ p.slots = []; return p; }
+  if (!Array.isArray(p.slots) || p.slots.length !== L || p.codeSeen !== cleanCode(p.code)){
+    const def = defaultSlots(p.code);
+    const old = Array.isArray(p.slots) ? p.slots : [];
+    p.slots = def.map((d,i) => (p.codeSeen && old[i] !== undefined && p.codeSeen[i] === cleanCode(p.code)[i]) ? old[i] : d);
+    p.codeSeen = cleanCode(p.code);
+  }
+  return p;
+}
+
+/* Turn a date into a training availability by looking up its slot's tick. */
+function shiftAvailabilityOn(date){
+  const s = shiftSlotOn(date);
+  if (!s) return 'any';                       // leave: fully available
+  const slots = Array.isArray(s.pat.slots) && s.pat.slots.length === s.len
+              ? s.pat.slots : defaultSlots(s.pat.code);
+  return slots[s.i] ? 'any' : 'off';          // available: the plan decides if it needs it
+}
+
+/* The availability grid for the block of CYCLE days beginning `cycStart`. */
+function shiftWeekMode(cycStart, len){
+  const L = len || CYCLE;
+  return Array.from({length:L}, (_,i) => shiftAvailabilityOn(addDays(cycStart, i)));
+}
+
+/* How long is the rotation? The pattern covering the start of the block sets
+   the block length; a second seasonal pattern of a different length is read for
+   availability but doesn't re-cut the periodisation mid-plan. */
+function shiftCycleLen(onDate){
+  const s = onDate ? shiftSlotOn(onDate) : null;
+  if (s) return s.len;
+  const p = shiftValidPatterns()[0];
+  return p ? cleanCode(p.code).length : 7;
+}
+/* Move a start date forward to the next slot 0, so every block of the plan
+   begins at the same point in the rotation and they all share a shape. */
+function shiftAlignStart(d){
+  /* Days before the rotation begins are leave -- fully available, and NOT a
+     valid place to start a block from, because the block would be shaped by a
+     week of holiday and then run out of step with the pattern for good. So the
+     scan looks for a genuine slot 0 and steps over uncovered dates. */
+  for (let k = 0; k < 400; k++){
+    const s = shiftSlotOn(addDays(d, k));
+    if (s && s.i === 0) return addDays(d, k);
+  }
+  // no rotation covers anything from here on: fall back to where one starts
+  const froms = shiftValidPatterns().map(p => parseYmd(p.from)).filter(Boolean).sort((a,b) => a-b);
+  const next = froms.find(f => f >= d);
+  return next || d;
+}
+
+/* Where the long run goes this week: the available day sitting in the longest
+   unbroken block of available days, so it lands in a rest bank rather than
+   squeezed between two shifts. Ties break toward the later day, which tends to
+   be deeper into the block and better rested. */
+function shiftLongDay(mode){
+  const L = mode.length;
+  let best = -1, bestScore = -1;
+  for (let d = 0; d < L; d++){
+    if (mode[d] === 'off') continue;
+    let back = 0, fwd = 0;
+    for (let i = d-1; i >= 0 && mode[i] !== 'off'; i--) back++;
+    for (let i = d+1; i <  L && mode[i] !== 'off'; i++) fwd++;
+    const score = (back + fwd) * 10 + back;      // prefer deeper into the block
+    if (score >= bestScore){ bestScore = score; best = d; }
+  }
+  return best;
+}
+
+const parseYmd = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||'')); return m ? new Date(+m[1], +m[2]-1, +m[3]) : null; };
+
+/* Where the athlete has asked for their hardest session. On a calendar week
+   that's a weekday; on a rotation it's a slot of the bank, which is the same
+   idea expressed in the unit that actually repeats for them. Either way it's a
+   preference, not a command -- if it can't sit clear of the long run in a given
+   block, the plan places the session properly instead. */
+function preferredSpeedIdx(){
+  const v = planState.shiftMode ? planState.shiftSpeedSlot : planState.speedDay;
+  return (typeof v === 'number' && v >= 0) ? v : -1;
+}
+
 function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDayIdx, isTimeTrial, prof, longMins, targetMins){
   const cells = {};
   runAv.forEach(d => cells[d] = { kind:'easy' });
@@ -3535,7 +3887,7 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
        week except the race itself. */
     if (raceDayIdx != null){
       cells[raceDayIdx] = { kind: isTimeTrial ? 'timetrial' : 'race' };
-      const before = (raceDayIdx+6)%7;
+      const before = (raceDayIdx+CYCLE-1)%CYCLE;
       const preRace = runAv.filter(d => d < raceDayIdx);
       /* The day before the race: a shakeout if it's the only running day left
          before race morning (better than nothing at all), otherwise a rest day. */
@@ -3544,8 +3896,8 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
         else delete cells[before];
       }
       // clear the two days immediately after the race...
-      for (let d = raceDayIdx+1; d <= Math.min(6, raceDayIdx+1); d++) delete cells[d];
-      for (let d = raceDayIdx+2; d <= 6; d++) delete cells[d];
+      for (let d = raceDayIdx+1; d <= Math.min(CYCLE-1, raceDayIdx+1); d++) delete cells[d];
+      for (let d = raceDayIdx+2; d <= CYCLE-1; d++) delete cells[d];
       /* ...then give back the first available day two clear days later as an
          easy jog. An empty second half of race week is not a taper, it's a gap. */
       const after = runAv.find(d => d >= raceDayIdx + 2);
@@ -3557,10 +3909,10 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
                                     && (raceDayIdx == null || dayDist(d, raceDayIdx) >= 2));
     if (openDays.length) cells[openDays[0]] = { kind:'sharpener' };
     // first week of a two-week taper still carries a reduced long run
-    if (longMins > 0 && longDay !== raceDayIdx && cells[longDay]
+    if (longMins > 0 && longDay !== raceDayIdx && cells[longDay] && runAv.includes(longDay)
         && !['race','timetrial','sharpener'].includes(cells[longDay].kind)) cells[longDay] = { kind:'long' };
   } else {
-    cells[longDay] = { kind: isDown ? 'longdown' : 'long' };
+    if (runAv.includes(longDay)) cells[longDay] = { kind: isDown ? 'longdown' : 'long' };
     const runDays = runAv.length;
     const xtDays  = xtAv.length;
     /* How many quality sessions the week can carry.
@@ -3579,14 +3931,19 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
        session would mean the athlete never runs easy at all. One quality day
        plus the long run is the only sane shape. */
     if (runAv.length <= 2) q = Math.min(q, 1);
+    /* On a rotation the aim is two quality sessions per bank, and a ten-day
+       block with six days off has room for both. Only genuinely thin rotations
+       -- three usable days or fewer in the whole block -- drop to one, because
+       there the two would end up side by side. */
+    if (planState.shiftMode && runAv.length <= 3) q = Math.min(q, 1);
     // down weeks: one quality session keeps the intensity, volume comes down
     if (isDown) q = 1;
     // a small week can't carry two quality sessions and a long run as well
-    if (targetMins && targetMins < 150) q = 1;
+    if (targetMins && targetMins < perCycle(150)) q = 1;
     let qd = pickQualityDays(runAv, longDay, q);
     // honour a fixed speed-session day whenever this week's shape allows it:
     // it must be a run day, not the long run, and not right next to it
-    const sd = planState.speedDay;
+    const sd = preferredSpeedIdx();
     if (sd != null && sd >= 0 && runAv.includes(sd) && sd !== longDay && dayDist(sd, longDay) >= 2){
       if (q === 2){
         const others = runAv.filter(d => d !== longDay && d !== sd && dayDist(d, sd) >= 2 && dayDist(d, longDay) >= 2);
@@ -3610,13 +3967,13 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
        post-hard day as recovery meant a well-spaced five-day week ended up with
        no easy runs in it at all, and the whole week's aerobic volume collapsed
        into 20-minute shuffles. */
-    const afterLong = (longDay+1)%7;
+    const afterLong = (longDay+1)%CYCLE;
     if (cells[afterLong] && cells[afterLong].kind === 'easy') cells[afterLong] = { kind:'recovery' };
     /* Mark the day before the long run. It stays an easy run -- the week needs
        the volume -- but it gets capped short when the sizing happens, so you
        don't end up with a two-hour easy run the day before a three-hour long
        run. */
-    const eve = (longDay+6)%7;
+    const eve = (longDay+CYCLE-1)%CYCLE;
     if (cells[eve] && cells[eve].kind === 'easy') cells[eve].preLong = true;
     /* The midweek medium-long run.
 
@@ -3633,7 +3990,7 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
        when the long run is barely over an hour, a "medium-long" run would be
        the same size as it, which makes the label meaningless. */
     const wantsMed = WANTS_MEDLONG.has(planState.goal) && !isDown && !isTaper
-                     && phase !== 'base' && targetMins >= 240
+                     && phase !== 'base' && targetMins >= perCycle(240)
                      && longMins >= MEDLONG_RUNGS[0] + 10;
     if (wantsMed){
       const sec = runAv.find(d => cells[d] && cells[d].kind === 'secondary');
@@ -3643,7 +4000,7 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
         // no second quality day to convert: take a spare easy day if one sits
         // far enough from the long run to be worth running long on
         const spare = runAv
-          .filter(d => cells[d] && cells[d].kind === 'easy' && dayDist(d, longDay) >= 2 && d !== (longDay+1)%7)
+          .filter(d => cells[d] && cells[d].kind === 'easy' && dayDist(d, longDay) >= 2 && d !== (longDay+1)%CYCLE)
           .sort((a,b) => dayDist(b, longDay) - dayDist(a, longDay));
         if (spare.length) cells[spare[0]] = { kind:'medlong' };
       }
@@ -3787,7 +4144,21 @@ function shortestOf(names){
   return best;
 }
 
-function planError(msg){ const e = pd('pl-err'); e.textContent = msg; e.classList.add('show'); }
+/* A refused build must not leave the previous plan sitting there: the settings
+   on screen no longer describe it, and acting on a stale plan is worse than
+   seeing an empty page with the reason why. */
+function planError(msg){
+  const e = pd('pl-err'); e.textContent = msg; e.classList.add('show');
+  planState.generated = null; planState.sig = null;
+  /* Only a shift build clears the shift tab's output -- a failure over on the
+     plan builder has no business wiping a rotation plan the athlete is using. */
+  const se = pd('shift-err');
+  if (planState.shiftMode){
+    const target = pd('shift-out');
+    if (target) target.innerHTML = '';
+    if (se){ se.textContent = msg; se.classList.add('show'); }
+  }
+}
 
 /* Estimated weekly load from the actual session data. Cross-training is
    counted separately (assume ~45 min) and never folded into run volume. */
@@ -3859,10 +4230,18 @@ function buildCalendar(){
     const k = ymd(r.date);
     (byDate[k] = byDate[k] || []).push(r);
   });
-  // index plan weeks by the Monday they start on, so each calendar row can be
-  // labelled with the block phase it belongs to
+  /* Index plan blocks by every date they cover, so a calendar row can find the
+     block it belongs to. A rotation doesn't start on a Monday and doesn't have
+     to be seven days long, so looking blocks up by their start date alone would
+     leave most rows unlabelled. */
   const weekByMonday = {};
-  g.weeks.forEach(wk => { weekByMonday[ymd(wk.wkStart)] = wk; });
+  g.weeks.forEach(wk => {
+    const len = wk.cycleDays || 7;
+    for (let i = 0; i < len; i++){
+      const k = ymd(addDays(wk.wkStart, i));
+      if (!weekByMonday[k]) weekByMonday[k] = wk;
+    }
+  });
   const phaseOf = wk => {
     if (!wk) return null;
     if (wk.cells.some(c => c.kind === 'race')) return { label:'Race Week', cls:'ph-race' };
@@ -3934,8 +4313,15 @@ function buildCalendar(){
             <span class="cal-meta">${fmtHrs(r.mins)}${km ? ' \u00b7 ' + fmtKm(km) : ''}</span>
           </div>`;
         }).join('');
+        /* On a rotation the wall calendar has to say which shift each day is,
+           or the plan can't be checked against the roster at a glance. */
+        // only for days the rotation actually covers -- a date outside every
+        // pattern is leave, and labelling it would be noise
+        const sl = g.shift ? shiftSlotOn(d) : null;
+        const shiftWord = sl ? (SHIFT_WORD[sl.ch] || '') : '';
         return `<td class="${items.length ? 'cal-has' : 'cal-rest'}">
-          <div class="cal-daynum">${d.getDate()}</div>
+          <div class="cal-daynum">${d.getDate()}${shiftWord
+            ? `<span class="cal-shift cal-sw-${sl.ch}">${shiftWord}</span>` : ''}</div>
           ${entries || '<div class="cal-off">rest</div>'}
         </td>`;
       });
@@ -3945,7 +4331,7 @@ function buildCalendar(){
     return `<section class="cal-page${weekRows.length >= 6 ? ' cal-six' : ''}">
       <div class="cal-head">
         <h2>${MONTHNAME[mon]} ${year}</h2>
-        <span class="cal-sub">${g.prof} plan \u00b7 ${g.N} weeks</span>
+        <span class="cal-sub">${g.prof} plan \u00b7 ${g.shift ? g.N + ' rotations of ' + g.cycleDays + ' days' : g.N + ' weeks'}</span>
       </div>
       <table class="cal-grid">
         <thead><tr><th class="cal-phase-head"></th>${['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
@@ -4219,31 +4605,58 @@ function generateC25K(){
   pd('c25k-export').style.display = '';
 }
 function generatePlan(){
+  // hand the engine the settings of whichever planner this plan belongs to
+  applyTabPrefs(currentTab());
   // the beginner programme is a fixed table, not a generated block
-  if (planState.planType === 'c25k') return generateC25K();
+  if (planState.planType === 'c25k'){ setCycle(7); SHAPE_DAYS = null; return generateC25K(); }
   pd('pl-err').classList.remove('show');
   XT_MINS = planState.xtMins || 45;
+  /* THE UNIT OF THE BLOCK. Seven days for everybody on a calendar; the length
+     of the rotation for a shift worker, so that every block of the plan has the
+     same shape and the periodisation runs over rotations rather than being
+     forced into a week it doesn't fit. */
+  SHAPE_DAYS = null;
+  if (planState.shiftMode){
+    if (!shiftValidPatterns().length){
+      setCycle(7);
+      return planError('Add at least one rotation — the pattern letters, the date its first letter falls on, and how long it runs for.');
+    }
+    setCycle(shiftCycleLen(shiftAlignStart(resolveStartMonday())));
+  } else setCycle(7);
   const runAv = runDaysOf().sort((a,b)=>a-b);
   const xtAv  = xtDaysOf();
   /* Two running days can hold a long run and one quality session and nothing
      else -- no easy running at all, which is not a training plan, it's two hard
      days a week for twelve weeks. Three is the floor for anything structured. */
-  if (runAv.length < 3) return planError('Set at least three days you could run. On two days a week every run has to be either the long run or a hard session, with no easy running at all \u2014 that\u2019s a recipe for staleness and injury rather than a plan. If three is genuinely all you can manage, mark a third day as Either and the plan will use it only when it needs to.');
-  let longDay = planState.longDay;
-  if (!runAv.includes(longDay)) longDay = runAv[runAv.length-1];
+  if (planState.shiftMode){
+    /* Measured over several rotations rather than one: leave and a seasonal
+       second pattern both change what a given block offers. */
+    const probeStart = shiftAlignStart(resolveStartMonday());
+    const probe = Array.from({length:4}, (_,k) => shiftWeekMode(addDays(probeStart, k*CYCLE))
+      .filter(m => m !== 'off').length);
+    const avgPerCycle = probe.reduce((a,b)=>a+b,0) / probe.length;
+    if (avgPerCycle * 7 / CYCLE < 2.5) return planError('Your shift bank leaves almost no room to train \u2014 fewer than three usable days a week once the rotation is averaged out. Tick another box or two, even ones you\u2019d only manage a short run around.');
+  }
+  else if (runAv.length < 3) return planError('Set at least three days you could run. On two days a week every run has to be either the long run or a hard session, with no easy running at all \u2014 that\u2019s a recipe for staleness and injury rather than a plan. If three is genuinely all you can manage, mark a third day as Either and the plan will use it only when it needs to.');
+  let longDayFixed = planState.longDay;
+  if (!runAv.includes(longDayFixed)) longDayFixed = runAv[runAv.length-1];
 
   // a fixed speed-session day has to make sense before anything is built
-  const sdChoice = planState.speedDay;
+  /* A fixed weekday for the speed session means nothing on a rotation -- the
+     bank moves through the calendar, so the plan places it inside the bank. */
+  const sdChoice = planState.shiftMode ? -1 : planState.speedDay;
   if (sdChoice != null && sdChoice >= 0){
     const mode = planState.dayMode[sdChoice];
     if (mode === 'off') return planError('Your speed-session day (' + DOW[sdChoice] + ') is an off day \u2014 make it a run day, or set the speed day back to Any.');
     if (mode === 'xt')  return planError('Your speed-session day (' + DOW[sdChoice] + ') is set to cross-training \u2014 make it a run day, or set the speed day back to Any.');
-    if (sdChoice === longDay) return planError('Your speed session and your long run can\u2019t share a day \u2014 move one of them.');
-    if (dayDist(sdChoice, longDay) < 2) return planError('Your speed session can\u2019t sit right next to your long run \u2014 leave at least one day between them (Sunday and Monday count as next to each other).');
+    if (sdChoice === longDayFixed) return planError('Your speed session and your long run can\u2019t share a day \u2014 move one of them.');
+    if (dayDist(sdChoice, longDayFixed) < 2) return planError('Your speed session can\u2019t sit right next to your long run \u2014 leave at least one day between them (Sunday and Monday count as next to each other).');
   }
 
   const prof = raceProfile();
-  const start = resolveStartMonday();
+  /* A shift block starts at the top of the rotation, not on a Monday, so every
+     block of the plan lines up with the same point in the pattern. */
+  const start = planState.shiftMode ? shiftAlignStart(resolveStartMonday()) : resolveStartMonday();
   let N, raceDayIdx = null, raceDateObj = null;
 
   if (planState.raceDate){
@@ -4251,13 +4664,24 @@ function generatePlan(){
     if (isNaN(raceDateObj)) raceDateObj = null;
   }
   if (raceDateObj){
-    const raceMon = addDays(raceDateObj, -isoIndex(raceDateObj));
-    N = Math.round((raceMon - start) / (7*86400000)) + 1;
-    raceDayIdx = isoIndex(raceDateObj);
-    if (N < 1) return planError('That race date has already passed \u2014 pick a date in the future, or clear it for a rolling block.');
-    if (N < 3) return planError('That race date is too soon to plan a block around \u2014 pick something at least 3 weeks out.');
-    if (N < 5) planError('Heads up: that\u2019s a short runway. Showing a compressed plan \u2014 more time would help.');
-    N = Math.min(N, 26);
+    if (planState.shiftMode){
+      // count in rotations: the race sits somewhere inside the final one
+      const days = Math.round((raceDateObj - start) / 86400000);
+      N = Math.floor(days / CYCLE) + 1;
+      raceDayIdx = days - (N-1)*CYCLE;
+      if (days < 0) return planError('That race date has already passed \u2014 pick a date in the future, or clear it for a rolling block.');
+      if (days < 21) return planError('That race date is too soon to plan a block around \u2014 pick something at least 3 weeks out.');
+      if (days < 35) planError('Heads up: that\u2019s a short runway. Showing a compressed plan \u2014 more time would help.');
+      N = Math.min(N, Math.max(3, Math.floor(26 * 7 / CYCLE)));
+    } else {
+      const raceMon = addDays(raceDateObj, -isoIndex(raceDateObj));
+      N = Math.round((raceMon - start) / (7*86400000)) + 1;
+      raceDayIdx = isoIndex(raceDateObj);
+      if (N < 1) return planError('That race date has already passed \u2014 pick a date in the future, or clear it for a rolling block.');
+      if (N < 3) return planError('That race date is too soon to plan a block around \u2014 pick something at least 3 weeks out.');
+      if (N < 5) planError('Heads up: that\u2019s a short runway. Showing a compressed plan \u2014 more time would help.');
+      N = Math.min(N, 26);
+    }
   } else {
     // no race date: a focused block sized to the goal, plus any base-building
     // weeks the athlete asked for up front (the return-from-injury on-ramp)
@@ -4270,12 +4694,24 @@ function generatePlan(){
        four weeks of base. */
     const autoBase = (planState.baseWeeks == null) ? 4 : planState.baseWeeks;
     N = prof.spec + autoBase;
-    raceDayIdx = runAv.includes(6) ? 6 : runAv[runAv.length-1];
+    /* Same span of time, counted in rotations rather than weeks. */
+    if (planState.shiftMode) N = Math.max(3, Math.round(N * 7 / CYCLE));
+    if (planState.shiftMode){
+      // the benchmark goes in the best-rested slot of the final rotation
+      const lastMode = shiftWeekMode(addDays(start, (N-1)*CYCLE));
+      const d = shiftLongDay(lastMode);
+      raceDayIdx = d >= 0 ? d : null;
+    } else raceDayIdx = runAv.includes(6) ? 6 : runAv[runAv.length-1];
   }
 
   // --- periodisation: [ base ][ development + specific ][ taper ] ---
-  let taperWeeks = N >= 6 ? prof.taper : (N >= 4 ? 1 : 0);
-  const specWeeks = Math.min(prof.spec, N);           // focused block length
+  /* Phase lengths are quantities of TIME. Expressed in weeks in the profiles,
+     they're converted to however many rotations cover the same span, so a
+     twelve-week specific phase stays twelve weeks long whether that's twelve
+     blocks of seven days or eight blocks of ten. */
+  const inBlocks = wks => Math.max(1, Math.round(wks * 7 / CYCLE));
+  let taperWeeks = N >= inBlocks(6) ? inBlocks(prof.taper) : (N >= inBlocks(4) ? 1 : 0);
+  const specWeeks = Math.min(inBlocks(prof.spec), N);  // focused block length
   const baseWeeks = Math.max(0, N - specWeeks);       // extra time becomes base
   const specCore  = specWeeks - taperWeeks;           // dev + specific weeks
   const devWeeks  = Math.max(1, Math.round(specCore * 0.5));
@@ -4293,6 +4729,10 @@ function generatePlan(){
      days later gets the sequencing backwards; the peak long run wants a normal
      week in front of it and two to three weeks of taper behind it. */
   const peakLongWeek = Math.max(1, specEnd - 1);
+  /* Three hard blocks then an easy one is a rhythm in days, not in blocks: a
+     ten-day rotation deloading every fourth rotation would go nearly six weeks
+     between easy periods. Roughly every four weeks, whatever the block. */
+  const downEvery = Math.max(2, Math.round(28 / CYCLE));
   const isDownWeek = w => {
     const p = phaseOf(w);
     if (p === 'taper' || w >= specEnd) return false;
@@ -4301,9 +4741,18 @@ function generatePlan(){
        dropped, so the 3:1 rhythm survives instead of leaving six consecutive
        full weeks before the taper. */
     if (w === peakLongWeek - 1) return false;
-    if (w % 4 === 0) return true;
-    return (w + 1) % 4 === 0 && (w + 1) === peakLongWeek - 1;
+    if (w % downEvery === 0) return true;
+    return (w + 1) % downEvery === 0 && (w + 1) === peakLongWeek - 1;
   };
+  /* The long-run ladder asks how many running days the week's shape offers.
+     A rotation has no day grid to read, so hand it the weekly equivalent of
+     what the bank actually gives. */
+  if (planState.shiftMode){
+    let t = 0;
+    for (let k = 0; k < N; k++) t += shiftWeekMode(addDays(start, k*CYCLE)).filter(m => m !== 'off').length;
+    const perBlock = t / Math.max(1, N);
+    SHAPE_DAYS = { run: Math.max(2, Math.round(perBlock * 7 / CYCLE)), xt: 0 };
+  }
   const targets    = weeklyTargets(N, specEnd, taperWeeks, prof, isDownWeek, planState.currentMins);
   let longLadder = longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets);
 
@@ -4317,13 +4766,29 @@ function generatePlan(){
     const phase   = phaseOf(w);
     const isTaper = phase === 'taper';
     const isDown  = isDownWeek(w);
-    const wkStart = addDays(start, (w-1)*7);
+    const wkStart = addDays(start, (w-1)*CYCLE);
     // a down week borrows the shorter development-pool sessions so the load
     // actually drops, even when it lands on the switch into the specific phase
     const basePhase = isTaper ? 'specific' : phase;
     const namePhase = (isDown && basePhase === 'specific') ? 'development' : basePhase;
     // per-week run <-> cross-train flips
-    let modeW = planState.dayMode.map((m,i) => planState.flips[flipKey(w,i)] || m);
+    /* Shift workers get their availability from where the rotation lands this
+       week rather than from a fixed grid, and the long run moves with it. */
+    const shiftWk = planState.shiftMode ? shiftWeekMode(wkStart) : null;
+    /* Targets are computed per week; a block that lasts longer than a week
+       carries proportionally more. No redistribution is needed any more --
+       every block of a rotation has the same shape as the last. */
+    const wkT = perCycle(targets[w] || 0);
+    let modeW = (shiftWk || planState.dayMode).map((m,i) => planState.flips[flipKey(w,i)] || m);
+    let longDay = longDayFixed;
+    if (shiftWk){
+      /* A rotation can leave a week with almost nothing usable. Where that
+         happens the week simply doesn't carry a long run -- forcing one onto a
+         shift is worse than going without for a week, and the block's volume is
+         already redistributed toward the weeks that do have room. */
+      const sd = shiftLongDay(modeW);
+      longDay = sd >= 0 ? sd : -1;
+    }
 
     /* THE DAY GRID IS AVAILABILITY, NOT A PRESCRIPTION.
        Marking a day Run says "I could run then", not "give me a run". So the
@@ -4337,7 +4802,10 @@ function generatePlan(){
     /* Three is the floor. A two-day week can only hold the long run and one
        quality session, so every run in it is hard -- which is the shape the
        three-day minimum on the grid exists to prevent. */
-    const curDays  = Math.max(3, Math.min(availRun.length, planState.currentDays || 3));
+    /* "Days I already run" is a per-week number; over a longer block it buys
+       proportionally more of them. */
+    const curPerBlock = Math.max(3, Math.round((planState.currentDays || 3) * CYCLE / 7));
+    const curDays  = Math.max(3, Math.min(availRun.length, curPerBlock));
     // highest target reached so far, so frequency ratchets up and never dips back
     let volSoFar = 0;
     for (let k = 1; k <= w; k++) volSoFar = Math.max(volSoFar, targets[k] || 0);
@@ -4346,11 +4814,17 @@ function generatePlan(){
     /* How many running days does the training genuinely want this week? It
        starts where the athlete already is and only grows when the volume needs
        spreading -- how eagerly is set by what they're training for. */
-    const byVolume  = isTaper ? 3 : Math.max(3, Math.ceil((targets[w] || 0) / 75));
+    const byVolume  = isTaper ? 3 : Math.max(3, Math.ceil((wkT || 0) / 75));
     const dayCeiling = Math.max(curDays, Math.ceil(volSoFar / comfortableRun()));
+    /* The frequency floor assumes availability is constant. On a rotation it
+       isn't -- a week with two rest days genuinely cannot hold five runs, and
+       ratcheting would either fail or push runs onto shifts. In shift mode the
+       week takes what it can get. */
     const desired = isTaper
       ? Math.min(availRun.length, Math.max(curDays - 1, 3))
-      : Math.min(availRun.length, dayCeiling, Math.max(byVolume, useDays, freqFloor));
+      : planState.shiftMode
+        ? Math.min(availRun.length, Math.max(byVolume, Math.min(curDays, availRun.length)))
+        : Math.min(availRun.length, dayCeiling, Math.max(byVolume, useDays, freqFloor));
 
     /* Which days, given we want `n` of them. The long-run day always runs.
        After that, days marked Run are preferred over Either -- the athlete has
@@ -4372,8 +4846,9 @@ function generatePlan(){
         });
         chosen.push(pool.splice(best, 1)[0]);
       }
-      if (planState.speedDay >= 0 && availRun.includes(planState.speedDay) && !chosen.includes(planState.speedDay)){
-        chosen.push(planState.speedDay);
+      const sdPick = preferredSpeedIdx();
+      if (sdPick >= 0 && availRun.includes(sdPick) && !chosen.includes(sdPick)){
+        chosen.push(sdPick);
       }
       return chosen.sort((a,b) => a-b);
     };
@@ -4409,7 +4884,7 @@ function generatePlan(){
          athlete's goal implies -- chasing volume is not a reason to turn a
          four-day plan into a seven-day one. */
       const ceiling = Math.min(availRun.length, dayCeiling);
-      while (wantRun < ceiling && cellsMins(cells) < (targets[w] || 0) * 0.9){
+      while (wantRun < ceiling && cellsMins(cells) < (wkT || 0) * 0.9){
         wantRun++;
         cells = makeCells(wantRun);
       }
@@ -4456,7 +4931,7 @@ function generatePlan(){
       // grow the week if needed so the long run keeps its proper share of it
       const xtMins = cells.filter(c => c.kind === 'xt').length * XT_MINS;
       const need = longMins ? (longMins / longShareCap(longMins / 0.42)) - xtMins : 0;
-      cells = fitEasyRuns(cells, Math.max(targets[w], need));
+      cells = fitEasyRuns(cells, Math.max(wkT, need));
       if (allowCap) cells = capLongShare(cells);
     } else {
       /* Taper and race weeks get sized against their target like every other
@@ -4465,8 +4940,8 @@ function generatePlan(){
          over-taper the target fractions were changed to prevent, and now
          contradicted by the plan's own printed number. */
       cells = isRaceWeek
-        ? shapeRaceWeek(fitEasyRuns(cells, targets[w] || 0), targets[w] || 0, raceDayIdx)
-        : fitEasyRuns(cells, targets[w] || 0);
+        ? shapeRaceWeek(fitEasyRuns(cells, wkT || 0), targets[w] || 0, raceDayIdx)
+        : fitEasyRuns(cells, wkT || 0);
     }
     // A recovery week must come in under the week before it, and a taper week
     // under the biggest build week. Trimming easy runs raises the long run's
@@ -4490,7 +4965,7 @@ function generatePlan(){
            arrived flat. It now only stops a taper week exceeding its own
            target, with a little headroom for rounding. */
         const maxBuild = Math.max(...weeks.filter(x => !x.isTaper).map(x => cellsMins(x.cells)), 0);
-        const ceiling = (targets[w] || 0) * 1.08;
+        const ceiling = (wkT || 0) * 1.08;
         if (maxBuild && ceiling) cells = trimWeekTo(cells, Math.min(ceiling, maxBuild));
       }
       if (!isRaceWeek && allowCap) cells = capLongShare(cells);
@@ -4569,14 +5044,14 @@ function generatePlan(){
       });
     })();
     if (!isTaper) freqFloor = Math.min(dayCeiling, Math.max(freqFloor, cells.filter(c => c.kind !== 'xt').length));
-    weeks.push({ w, phase, namePhase, isDown, isTaper, wkStart, wkEnd:addDays(wkStart,6),
+    weeks.push({ w, phase, namePhase, isDown, isTaper, wkStart, wkEnd:addDays(wkStart,CYCLE-1), cycleDays:CYCLE,
                  cells, note, noteCls,
                  /* Taper and race weeks aren't aiming at a volume number: their
                     shape is set by proximity to the race, and the sizing caps
                     that produce that shape make the arithmetic target
                     unreachable by construction. Recording what the week
                     actually asks for keeps the plan's own numbers honest. */
-                 target: isTaper ? Math.round(cellsMins(cells)) : targets[w] });
+                 target: isTaper ? Math.round(cellsMins(cells)) : wkT });
   }
   return weeks;
   }
@@ -4591,11 +5066,22 @@ function generatePlan(){
 
   // does this week shape force two hard days together?
   let crowded = false, allQuality = false;
+  /* On a rotation, "is the week crowded?" can't be answered from week one --
+     every week has a different shape, and some rest banks are simply too short
+     to separate the hard days. Checking the whole block means the warning
+     reflects the plan the athlete actually gets. */
+  if (planState.shiftMode){
+    weeks.forEach(wk => {
+      if (wk.isTaper) return;
+      const by = {}; wk.cells.forEach(c => by[c.idx] = c.kind);
+      for (let d=0; d<CYCLE-1; d++) if (HARDK.includes(by[d]) && HARDK.includes(by[d+1])) crowded = true;
+    });
+  }
   const w1 = weeks.find(x => !x.isTaper && !x.isDown);
   if (w1){
     const by = {}; w1.cells.forEach(c => by[c.idx] = c.kind);
-    for (let d=0; d<7; d++){
-      const n = (d+1)%7;
+    for (let d=0; d<CYCLE; d++){
+      const n = (d+1)%CYCLE;
       if (HARDK.includes(by[d]) && HARDK.includes(by[n])) crowded = true;
     }
     const runCells = w1.cells.filter(c => c.kind !== 'xt');
@@ -4621,13 +5107,16 @@ function generatePlan(){
      saying if there's something they could do about it -- and never alongside
      the note telling them they already run enough, which was the flat
      contradiction this used to produce at high volume. */
-  const wk1Mins = wk1 ? cellsMins(wk1.cells) : 0;
+  // compared against a weekly figure, so a longer block is measured per week
+  const wk1Mins = wk1 ? cellsMins(wk1.cells) * 7 / CYCLE : 0;
   /* Is there actually a day they could give the plan? Either an available day
      it isn't using, or an off day they could mark. If every day of the week is
      already spoken for, telling them to "add a run day" is just noise. */
   const usedRunDays = wk1 ? wk1.cells.filter(c => c.kind !== 'xt').length : 0;
   const markedDays  = planState.dayMode.filter(m => m !== 'off').length;
-  const spareDays   = Math.max(runDaysOf().length - usedRunDays, 7 - markedDays);
+  const spareDays   = planState.shiftMode
+    ? (wk1 ? shiftWeekMode(wk1.wkStart).filter(m => m !== 'off').length - usedRunDays : 0)
+    : Math.max(runDaysOf().length - usedRunDays, 7 - markedDays);
   const underVolume = state && wk1 && wk1Mins < planState.currentMins * 0.85 && spareDays > 0;
   const longCapped = longLadder.peakLong < longPeakFor(prof) - 5;
   // ultra plans want back-to-back long runs; they only fit if the long-run day
@@ -4662,11 +5151,12 @@ function generatePlan(){
   // prompt already tells the user what to do. Only a genuine day-layout problem
   // (calibrated, but the long run is the last run of the week) should warn.
   const b2bMissed = !!state && wantsB2B && !gotB2B;
-  planState.generated = { weeks, N, start, longDay, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: longPeakFor(prof), peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed,
+  planState.generated = { shift: !!planState.shiftMode, cycleDays: CYCLE, weeks, N, start, longDay: longDayFixed, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: longPeakFor(prof), peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed,
     weeksForFull: targets.weeksForFull, growthWanted: targets.growthWanted, growthUsed: targets.growthUsed,
     sufficient: targets.sufficient, volumeHeld: targets.volumeHeld };
   // a rebuild can change what each day is for, so stale swaps are dropped
-  const sig = [planState.goal, planState.dayMode.join(''), longDay, N, ymd(start), planState.currentMins, planState.xtMins, planState.speedDay, JSON.stringify(planState.races||[])].join('|');
+  const sig = [planState.goal, planState.dayMode.join(''), longDayFixed, N, ymd(start), planState.currentMins, planState.xtMins, planState.speedDay, JSON.stringify(planState.races||[]),
+               planState.shiftMode ? JSON.stringify([planState.shiftSpeedSlot, (planState.shiftPatterns||[]).map(p => [p.code, p.from, p.to, (p.slots||[]).map(x=>x?1:0).join('')])]) : ''].join('|');
   if (planState.sig && planState.sig !== sig){
     // the shape of the block changed, so day-level edits no longer refer to
     // the same sessions
@@ -4683,7 +5173,7 @@ function renderPlan(){
      builder meant a nine-week run/walk plan appeared under a settings panel
      full of controls that don't apply to it, and the only way back to a normal
      plan was a toggle nobody would think to press. */
-  const out = pd(g.c25k ? 'c25k-out' : 'plan-out');
+  const out = pd(g.c25k ? 'c25k-out' : (g.shift ? 'shift-out' : 'plan-out'));
 
   // phase overview strip -- the beginner programme has its own three stages,
   // described in its own terms rather than as road periodisation
@@ -4697,7 +5187,8 @@ function renderPlan(){
   const order = ['base','development','specific','taper'];
   const strip = order.filter(p => META[p] && spans[p][0] <= spans[p][1] && spans[p][1] <= g.N && spans[p][0] >= 1).map(p => {
     const m = META[p], s = spans[p];
-    const wk = s[0] === s[1] ? `Week ${s[0]}` : `Weeks ${s[0]}\u2013${s[1]}`;
+    const unitNm = g.shift ? 'Rotation' : 'Week';
+    const wk = s[0] === s[1] ? `${unitNm} ${s[0]}` : `${unitNm}s ${s[0]}\u2013${s[1]}`;
     return `<div class="phase-card" style="border-left-color:${m.color}">
       <div class="pnm">${m.label}</div><div class="pwk">${wk}</div><div class="ppz">${m.why}</div></div>`;
   }).join('');
@@ -4708,7 +5199,10 @@ function renderPlan(){
     ? `<div class="wk-note" style="border-radius:var(--radius);border:1px solid var(--line);margin-bottom:16px">
          <span>\u2691</span><span>Structure is ready. <b>Calibrate</b> (first tab) to fill in target paces and turn on one-tap .FIT downloads for each day.</span></div>`
     : '';
-  const headline = `<div class="plan-headline">${g.prof} plan \u00b7 ${g.N} weeks${g.raceDateObj ? ' to race day' : ' (rolling)'}</div>`;
+  const blockWeeks = g.shift ? Math.round(g.N * g.cycleDays / 7) : g.N;
+  const headline = `<div class="plan-headline">${g.prof} plan \u00b7 ${
+    g.shift ? `${g.N} rotations of ${g.cycleDays} days \u00b7 about ${blockWeeks} weeks` : `${g.N} weeks`
+  }${g.raceDateObj ? ' to race day' : ' (rolling)'}</div>`;
   const modelNote = (g.allQuality && !g.crowded)
     ? `<div class="plan-note-info"><b>Every run is a quality run.</b> With three running days and cross-training filling the gaps, each run earns its place \u2014 speed, threshold and the long run \u2014 and your bike days carry the recovery. It\u2019s a proven structure, but it leaves no easy running: keep the cross-training genuinely easy, and if the legs feel flat, swap a quality session for an easy run rather than pushing through.</div>`
     : '';
@@ -4739,7 +5233,7 @@ function renderPlan(){
      longer. And sometimes the race date is fixed and the block is what it is --
      in which case the honest message is that this will still make them fitter,
      not that they have failed a target they never set. */
-  const heldButShort = g.volumeHeld && g.underVolume;
+  const heldButShort = g.volumeHeld && g.underVolume && !g.shift;
   const volumeHeldNote = heldButShort
     ? `<div class="plan-warn"><b>You already run enough for this \u2014 but not on these days.</b>
         ${fmtHrs(planState.currentMins)} a week is a sound platform for ${g.prof}, so this block doesn\u2019t need to add volume. The problem is fitting it in: the days you\u2019ve picked can\u2019t hold that much running, so the plan would start you below where you already are.
@@ -4752,21 +5246,45 @@ function renderPlan(){
         More running is not automatically better training \u2014 the gains here come from the quality of what you do, not from adding hours.
         ${planState.intent !== 'pb' ? 'If you later decide you want to race it hard, switch the goal above to <b>Chase a PB</b> and the plan will build volume as well.' : ''}</div>`
     : '';
-  const shortBlock = (!g.volumeHeld && !g.raceDateObj && g.weeksForFull && g.weeksForFull > g.N)
+  /* weeksForFull counts BLOCKS, because that is the unit the volume ramp was
+     computed in -- weeks for everybody else, rotations for a shift worker. So
+     it compares cleanly against g.N, but it must be SAID in the right unit, and
+     the extend button has to convert back into base weeks or it asks for a
+     length the rotation maths rounds straight back to what you already had. */
+  const fullBlocks = g.weeksForFull;
+  const fullWeeks  = g.shift ? Math.round(fullBlocks * g.cycleDays / 7) : fullBlocks;
+  const nowUnits   = g.shift ? `${g.N} rotations (about ${blockWeeks} weeks)` : `${g.N} weeks`;
+  const fullUnits  = g.shift ? `${fullBlocks} rotations (about ${fullWeeks} weeks)` : `${fullBlocks} weeks`;
+  const shortBlock = (!g.volumeHeld && !g.raceDateObj && fullBlocks && fullBlocks > g.N)
     ? `<div class="plan-note-info"><b>A longer block would build further.</b>
-        Going from ${fmtHrs(planState.currentMins)} a week to what a ${g.prof} ideally wants would mean adding volume faster than is sensible over ${g.N} weeks, so the plan builds at a rate you can absorb and peaks a little lower.
-        That is still a real block that will make you fitter \u2014 but with <b>${g.weeksForFull} weeks</b> it can reach the full build.
-        <button class="ghost-btn" id="extend-plan" data-n="${g.weeksForFull}" style="margin-top:10px">Extend to ${g.weeksForFull} weeks</button></div>`
+        Going from ${fmtHrs(planState.currentMins)} a week to what a ${g.prof} ideally wants would mean adding volume faster than is sensible over ${nowUnits}, so the plan builds at a rate you can absorb and peaks a little lower.
+        That is still a real block that will make you fitter \u2014 but with <b>${fullUnits}</b> it can reach the full build.
+        <button class="ghost-btn" id="extend-plan" data-n="${fullBlocks}" data-cycle="${g.cycleDays || 7}" style="margin-top:10px">Extend to ${g.shift ? fullBlocks + ' rotations' : fullBlocks + ' weeks'}</button></div>`
     : '';
   /* Race date fixed: no offer to make, so say the useful thing instead. */
-  const fixedDateNote = (!g.volumeHeld && g.raceDateObj && g.weeksForFull && g.weeksForFull > g.N)
-    ? `<div class="plan-note-info"><b>${g.N} weeks is what your race date allows \u2014 and it\u2019s enough to arrive fitter.</b>
-        A full ${g.prof} build from ${fmtHrs(planState.currentMins)} a week would want around ${g.weeksForFull} weeks, so rather than cramming the volume in, this block grows at a rate you can absorb and puts the rest of its effort into sharper, more race-specific sessions.
+  const fixedDateNote = (!g.volumeHeld && g.raceDateObj && fullBlocks && fullBlocks > g.N)
+    ? `<div class="plan-note-info"><b>${nowUnits.charAt(0).toUpperCase() + nowUnits.slice(1)} is what your race date allows \u2014 and it\u2019s enough to arrive fitter.</b>
+        A full ${g.prof} build from ${fmtHrs(planState.currentMins)} a week would want around ${fullUnits}, so rather than cramming the volume in, this block grows at a rate you can absorb and puts the rest of its effort into sharper, more race-specific sessions.
         You\u2019ll go into race day better prepared than you are today, with your long run up to ${fmtHrs(g.peakLong)} and your paces re-tightened along the way. Treat the time as the constraint it is, run the sessions as written, and race what you\u2019ve got.</div>`
     : '';
-  const crowdWarn = g.crowded
-    ? `<div class="plan-warn"><b>Heads up:</b> the days you\u2019ve chosen sit close together, so a hard day lands next to your long run. That\u2019s workable, but spreading your runs across the week \u2014 or dropping one \u2014 would recover better.</div>`
+  const shiftVolNote = (g.shift && g.underVolume)
+    ? `<div class="plan-note-info"><b>Your shift bank is the limit here, not your willingness.</b>
+        You run about ${fmtHrs(planState.currentMins)} a week, and the boxes you\u2019ve left unticked hold the plan below that. It works with what the bank gives it rather than pretending otherwise.
+        Ticking one more box \u2014 even a shift you\u2019d only manage half an hour around \u2014 opens the plan up considerably.</div>`
     : '';
+  /* The one thing a shift athlete needs told plainly: this block is not a week,
+     and the gap between long runs is a deliberate consequence rather than a
+     bug. */
+  const rotaNote = g.shift
+    ? `<div class="plan-note-info"><b>This plan runs on your rotation, not on Mondays.</b>
+        Each block below is one full turn of your pattern \u2014 ${g.cycleDays} days \u2014 and every block has the same shape, so the build, the recovery blocks and the taper progress across rotations exactly as they would across weeks.
+        <br><br>The trade is that your long run comes round every ${g.cycleDays} days rather than every seven. That is deliberate: the block is bigger to match, and the extra running goes into a medium-long run and longer easy days inside the same bank rather than into a second big effort. Each bank still carries its two quality sessions, spaced as far apart as the bank allows.
+        <br><br>Dates are on every row, and the letter beside each date is the shift that day falls on \u2014 so you can check the plan against your roster at a glance.</div>`
+    : '';
+  const crowdWarn = !g.crowded ? ''
+    : g.shift
+      ? `<div class="plan-warn"><b>Some of your rest banks are short.</b> Where the rotation only gives you two or three days together, a hard session ends up next to your long run \u2014 there is nowhere else to put it. Those weeks are the ones to be honest with yourself about: if the long run feels heavy on tired legs, run it easier rather than skipping it, and let the bigger rest banks carry the hard work.</div>`
+      : `<div class="plan-warn"><b>Heads up:</b> the days you\u2019ve chosen sit close together, so a hard day lands next to your long run. That\u2019s workable, but spreading your runs across the week \u2014 or dropping one \u2014 would recover better.</div>`;
   const b2bNote = g.b2bMissed
     ? `<div class="plan-warn"><b>Back-to-back long runs couldn\u2019t be placed.</b> This ${g.prof} plan is built around a long run followed the next morning by a second long run on tired legs \u2014 the key ultra session. That needs a run day <i>immediately after</i> your long-run day: either in the same week (long run Saturday, second run Sunday), or \u2014 for Sunday long runs \u2014 a <b>Monday run day</b> so the pair lands Sunday\u2013Monday. Add a run day straight after your long run and rebuild.</div>`
     : (g.ultra && !g.b2bMissed && g.prof !== '50K')
@@ -4808,7 +5326,7 @@ function renderPlan(){
       const cands = candidatesFor(c.kind, phaseForSwap, null, c.name);
       const canSwap = cands.length > 1 && c.kind !== 'race' && c.kind !== 'xt';
       const nameHtml = canSwap
-        ? `<select class="pl-swap" data-w="${wk.w}" data-idx="${c.idx}" aria-label="Swap ${DOW[c.idx]} session">
+        ? `<select class="pl-swap" data-w="${wk.w}" data-idx="${c.idx}" aria-label="Swap ${dowOf(wk, c.idx)} session">
              ${cands.map(n => `<option value="${n}"${n === c.name ? ' selected' : ''}>${n}</option>`).join('')}
            </select>`
         : `<span class="pl-sess${isRace?' race':''}">${label}</span>`;
@@ -4824,8 +5342,8 @@ function renderPlan(){
       const flip = canFlip
         ? `<button class="pl-flip" data-w="${wk.w}" data-idx="${c.idx}" data-to="${flipTo}" title="${flipLbl}">${flipTxt}</button>` : '';
       return `<div class="pl-day${isDone?' is-done':''}">
-        <input type="checkbox" class="pl-tick" data-w="${wk.w}" data-idx="${c.idx}"${isDone?' checked':''} aria-label="Mark ${DOW[c.idx]} done">
-        <span class="pl-dow">${DOW[c.idx]}</span>
+        <input type="checkbox" class="pl-tick" data-w="${wk.w}" data-idx="${c.idx}"${isDone?' checked':''} aria-label="Mark ${dowOf(wk, c.idx)} done">
+        <span class="pl-dow">${dowLabel(wk, c.idx)}</span>
         <span class="pl-dot" style="background:${color}"></span>
         <div class="pl-name">${nameHtml}</div>
         <span class="pl-tgt">${tgt}</span>
@@ -4842,13 +5360,13 @@ function renderPlan(){
           ? `<button class="pl-chart" data-i="${state.byName[c.double.name]}" title="See the session structure" aria-label="See the session structure">${chartIcon}</button><button class="pl-dl" data-i="${state.byName[c.double.name]}" data-date="${ymd(addDays(wk.wkStart, c.idx))}" data-week="${wk.w}" data-second="1" title="Download .FIT">FIT</button>` : ''}</span>
       </div>` : ''}`;
     }).join('');
-    return `<article class="wk-card${wk.isDown?' is-down':''}${wk.isTaper?' is-taper':''}${isNow?' is-now':''}${isPast?' is-past':''}"${isNow?' id="week-now"':''}>
+    return `<article class="wk-card${g.shift?' is-rota':''}${wk.isDown?' is-down':''}${wk.isTaper?' is-taper':''}${isNow?' is-now':''}${isPast?' is-past':''}"${isNow?' id="week-now"':''}>
       <div class="wk-head">
-        <span class="wk-num">Week ${wk.w}</span>
-        ${isNow ? '<span class="now-chip">This week</span>' : ''}
+        <span class="wk-num">${g.shift ? `Rotation ${wk.w}` : `Week ${wk.w}`}</span>
+        ${isNow ? `<span class="now-chip">${g.shift ? 'Now' : 'This week'}</span>` : ''}
         <span class="wk-dates">${fmtDate(wk.wkStart)} \u2013 ${fmtDate(wk.wkEnd)}</span>
         ${loadHtml}
-        <button class="wk-zip" data-w="${wk.w}" title="Download this week's workouts as .FIT">.ZIP</button>
+        <button class="wk-zip" data-w="${wk.w}" title="Download this ${g.shift ? 'rotation' : 'week'}'s workouts as .FIT">.ZIP</button>
         <span class="wk-badge" style="background:${badgeColor}">${badge}</span>
       </div>
       ${wk.note ? `<div class="wk-note ${wk.noteCls}"><span>\u2192</span><span>${wk.note}</span></div>` : ''}
@@ -4869,7 +5387,8 @@ function renderPlan(){
   /* Never shown next to "you already run enough" -- those two together were a
      flat contradiction, and the one that actually helps is this one only when
      there's an unused day to point at. */
-  const volWarn = (g.underVolume && !g.volumeHeld)
+  const shiftWarn = g.shift;
+  const volWarn = (g.underVolume && !g.volumeHeld && !shiftWarn)
     ? `<div class="plan-warn"><b>Not enough running days.</b> You said you run about ${fmtHrs(planState.currentMins)} a week, but the days you\u2019ve chosen can\u2019t hold that much. Mark another day as Run or Either, and the plan will start where you already are rather than below it.</div>`
     : '';
   const totalDays = g.weeks.reduce((a,wk)=>a+wk.cells.length,0);
@@ -4880,11 +5399,11 @@ function renderPlan(){
          <div class="pp-txt">${doneDays} of ${totalDays} sessions done \u00b7 ${pct}%</div></div>`
     : '';
   const totalHtml = totals
-    ? `<div class="plan-totals"><b>${g.N} weeks</b> \u00b7 about <b>${fmtHrs(totals.run)}</b> of running${totals.xt ? ` plus <b>${fmtHrs(totals.xt)}</b> cross-training` : ''} \u00b7 averaging <b>${fmtHrs(totals.run/g.N)}</b> a week</div>`
+    ? `<div class="plan-totals"><b>${g.shift ? `${g.N} rotations` : `${g.N} weeks`}</b> \u00b7 about <b>${fmtHrs(totals.run)}</b> of running${totals.xt ? ` plus <b>${fmtHrs(totals.xt)}</b> cross-training` : ''} \u00b7 averaging <b>${fmtHrs(totals.run/Math.max(1,blockWeeks))}</b> a week</div>`
     : '';
 
   out.innerHTML =
-    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${weeksHtml}
+    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${rotaNote}${shiftVolNote}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${weeksHtml}
      ${g.c25k ? `<div class="plan-tip"><h4>How to run it</h4>
        <b>Three runs a week, with a rest day between each.</b> The walking is not a failure or a fallback \u2014 it is the part that lets you come back two days later, which is the only thing that actually matters over nine weeks.
        <br><br><b>Go slower than feels right.</b> Almost everyone who struggles with this programme is running their intervals too fast. You should be able to talk. If you cannot, slow down until you can \u2014 there is no pace target here on purpose.
@@ -4930,9 +5449,16 @@ function renderPlan(){
     /* Lengthen the block by adding base weeks in front of it: the focused part
        stays the length the distance needs, and the extra time goes where extra
        time belongs -- building the engine before the sharp work starts. */
+    /* `want` is a number of BLOCKS. Base is always set in weeks, so on a
+       rotation it has to be converted -- and then nudged up until the block
+       count actually lands on the target, because the weeks-to-rotations
+       rounding can otherwise hand back the very length we're trying to leave. */
     const want = +ext.dataset.n;
+    const cyc  = +(ext.dataset.cycle || 7) || 7;
     const prof = raceProfile();
-    planState.baseWeeks = Math.max(0, want - prof.spec);
+    let base = Math.max(0, Math.round(want * cyc / 7) - prof.spec);
+    while (base < 60 && Math.max(3, Math.round((prof.spec + base) * 7 / cyc)) < want) base++;
+    planState.baseWeeks = base;
     const sel = pd('base-weeks');
     if (sel && !Array.from(sel.options).some(o => +o.value === planState.baseWeeks)){
       const o = document.createElement('option');
@@ -4986,8 +5512,8 @@ function buildDayGrid(){
 buildDayGrid();
 refreshLongDayOptions();
 pd('long-day').onchange = e => { planState.longDay = +e.target.value; };
-pd('race-date').onchange = e => { planState.raceDate = e.target.value || null; };
-pd('goal').onchange = e => { planState.goal = e.target.value; };
+pd('race-date').onchange = e => { TAB_PREFS.plan.raceDate = e.target.value || null; planState.raceDate = TAB_PREFS.plan.raceDate; };
+pd('goal').onchange = e => { TAB_PREFS.plan.goal = e.target.value; planState.goal = e.target.value; };
 
 const GOAL_OPTS = {
   road:  [['5k','5K'],['10k','10K'],['half','Half marathon'],['marathon','Marathon']],
@@ -5010,7 +5536,11 @@ function setPlanType(type){
   if (!c25k){
     sel.innerHTML = GOAL_OPTS[type].map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
     // keep the current goal if it belongs to this type, else default to the first
-    if (!GOAL_OPTS[type].some(([v]) => v === planState.goal)) planState.goal = GOAL_OPTS[type][0][0];
+    /* The reference is the plan builder's OWN goal, not whatever is in
+       planState -- that may belong to a rotation plan built on another tab. */
+    if (!GOAL_OPTS[type].some(([v]) => v === TAB_PREFS.plan.goal)) TAB_PREFS.plan.goal = GOAL_OPTS[type][0][0];
+    TAB_PREFS.plan.planType = type;
+    planState.goal = TAB_PREFS.plan.goal;
     sel.value = planState.goal;
   }
   pd('plan-type-hint').textContent = c25k
@@ -5041,16 +5571,33 @@ function updateCurAvg(){
 pd('xt-mins').onchange = e => { planState.xtMins = +e.target.value; };
 pd('base-weeks').onchange = e => { planState.baseWeeks = e.target.value === 'auto' ? null : +e.target.value; };
 pd('speed-day').onchange = e => { planState.speedDay = +e.target.value; };
-function setIntent(k){
-  planState.intent = INTENTS[k] ? k : 'improve';
-  document.querySelectorAll('#intent-toggle .seg-opt').forEach(b => {
-    const on = b.dataset.intent === planState.intent;
-    b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on);
-  });
-  pd('intent-hint').textContent = intentOf().blurb;
+/* Each planner has its own intent toggle and its own answer. Wanting a PB off a
+   rotation says nothing about what you want from the block you're building on
+   the other tab. */
+function paintIntents(){
+  const paint = (sel, val, hint) => {
+    document.querySelectorAll(sel + ' .seg-opt').forEach(b => {
+      const on = b.dataset.intent === val;
+      b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on);
+    });
+    const h = pd(hint);
+    if (h) h.textContent = (INTENTS[val] || INTENTS.improve).blurb;
+  };
+  paint('#intent-toggle', TAB_PREFS.plan.intent, 'intent-hint');
+  paint('#shift-intent-toggle', TAB_PREFS.shift.intent, 'shift-intent-hint');
+}
+function setIntent(k, which){
+  const key = INTENTS[k] ? k : 'improve';
+  const tab = which || 'plan';
+  if (TAB_PREFS[tab]) TAB_PREFS[tab].intent = key;
+  if (tab === currentTab() || !planState.generated) planState.intent = key;
+  paintIntents();
 }
 document.querySelectorAll('#intent-toggle .seg-opt').forEach(b => {
-  b.onclick = () => { setIntent(b.dataset.intent); if (planState.generated) generatePlan(); };
+  b.onclick = () => { setIntent(b.dataset.intent, 'plan'); if (planState.generated && !planState.shiftMode) generatePlan(); };
+});
+document.querySelectorAll('#shift-intent-toggle .seg-opt').forEach(b => {
+  b.onclick = () => { setIntent(b.dataset.intent, 'shift'); if (planState.generated && planState.shiftMode) generatePlan(); };
 });
 document.querySelectorAll('#doubles-toggle .seg-opt').forEach(b => {
   b.onclick = () => {
@@ -5074,20 +5621,31 @@ function refreshDoublesVisibility(){
     });
   }
 }
-pd('build-plan').onclick = generatePlan;
+/* Building from the plan builder is always a calendar-week plan, whatever the
+   shift tab last did. */
+pd('build-plan').onclick = () => {
+  planState.shiftMode = false;
+  planState.planType  = TAB_PREFS.plan.planType;   // never the other tabs' type
+  generatePlan();
+};
 
 /* ---- start date (snaps to Monday) ---- */
 function ymd(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function resolveStartMonday(){
-  const v = pd('start-date').value;
+  // each planner keeps its own start date; fall back to the builder's field
+  const v = (TAB_PREFS[currentTab()] || {}).start || pd('start-date').value;
   if (v){ const d = new Date(v + 'T00:00:00'); if (!isNaN(d)) return addDays(d, -isoIndex(d)); }
   return planStartMonday();
 }
 // default the field to next Monday so it's visible and editable
 pd('start-date').value = ymd(planStartMonday());
+TAB_PREFS.plan.start = pd('start-date').value;
+TAB_PREFS.shift.start = pd('start-date').value;
+TAB_PREFS.c25k.start = pd('start-date').value;
 pd('start-date').onchange = e => {
   const v = e.target.value;
   if (v){ const d = new Date(v + 'T00:00:00'); if (!isNaN(d)) e.target.value = ymd(addDays(d, -isoIndex(d))); }
+  TAB_PREFS.plan.start = e.target.value;
 };
 
 /* ---- save / load a plan to a portable file ---- */
@@ -5129,8 +5687,15 @@ function collectSnapshot(){
       flips:       Object.assign({}, planState.flips),
       done:        Object.assign({}, planState.done),
       longDay:  planState.longDay,
+      // the rotation and its shift bank, so a shift plan reloads as one
+      shiftMode:     !!planState.shiftMode,
+      shiftSpeedSlot: (typeof planState.shiftSpeedSlot === 'number') ? planState.shiftSpeedSlot : -1,
+      shiftPatterns: (planState.shiftPatterns || []).map(p => ({
+        code: p.code || '', from: p.from || '', to: p.to || '',
+        slots: Array.isArray(p.slots) ? p.slots.map(Boolean) : null
+      })),
       raceDate: planState.raceDate || null,
-      start:    pd('start-date').value || ymd(resolveStartMonday()),
+      start:    (TAB_PREFS[currentTab()] || {}).start || pd('start-date').value || ymd(resolveStartMonday()),
       overrides: Object.assign({}, planState.overrides)
     }
   };
@@ -5194,14 +5759,29 @@ function applySnapshot(s){
   // restore plan type (road/ultra), inferring from the goal for older files
   const savedGoal = RACE[p.goal] ? p.goal : '5k';
   const inferredType = (RACE[savedGoal] && RACE[savedGoal].ultra) ? 'ultra' : 'road';
+  const savedType = ['ultra','road','c25k'].includes(p.planType) ? p.planType : inferredType;
+  /* A file holds ONE plan, so it restores into the tab that plan came from and
+     leaves the other planners' settings alone. */
+  const savedTab = (savedType === 'c25k') ? 'c25k'
+                 : (p.shiftMode && Array.isArray(p.shiftPatterns) && p.shiftPatterns.length) ? 'shift' : 'plan';
+  const savedStart = p.start || ymd(planStartMonday());
+  Object.assign(TAB_PREFS[savedTab], {
+    goal: savedGoal,
+    planType: savedType,
+    raceDate: p.raceDate || null,
+    start: savedStart,
+    intent: INTENTS[p.intent] ? p.intent : 'improve'
+  });
   planState.goal = savedGoal;
-  setPlanType(['ultra','road','c25k'].includes(p.planType) ? p.planType : inferredType);
+  if (savedTab !== 'shift') setPlanType(savedType);
   planState.goal = savedGoal;
-  pd('goal').value = planState.goal;
+  if (savedTab === 'plan'){
+    pd('goal').value = planState.goal;
+    pd('race-date').value = p.raceDate || '';
+    pd('start-date').value = savedStart;
+  }
   if (p.longDay != null) planState.longDay = p.longDay;
   planState.raceDate = p.raceDate || null;
-  pd('race-date').value = p.raceDate || '';
-  pd('start-date').value = p.start || ymd(planStartMonday());
   buildDayGrid(); refreshLongDayOptions();
   if (runDaysOf().includes(planState.longDay)) pd('long-day').value = planState.longDay;
   // recalibrate if we have a benchmark, then rebuild the block on its saved dates
@@ -5219,7 +5799,7 @@ function applySnapshot(s){
   pd('base-weeks').value = planState.baseWeeks == null ? 'auto' : String(planState.baseWeeks);
   planState.speedDay = (typeof p.speedDay === 'number') ? p.speedDay : -1;
   pd('speed-day').value = String(planState.speedDay);
-  setIntent(INTENTS[p.intent] ? p.intent : 'improve');
+  setIntent(INTENTS[p.intent] ? p.intent : 'improve', savedTab);
   planState.doubles = !!p.doubles;
   document.querySelectorAll('#doubles-toggle .seg-opt').forEach(x => {
     const on = (x.dataset.dbl === '1') === planState.doubles;
@@ -5232,8 +5812,25 @@ function applySnapshot(s){
   planState.overrides = (p.overrides && typeof p.overrides === 'object') ? Object.assign({}, p.overrides) : {};
   planState.flips     = (p.flips && typeof p.flips === 'object') ? Object.assign({}, p.flips) : {};
   planState.done      = (p.done  && typeof p.done  === 'object') ? Object.assign({}, p.done)  : {};
+  /* A shift plan reloads as a shift plan: the rotation, the bank and the tab. */
+  planState.shiftPatterns = Array.isArray(p.shiftPatterns)
+    ? p.shiftPatterns.map(x => ({ code:x.code||'', from:x.from||'', to:x.to||'',
+        slots: Array.isArray(x.slots) ? x.slots.map(Boolean) : null,
+        codeSeen: Array.isArray(x.slots) ? cleanCode(x.code) : null }))
+    : [];
+  planState.shiftSpeedSlot = (typeof p.shiftSpeedSlot === 'number') ? p.shiftSpeedSlot : -1;
+  const wasShift = !!p.shiftMode && shiftValidPatterns().length > 0;
+  planState.shiftMode = wasShift;
+  if (wasShift) planState.planType = TAB_PREFS.shift.planType;
+  if (planState.shiftPatterns.length){
+    pd('shift-goal').value  = TAB_PREFS.shift.goal;
+    pd('shift-race-date').value = TAB_PREFS.shift.raceDate || '';
+    pd('shift-start').value = TAB_PREFS.shift.start || '';
+    redrawShift();
+  }
   generatePlan();
-  showView('plan');
+  if (wasShift && planState.generated) pd('shift-export').style.display = '';
+  showView(wasShift ? 'shift' : 'plan');
   flashHint('Loaded. Enter a fresh test time on the Calibrate tab to re-tighten every pace.');
 }
 
@@ -5375,7 +5972,7 @@ function planRows(){
       const name = effectiveName(wk, c);
       rows.push({
         date, week: wk.w, phase: wk.isDown ? 'recovery' : wk.phase,
-        dow: DOW[c.idx], kind: c.kind,
+        dow: DOW[isoIndex(date)], kind: c.kind,
         session: name,
         target: kindTarget(c.kind, phaseForCol, c),
         mins: (c.kind === 'xt') ? XT_MINS : durOf(name)
@@ -5385,7 +5982,7 @@ function planRows(){
       if (c.double){
         rows.push({
           date, week: wk.w, phase: wk.isDown ? 'recovery' : wk.phase,
-          dow: DOW[c.idx], kind: c.double.kind, second: true,
+          dow: DOW[isoIndex(date)], kind: c.double.kind, second: true,
           session: c.double.name,
           target: kindTarget(c.double.kind, phaseForCol, c),
           mins: durOf(c.double.name)
@@ -5466,7 +6063,11 @@ function exportCsv(){
 
 function shiftPlan(weeks){
   const cur = resolveStartMonday();
-  pd('start-date').value = ymd(addDays(cur, weeks*7));
+  const nd = ymd(addDays(cur, weeks*7));
+  const tab = currentTab();
+  TAB_PREFS[tab].start = nd;
+  if (tab === 'plan') pd('start-date').value = nd;
+  else if (tab === 'shift') pd('shift-start').value = nd;
   planState.sig = null;                       // a date shift must not wipe swaps
   generatePlan();
   flashHint('Plan shifted ' + (weeks > 0 ? 'forward' : 'back') + ' one week. Swaps and ticks kept.');
@@ -5553,6 +6154,18 @@ const LONGK   = ['long','longdown'];
 const INTENSE = ['primary','secondary','retest'];
 
 const dayIndexIn = (d, wkStart) => Math.round((d - wkStart) / 86400000);
+/* A block longer than a week runs past Sunday, so a day's name has to come from
+   its date rather than from its position. Identical for seven-day weeks. */
+const dowOf = (wk, idx) => DOW[isoIndex(addDays(wk.wkStart, idx))];
+/* On a rotation the same weekday appears twice in a block and means two
+   different things, so the date goes on the row as well as the day name. Plus
+   the shift letter, so it's obvious which slot of the bank the session sits in. */
+function dowLabel(wk, idx){
+  const d = addDays(wk.wkStart, idx);
+  if (!(planState.generated && planState.generated.shift)) return DOW[isoIndex(d)];
+  const ch = shiftCharOn(d);
+  return `${DOW[isoIndex(d)]} ${d.getDate()}<i class="pl-shiftch">${ch === 'H' ? '' : ch}</i>`;
+}
 
 /* Moving a long run around a race can park it next to another quality day.
    Sweep the week and ease whichever of an adjacent hard pair isn't the race. */
@@ -5560,7 +6173,7 @@ function easeAdjacent(cells, protectIdx){
   for (let pass = 0; pass < 3; pass++){
     const at = {}; cells.forEach((c,i) => at[c.idx] = i);
     let changed = false;
-    for (let d = 0; d < 6; d++){
+    for (let d = 0; d < CYCLE-1; d++){
       const a = at[d], b = at[d+1];
       if (a == null || b == null) continue;
       if (!HARDK.includes(cells[a].kind) || !HARDK.includes(cells[b].kind)) continue;
@@ -5674,11 +6287,11 @@ function applyRaces(weeks, g, prof){
     // Recovery that runs past Sunday spills into the following weeks. An ultra
     // can owe a fortnight of easy running, so this cascades across however many
     // weeks it takes rather than just the next one.
-    let remaining = idx + recAfter - 6;
+    let remaining = idx + recAfter - (CYCLE-1);
     let nwi = wi + 1;
     while (remaining > 0 && weeks[nwi] && !weeks[nwi].isTaper){
       const nx = weeks[nwi];
-      const cut = Math.min(remaining, 7);
+      const cut = Math.min(remaining, CYCLE);
       nx.cells = nx.cells.map(c => {
         if (c.idx < cut && HARDK.includes(c.kind)) return { ...c, kind:'recovery', name:'Recovery 30 min' };
         if (c.idx < cut && c.kind === 'easy' && durOf(c.name) > 45) return { ...c, name: easyName(45) };
@@ -5692,7 +6305,7 @@ function applyRaces(weeks, g, prof){
       } else if (!nx.note){
         nx.note = 'Ease back in after ' + RACE_LABEL[r.dist] + ' \u2014 the first day or two stay easy, then resume.';
       }
-      remaining -= 7;
+      remaining -= CYCLE;
       nwi++;
     }
 
@@ -5734,6 +6347,8 @@ function showView(v){
   pd('view-sessions').style.display  = v === 'sessions' ? '' : 'none';
   pd('view-plan').style.display      = v === 'plan' ? '' : 'none';
   pd('view-start').style.display     = v === 'start' ? '' : 'none';
+  pd('view-shift').style.display     = v === 'shift' ? '' : 'none';
+  pd('nav-shift').setAttribute('aria-selected', v === 'shift');
   pd('nav-start').setAttribute('aria-selected', v === 'start');
   pd('nav-calibrate').setAttribute('aria-selected', v === 'calibrate');
   pd('nav-sessions').setAttribute('aria-selected', v === 'sessions');
@@ -5747,6 +6362,7 @@ function showView(v){
    and reverts when the athlete returns to the builder. */
 pd('nav-start').onclick     = () => showView('start');
 pd('nav-calibrate').onclick = () => showView('calibrate');
+pd('nav-shift').onclick     = () => showView('shift');
 pd('nav-sessions').onclick  = () => showView('sessions');
 pd('nav-plan').onclick      = () => {
   if (planState.planType === 'c25k') setPlanType(lastBuilderType);
@@ -5761,10 +6377,11 @@ pd('build-c25k').onclick = () => {
   planState.dayMode = ['off','off','off','off','off','off','off'];
   pick.forEach(d => planState.dayMode[d] = 'run');
   planState.planType = 'c25k';
+  planState.shiftMode = false;
   planState.longDay  = pick[pick.length-1];
   planState.overrides = {}; planState.flips = {}; planState.done = {}; planState.sig = null;
   const d = pd('start-date-c25k').value;
-  if (d) pd('start-date').value = d;
+  if (d) TAB_PREFS.c25k.start = d;
   generateC25K();
   pd('c25k-out').scrollIntoView({ behavior:'smooth', block:'start' });
 };
@@ -5773,9 +6390,207 @@ pd('c25k-zip').onclick = () => exportZip(null);
 pd('c25k-ics').onclick = () => exportIcs();
 pd('c25k-a4').onclick  = () => printCalendar('a4');
 
+
+/* ---- shift work planner ---- */
+const redrawShift = () => { renderShiftRows(); renderShiftBank(); renderShiftSpeed(); renderShiftPreview(); };
+
+/* Which slots of the bank can hold the hard session? Only the ones ticked --
+   and the offer is only ever a preference, so nothing here validates it against
+   the long run; the builder does that per rotation. */
+const ORDINALS = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th'];
+function renderShiftSpeed(){
+  const sel = pd('shift-speed-slot');
+  const p = shiftValidPatterns()[0] || planState.shiftPatterns.find(x => cleanCode(x.code));
+  const code = p ? cleanCode(p.code) : '';
+  if (!code){
+    sel.innerHTML = '<option value="-1">Any — let the plan pick</option>';
+    planState.shiftSpeedSlot = -1;
+    return;
+  }
+  syncSlots(p);
+  let runCh = '', runN = 0;
+  const opts = code.split('').map((ch, i) => {
+    if (ch === runCh) runN++; else { runCh = ch; runN = 1; }
+    if (!p.slots[i]) return '';
+    const total = code.split('').filter(c => c === ch).length;
+    const nth = total > 1 ? ` (${ORDINALS[runN-1] || runN + 'th'})` : '';
+    return `<option value="${i}">Day ${i+1} — ${SHIFT_LETTERS[ch] || ch}${nth}</option>`;
+  }).join('');
+  // a slot the athlete has since unticked can't stay selected
+  if (planState.shiftSpeedSlot >= 0 && !p.slots[planState.shiftSpeedSlot]) planState.shiftSpeedSlot = -1;
+  sel.innerHTML = '<option value="-1">Any — let the plan pick</option>' + opts;
+  sel.value = String(planState.shiftSpeedSlot);
+}
+
+function renderShiftRows(){
+  const rows = planState.shiftPatterns.length ? planState.shiftPatterns : [{code:'',from:'',to:''}];
+  rows.forEach(syncSlots);
+  planState.shiftPatterns = rows;
+  pd('shift-rows').innerHTML = rows.map((p,i) => `
+    <div class="shift-row">
+      <input type="text" placeholder="DDNNOOOOOO" value="${(p.code||'').replace(/"/g,'')}" data-i="${i}" data-f="code" spellcheck="false">
+      <input type="date" value="${p.from||''}" data-i="${i}" data-f="from" title="First letter of the pattern lands on this date">
+      <input type="date" value="${p.to||''}" data-i="${i}" data-f="to" title="Pattern applies until this date">
+      <button class="del" data-del="${i}" title="Remove">&times;</button>
+    </div>`).join('');
+  pd('shift-rows').querySelectorAll('input').forEach(inp => {
+    inp.onchange = () => {
+      planState.shiftPatterns[+inp.dataset.i][inp.dataset.f] =
+        inp.dataset.f === 'code' ? inp.value.toUpperCase().replace(/[^A-Za-z]/g,'') : inp.value;
+      redrawShift();
+    };
+  });
+  pd('shift-rows').querySelectorAll('.del').forEach(b => b.onclick = () => {
+    planState.shiftPatterns.splice(+b.dataset.del, 1);
+    if (!planState.shiftPatterns.length) planState.shiftPatterns = [{code:'',from:'',to:''}];
+    redrawShift();
+  });
+}
+
+/* ---- the shift bank ----
+   One box per slot of the rotation. This is the whole point of the redesign:
+   availability is a property of WHERE you are in the pattern, not of what kind
+   of shift it is. The first night with a clear day in front of it and the last
+   night with a wrecked day behind it are the same letter and completely
+   different training propositions. */
+function renderShiftBank(){
+  const pats = planState.shiftPatterns.filter(p => cleanCode(p.code));
+  const box = pd('shift-bank');
+  if (!pats.length){
+    box.innerHTML = '<span class="hint" style="margin:0">Type a pattern above and its days will appear here as a row of boxes to tick.</span>';
+    return;
+  }
+  box.innerHTML = planState.shiftPatterns.map((p, pi) => {
+    const code = cleanCode(p.code);
+    if (!code) return '';
+    syncSlots(p);
+    /* Number each shift within its own run -- N1, N2 -- because "the second
+       night" is how anyone on a rotation actually thinks about it. */
+    let runCh = '', runN = 0;
+    const slots = code.split('').map((ch, i) => {
+      if (ch === runCh) runN++; else { runCh = ch; runN = 1; }
+      const on = !!p.slots[i];
+      const seq = (ch === 'O' || ch === 'H') ? String(i+1) : ch + runN;
+      return `<label class="sb-slot sb-${ch}${on?' sb-on':''}" title="Day ${i+1} of the rotation — ${SHIFT_LETTERS[ch]||ch}">
+        <span class="sb-n">${seq}</span>
+        <span class="sb-c">${ch}</span>
+        <input type="checkbox" data-p="${pi}" data-i="${i}"${on?' checked':''} aria-label="Available to run on day ${i+1} (${SHIFT_LETTERS[ch]||ch})">
+      </label>`;
+    }).join('');
+    const n = p.slots.filter(Boolean).length;
+    return `<div class="sb-pat">
+      ${planState.shiftPatterns.length > 1 ? `<div class="sb-pat-h">Pattern <b>${code}</b></div>` : ''}
+      <div class="sb-grid">${slots}</div>
+      <div class="sb-tools">
+        <button class="ghost-btn" data-all="${pi}">Tick all</button>
+        <button class="ghost-btn" data-none="${pi}">Clear all</button>
+        <button class="ghost-btn" data-reset="${pi}">Sensible default</button>
+      </div>
+      <div class="sb-count"><b>${n}</b> of ${code.length} days available &mdash; about <b>${(n*7/code.length).toFixed(1)}</b> a week.</div>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('input[type=checkbox]').forEach(inp => inp.onchange = () => {
+    const p = planState.shiftPatterns[+inp.dataset.p];
+    p.slots[+inp.dataset.i] = inp.checked;
+    renderShiftBank(); renderShiftSpeed(); renderShiftPreview();
+  });
+  const setAll = (pi, fn) => {
+    const p = planState.shiftPatterns[pi];
+    p.slots = fn(p);
+    renderShiftBank(); renderShiftSpeed(); renderShiftPreview();
+  };
+  box.querySelectorAll('[data-all]').forEach(b => b.onclick = () =>
+    setAll(+b.dataset.all, p => p.slots.map(() => true)));
+  box.querySelectorAll('[data-none]').forEach(b => b.onclick = () =>
+    setAll(+b.dataset.none, p => p.slots.map(() => false)));
+  box.querySelectorAll('[data-reset]').forEach(b => b.onclick = () =>
+    setAll(+b.dataset.reset, p => defaultSlots(p.code)));
+}
+
+/* A month of the rotation, so it's obvious at a glance whether the pattern and
+   the anchor date are right before a plan is built on top of them. */
+function renderShiftPreview(){
+  const ok = shiftValidPatterns().length;
+  if (!ok){ pd('shift-preview').innerHTML = ''; return; }
+  const start = shiftAlignStart(pd('shift-start').value
+    ? (new Date(pd('shift-start').value + 'T00:00:00'))
+    : planStartMonday());
+  const L = shiftCycleLen(start);
+  const span = Math.min(42, L * Math.max(2, Math.ceil(28 / L)));
+  const cells = Array.from({length:span}, (_,i) => {
+    const d = addDays(start, i);
+    const ch = shiftCharOn(d);
+    const avail = shiftAvailabilityOn(d) !== 'off';
+    return `<div class="sp-day sp-${ch}${avail?'':' sp-x'}" title="${SHIFT_LETTERS[ch]||ch}${avail?'':' \u2014 not available'}">
+      <b>${d.getDate()}</b><span>${ch}</span></div>`;
+  }).join('');
+  const used = new Set(planState.shiftPatterns.flatMap(p => cleanCode(p.code).split('')));
+  pd('shift-preview').innerHTML = `<h3 class="panel-h" style="font-size:18px;margin-bottom:8px">Your rotation from ${fmtDate(start)}</h3>
+    <div class="sp-grid">${cells}</div>
+    <div class="sp-key">${[...used].filter(c=>SHIFT_LETTERS[c]).map(c=>`<span><i class="sp-${c}"></i>${SHIFT_LETTERS[c]}</span>`).join('')}
+      <span>Faded = not ticked in your bank</span></div>
+    <div class="sb-count">One block of the plan is <b>${L} days</b> &mdash; one full turn of the pattern.</div>`;
+}
+
+pd('shift-add').onclick = () => { planState.shiftPatterns.push({code:'',from:'',to:''}); redrawShift(); };
+pd('shift-speed-slot').onchange = e => {
+  planState.shiftSpeedSlot = +e.target.value;
+  if (planState.generated && planState.generated.shift) generatePlan();
+};
+/* Everything set here belongs to the shift planner and stops here -- the plan
+   builder keeps whatever it was set to. */
+pd('shift-goal').onchange = e => {
+  TAB_PREFS.shift.goal = e.target.value;
+  TAB_PREFS.shift.planType = (RACE[e.target.value] && RACE[e.target.value].ultra) ? 'ultra' : 'road';
+};
+pd('shift-race-date').onchange = e => { TAB_PREFS.shift.raceDate = e.target.value || null; };
+pd('shift-start').onchange = e => { TAB_PREFS.shift.start = e.target.value; renderShiftPreview(); };
+
+pd('build-shift').onclick = () => {
+  pd('shift-err').classList.remove('show');
+  if (!shiftValidPatterns().length){
+    pd('shift-err').textContent = 'Add at least one rotation \u2014 the pattern letters, the date its first letter falls on, and how long it runs for.';
+    pd('shift-err').classList.add('show');
+    return;
+  }
+  if (!planState.shiftPatterns.some(p => (p.slots||[]).some(Boolean))){
+    pd('shift-err').textContent = 'Tick at least a few days in your shift bank \u2014 those are the days the plan is allowed to use.';
+    pd('shift-err').classList.add('show');
+    return;
+  }
+  planState.shiftMode = true;
+  // pick up anything typed but not yet committed, then hand over to the engine
+  TAB_PREFS.shift.goal     = pd('shift-goal').value || TAB_PREFS.shift.goal;
+  TAB_PREFS.shift.planType = (RACE[TAB_PREFS.shift.goal] && RACE[TAB_PREFS.shift.goal].ultra) ? 'ultra' : 'road';
+  TAB_PREFS.shift.raceDate = pd('shift-race-date').value || null;
+  TAB_PREFS.shift.start    = pd('shift-start').value || TAB_PREFS.shift.start;
+  planState.planType = TAB_PREFS.shift.planType;
+  planState.sig = null;
+  generatePlan();
+  if (planState.generated && planState.generated.shift){
+    pd('shift-export').style.display = '';
+    pd('shift-out').scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+};
+pd('shift-zip').onclick = () => exportZip(null);
+pd('shift-ics').onclick = () => exportIcs();
+pd('shift-csv').onclick = () => exportCsv();
+pd('shift-save').onclick = () => savePlan();
+pd('shift-load').onclick = () => pd('load-file').click();
+pd('shift-a4').onclick  = () => printCalendar('a4');
+pd('shift-a3').onclick  = () => printCalendar('a3');
+
 // offer to restore a browser backup from a previous visit
+pd('shift-goal').innerHTML = [...GOAL_OPTS.road, ...GOAL_OPTS.ultra]
+  .map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+pd('shift-start').value = ymd(planStartMonday());
+TAB_PREFS.shift.start = pd('shift-start').value;
+TAB_PREFS.shift.goal  = pd('shift-goal').value || '5k';
+TAB_PREFS.plan.goal   = pd('goal').value || TAB_PREFS.plan.goal;
+redrawShift();
 updateCurAvg();
-setIntent('improve');
+setIntent('improve', 'plan');
+setIntent('improve', 'shift');
 refreshDoublesVisibility();
 checkBackup();
 </script>
