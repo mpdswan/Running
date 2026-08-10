@@ -122,6 +122,27 @@ h1 .accent{color:var(--flame)}
 .sb-tools .ghost-btn{padding:4px 10px;font-size:12px}
 .sb-count{font-size:12.5px;color:var(--ink-soft);margin-top:8px}
 .sb-count b{color:var(--ink)}
+/* ---------- about ---------- */
+.about-wrap{max-width:780px;margin:0 auto;padding:32px 24px 90px}
+.ab-title{font-family:var(--disp);text-transform:uppercase;font-size:30px;font-weight:700;letter-spacing:.02em;color:var(--ink)}
+.ab-lead{font-size:17.5px;line-height:1.65;color:var(--ink-soft);margin:10px 0 26px;border-left:3px solid var(--track);padding-left:14px}
+.ab-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:18px}
+.ab-card h3{font-family:var(--disp);text-transform:uppercase;font-size:19px;font-weight:700;letter-spacing:.03em;color:var(--track);margin-bottom:10px}
+.ab-card p{font-size:15px;line-height:1.66;margin-bottom:12px}
+.ab-card p:last-child{margin-bottom:0}
+.ab-list{margin:4px 0 14px;padding-left:20px}
+.ab-list li{font-size:15px;line-height:1.6;margin-bottom:8px}
+.ab-code{font-family:var(--mono);font-size:13px;background:var(--tint);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.ab-plain{background:var(--tint)}
+.ab-coffee{background:var(--white);border:2px solid var(--flame);border-radius:var(--radius);padding:22px;text-align:center;margin:26px 0 14px}
+.ab-coffee h3{font-family:var(--disp);text-transform:uppercase;font-size:20px;font-weight:700;letter-spacing:.03em;color:var(--flame)}
+.ab-coffee p{font-size:15px;line-height:1.6;margin:8px auto 14px;max-width:52ch}
+.ab-btn{display:inline-block;background:var(--flame);color:#fff;text-decoration:none;font-family:var(--disp);text-transform:uppercase;font-size:18px;font-weight:700;letter-spacing:.05em;padding:12px 26px;border-radius:8px;transition:filter .15s}
+.ab-btn:hover{filter:brightness(1.08)}
+.ab-small{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin:12px 0 0!important}
+.ab-foot{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:18px}
+.reset-btn{margin-top:8px;color:var(--ink-soft)}
+.reset-btn:hover{color:var(--flame);border-color:var(--flame)}
 /* Both columns of the shift tab run long -- a rotation of settings on the left,
    a whole block of rotations on the right -- so each one scrolls on its own
    rather than dragging the other along with it. Only where there are genuinely
@@ -492,6 +513,7 @@ h1 .accent{color:var(--flame)}
       <button class="nav-tab" id="nav-plan" role="tab" aria-selected="false">Build a plan</button>
       <button class="nav-tab" id="nav-shift" role="tab" aria-selected="false">Shift work</button>
       <button class="nav-tab" id="nav-sessions" role="tab" aria-selected="false">Session library</button>
+      <button class="nav-tab" id="nav-about" role="tab" aria-selected="false">About</button>
     </nav>
   </div>
 </header>
@@ -583,6 +605,7 @@ h1 .accent{color:var(--flame)}
       </div>
 
       <button class="go" id="calc">Calibrate</button>
+      <div class="save-row"><button class="ghost-btn reset-btn" id="reset-calibrate">Reset this tab</button></div>
     </div>
   </aside>
 
@@ -629,7 +652,7 @@ h1 .accent{color:var(--flame)}
 
     <div class="footnote">
       <h4>Using the files</h4>
-      <p><b>Garmin direct:</b> connect the watch by USB and copy the .FIT files into the <span style="font-family:var(--mono);font-size:13px">GARMIN/Workouts</span> folder, then eject &mdash; they appear under Training &rarr; Workouts, named with their date and week. Garmin Connect only imports completed activities, not planned workouts, so there's no upload route there. <b>Final Surge:</b> Workouts &rarr; add a workout to a calendar day &rarr; import/attach the .FIT, and it will sync on to a connected Garmin &mdash; but note Final Surge ignores the name stored in the file and labels every import "Run Workout", so you'll be renaming them. <b>TrainingPeaks:</b> drag the .FIT onto a calendar day.</p>
+      <p><b>Garmin direct:</b> connect the watch by USB and copy the .FIT files into the <span style="font-family:var(--mono);font-size:13px">GARMIN/NEWFILES</span> folder (some models show it as <span style="font-family:var(--mono);font-size:13px">GARMIN/Workouts</span>), then eject &mdash; they appear under Training &rarr; Workouts, named with their date and week. Garmin Connect only imports completed activities, not planned workouts, so there's no upload route there. <b>Final Surge:</b> Workouts &rarr; add a workout to a calendar day &rarr; import/attach the .FIT, and it will sync on to a connected Garmin &mdash; but note Final Surge ignores the name stored in the file and labels every import "Run Workout", so you'll be renaming them. <b>TrainingPeaks:</b> drag the .FIT onto a calendar day.</p>
       <p>All targets are written as absolute values — pace bands in m/s and heart-rate bands in bpm — so nothing depends on the threshold or zone settings of the receiving platform. Hill and stride efforts are exported as open-target steps with timed durations, because pace targets are meaningless on a gradient.</p>
       <p>Recalibrate whenever you set a new benchmark: paces tighten automatically as you get fitter.</p>
     </div>
@@ -662,8 +685,7 @@ h1 .accent{color:var(--flame)}
     </div>
 
     <button class="go" id="build-c25k">Build my nine weeks</button>
-
-    
+    <div class="save-row"><button class="ghost-btn reset-btn" id="reset-c25k">Reset this tab</button></div>
   </div>
 
   <div class="c25k-main">
@@ -716,6 +738,20 @@ h1 .accent{color:var(--flame)}
     </div>
 
     <div class="field">
+      <label for="shift-base">Base building first</label>
+      <select id="shift-base">
+        <option value="auto" selected>Recommended</option>
+        <option value="0">None &mdash; straight into the block</option>
+        <option value="2">2 rotations of base</option>
+        <option value="3">3 rotations of base</option>
+        <option value="4">4 rotations of base</option>
+        <option value="6">6 rotations of base</option>
+        <option value="9">9 rotations of base</option>
+      </select>
+      <div class="hint">Easy volume, hills and strides before the sharp work &mdash; counted in rotations, like everything else on this tab. With a race date set, spare time becomes base automatically and this is ignored.</div>
+    </div>
+
+    <div class="field">
       <label for="shift-goal">Goal race</label>
       <select id="shift-goal"></select>
     </div>
@@ -739,11 +775,11 @@ h1 .accent{color:var(--flame)}
     </div>
 
     <button class="go" id="build-shift">Build my plan</button>
+    <div class="save-row"><button class="ghost-btn reset-btn" id="reset-shift">Reset this tab</button></div>
     <div class="plan-err" id="shift-err"></div>
   </div>
 
   <div class="c25k-main">
-    <div id="shift-preview" class="shift-preview"></div>
     <div id="shift-out" class="plan-out"></div>
     <div class="field" id="shift-export" style="display:none">
       <label>Take it with you</label>
@@ -887,6 +923,7 @@ h1 .accent{color:var(--flame)}
         <button class="ghost-btn" id="load-plan">Load from file</button>
         <input type="file" id="load-file" accept="application/json,.json" hidden>
       </div>
+      <div class="save-row"><button class="ghost-btn reset-btn" id="reset-plan">Reset this tab</button></div>
 
       <div class="field" style="margin-top:14px">
         <label>Export the block</label>
@@ -922,6 +959,62 @@ h1 .accent{color:var(--flame)}
       Choose your goal race, tap your week into shape, and hit <b>Build my plan</b>. Calibrate first and every day will show its target pace and a one-tap .FIT download.
     </div>
   </div>
+</section>
+
+<!-- ============ about view ============ -->
+<section class="about-wrap" id="view-about" style="display:none" aria-label="About Session Forge">
+  <h2 class="ab-title">Why this exists</h2>
+  <p class="ab-lead">I built Session Forge to get myself back to running properly after an injury, and because I couldn't see why a years training plan should cost more than the watch it runs on.</p>
+
+  <div class="ab-card">
+    <h3>The short version</h3>
+    <p>Hi, I'm Matt. I've counted myself as a runner since 2012 and have run several distances including ultras &mdash; The 2025 Northern Traverse, 300km coast to coast across the north of England, was my last race as I picked up an injury and barely ran for a year.</p>
+    <p>Coming back was hard but seeing a physio helped me get the injury under control. But it left me not knowing what to do next. Do I run today? How hard? For how long? Weeks of running whatever I fancied is a good way to end up injured again, so what I wanted was a structure: a proper block with easy days that stay easy, hard days that mean something, and a long run that grows instead of jumping about.</p>
+    <p>I also wanted to point that structure at shorter distances for a change. Ultras teach you to plod for hours. Getting a 5K back to where I was, and then quicker, is a completely different job and needs a completely different plan.</p>
+  </div>
+
+  <div class="ab-card">
+    <h3>Why I didn't just buy a plan</h3>
+    <p>I already pay for Strava. Being asked to pay again, every month, for a plan app on top of it felt like a cheek &mdash; especially when what you're buying is a table of sessions and a bit of maths that hasn't changed since Daniels and Lydiard wrote it down.</p>
+    <p>So I took roughly one month's subscription, spent it on Claude, and built this instead. It's a one-off, it's mine, and it does the specific things I actually wanted:</p>
+    <ul class="ab-list">
+      <li><b>Plans for whatever I'm training for next</b> &mdash; 5K through to a hundred miles, built around one benchmark effort rather than a questionnaire.</li>
+      <li><b>Workout files I can put on my watch myself</b>, whenever I need them, without a subscription sitting between me and my own training.</li>
+      <li><b>A library of classic sessions</b> &mdash; Mona fartlek, Yasso 800s, Michigan, hill repeats, threshold ladders &mdash; because the same three workouts on repeat is how people fall out of love with running.</li>
+      <li><b>Swap anything for something equivalent.</b> Every session in the plan has alternatives of the same purpose, so if you fancy a fartlek instead of track reps, take it. The week's shape doesn't break.</li>
+      <li><b>Real periodisation</b> &mdash; base, development, race-specific, taper, with a recovery week every fourth week and a benchmark test built in so the paces re-tighten as you get fitter.</li>
+    </ul>
+    <p>No account, no cloud, no data going anywhere. It's a single HTML file that runs in your browser.</p>
+  </div>
+
+  <div class="ab-card">
+    <h3>The shift work planner</h3>
+    <p>I used to work shifts, and a lot of my running mates still do. Every plan you can buy assumes a Monday-to-Sunday week: long run Sunday, sessions Tuesday and Thursday. That's no use to you when Sunday is your second night shift.</p>
+    <p>So that tab throws the week away. You tell it your rotation &mdash; <span class="ab-code">DDNNOOOOOO</span>, four on four off, whatever yours is &mdash; and tick the individual days you could actually run. Not "all nights are out": the <em>first</em> night with a clear day in front of it might be the best session of the whole bank, while the day after your last one obviously isn't.</p>
+    <p>Then the plan periodises over <b>your rotation instead of the calendar</b>. Every block is one full turn of the pattern, so the build, the recovery blocks and the taper all progress properly, the long run lands in your rest bank, and the hard sessions go where you're actually rested. Longer between long runs, yes &mdash; that's the trade, and the block is sized to match.</p>
+  </div>
+
+  <div class="ab-card">
+    <h3>Getting the sessions onto your watch</h3>
+    <p><b>Garmin &mdash; plug it in.</b> Download the .FIT files (any session, a single week/rotation, or the whole block as a zip), connect the watch by USB, and copy them into the <span class="ab-code">GARMIN/NEWFILES</span> folder on the watch drive. Some models show this as <span class="ab-code">GARMIN/Workouts</span> &mdash; if you have both, NEWFILES is the one that ingests them. Eject the watch, and the sessions appear under <b>Training &rarr; Workouts</b>, named with their date and week number.</p>
+    <p>Garmin Connect itself won't help here: it imports completed activities, not planned workouts. The USB route is the whole trick.</p>
+    <p><b>Everything else &mdash; use Final Surge.</b> It's free, and it's the easiest bridge to non-Garmin watches. Create an account, go to <b>Workouts</b>, add a workout to a day in the calendar, and import or attach the .FIT file. Final Surge then syncs the session to a connected watch. Fair warning: it ignores the name stored in the file and labels everything "Run Workout", so you'll be renaming them as you go. TrainingPeaks works the same way &mdash; drag the .FIT onto a calendar day.</p>
+    <p>Every target is written into the file as an absolute number &mdash; pace bands in metres per second, heart rate in beats per minute &mdash; so nothing depends on how the receiving app has your zones set up. Hills and strides export as timed open-target steps, because a pace target on a gradient is a lie.</p>
+  </div>
+
+  <div class="ab-card ab-plain">
+    <h3>One honest caveat</h3>
+    <p>I'm a runner who got injured and wanted a plan, I'm not a certified coach and not a physio. This builds a sensible, conventional block from your own numbers &mdash; but it can't see you, and it doesn't know what your body is doing today. Run the easy days easy, back off when you need and if something hurts speak to a professional and get proper advice for anything that persists.</p>
+  </div>
+
+  <div class="ab-coffee">
+    <h3>This is free, for everyone</h3>
+    <p>No fee, no account, no catch &mdash; if it's useful to you, use it, and send it to anyone else who'd get something out of it. But if you want to show some appreciation&hellip;</p>
+    <a class="ab-btn" href="https://buymeacoffee.com/mattswan" target="_blank" rel="noopener noreferrer">Buy me a coffee &#9749;</a>
+    
+  </div>
+
+  <p class="ab-foot">Session Forge &mdash; built with Claude, for the price of one month of somebody else's subscription.</p>
 </section>
 
 <div class="chart-modal" id="chart-modal" style="display:none">
@@ -3309,8 +3402,15 @@ function fitEasyRuns(cells, targetMins){
      big target has only one easy slot to pour the remainder into. */
     const longCell = cells.find(c => c.kind === 'long' || c.kind === 'longdown');
   const longMins = longCell ? durOf(longCell.name) : Infinity;
-  const easyCap  = Math.min(EASY_RUNGS[EASY_RUNGS.length-1], longMins);
-  const medCap   = Math.min(MEDLONG_RUNGS[MEDLONG_RUNGS.length-1], longMins);
+  /* An easy day the same length as the long run is not an easy day -- it is a
+     second long run with a gentler label, and the week then has two of them.
+     Letting the cap sit AT the long run made that happen wherever the volume
+     had nowhere else to go: a big block with few available days, which is
+     exactly the shape a rotation produces. Easy runs stop at three quarters of
+     the long run and the medium-long at six sevenths; if that leaves the week
+     under its target, the week comes in under its target, which is honest. */
+  const easyCap  = Math.min(EASY_RUNGS[EASY_RUNGS.length-1], longMins * 0.75);
+  const medCap   = Math.min(MEDLONG_RUNGS[MEDLONG_RUNGS.length-1], longMins * 0.86);
   /* The day before the long run is held to an hour however much volume is
      going spare: two big days back to back is how the long run gets ruined. */
   const PRE_LONG_CAP = 60;
@@ -3386,8 +3486,8 @@ const xtDaysOf  = () => planState.dayMode.map((m,i)=>m==='xt' ?i:-1).filter(i=>i
    intent; the engine is handed the right record at build time, and nothing but
    the calibration (paces, zones, what you currently run) crosses between them. */
 const TAB_PREFS = {
-  plan:  { goal:'5k', planType:'road', raceDate:null, start:null, intent:'improve' },
-  shift: { goal:'5k', planType:'road', raceDate:null, start:null, intent:'improve' },
+  plan:  { goal:'5k', planType:'road', raceDate:null, start:null, intent:'improve', baseWeeks:null },
+  shift: { goal:'5k', planType:'road', raceDate:null, start:null, intent:'improve', baseBlocks:null },
   c25k:  { goal:'5k', planType:'c25k', raceDate:null, start:null, intent:'improve' }
 };
 /* Which planner does the state on screen belong to? The beginner programme
@@ -3400,6 +3500,9 @@ function applyTabPrefs(which){
   planState.planType = p.planType;
   planState.raceDate = p.raceDate || null;
   planState.intent   = INTENTS[p.intent] ? p.intent : 'improve';
+  // the plan builder's base-weeks setting is its own; the rotation planner
+  // keeps a separate one counted in rotations (TAB_PREFS.shift.baseBlocks)
+  if (which === 'plan') planState.baseWeeks = (p.baseWeeks === undefined) ? planState.baseWeeks : p.baseWeeks;
 }
 
 const pd = id => document.getElementById(id);
@@ -4068,33 +4171,52 @@ function timeTrialOptions(prof){
     .forEach(n => { if (!opts.includes(n)) opts.push(n); });
   return opts;
 }
+/* Minutes named in a session title -- "Easy Aerobic 45 min" -> 45. Returns 0
+   for the named variants (Progressive Long Run and friends), which is what
+   makes them safe to anchor a list on rather than a reason to give up. */
+const durMinsOf = n => {
+  const m = /(\d+)\s*min/.exec(String(n || ''));
+  return m ? +m[1] : 0;
+};
+
 function candidatesFor(kind, phase, prof, curName){
   if (kind === 'c25k') return [];          // the programme is fixed; nothing to swap
   prof = prof || raceProfile();
   if (kind === 'timetrial') return withCurrent(timeTrialOptions(prof), curName);
   if (SWAP_FIXED[kind]) return withCurrent(SWAP_FIXED[kind], curName);
+  /* A swap list must be a ROUND TRIP. These lists are always built from the
+     session the plan prescribed, never from whatever you last picked -- a list
+     that slides with your choice lets you walk away from the original and then
+     refuses to offer it back, which is how "Easy Aerobic 35 min" turned itself
+     into 50 and how choosing a Progressive Long Run made the dropdown vanish
+     altogether. Every option here can be undone by choosing again. */
   if (kind === 'easy'){
-    const m = parseInt((curName || '').replace(/\D+/g,''), 10);
-    const i = EASY_RUNGS.indexOf(m);
-    if (i < 0) return [easyName(40), 'Easy Run + 6 Strides'];
-    const near = EASY_RUNGS.slice(Math.max(0,i-2), i+3).map(easyName);
-    near.push('Easy Run + 6 Strides');
-    return withCurrent(near, curName);
+    const m = durMinsOf(curName);
+    // every rung from the shortest easy run up to roughly double the prescribed
+    // one: short enough to be sensible, wide enough to always find the way back
+    const top = Math.min(180, Math.max(60, (m || 40) * 2, (m || 40) + 30));
+    const list = EASY_RUNGS.filter(r => r <= top).map(easyName);
+    list.push('Easy Run + 6 Strides');
+    return withCurrent(list, curName);
   }
   if (kind === 'long' || kind === 'longdown'){
-    const m = parseInt((curName || '').replace(/\D+/g, ''), 10);
+    const m = durMinsOf(curName);
     const i = LONG_RUNGS.indexOf(m);
-    if (i < 0) return [longName(LONG_RUNGS[0])];
-    const near = LONG_RUNGS.slice(Math.max(0, i-2), i+3).map(longName);
+    /* Anchored on the prescribed rung, so the same list appears whether you're
+       looking at the long run as written or at a variant you swapped to. */
+    const near = (i < 0)
+      ? LONG_RUNGS.filter(r => !m || Math.abs(r - m) <= 30).map(longName)
+      : LONG_RUNGS.slice(Math.max(0, i-4), i+5).map(longName);
+    if (!near.length) near.push(longName(LONG_RUNGS[0]));
     // quality long-run variants, offered where their duration is comparable
-    if (m >= 60 && m <= 105) near.push('Long Run + Tempo Finish', 'Progressive Long Run');
+    if (!m || (m >= 60 && m <= 105)) near.push('Long Run + Tempo Finish', 'Progressive Long Run');
     return withCurrent(near, curName);
   }
   if (kind === 'b2b'){
-    const m = parseInt((curName || '').replace(/\D+/g, ''), 10);
+    const m = durMinsOf(curName);
     const i = B2B_RUNGS.indexOf(m);
     const near = (i < 0) ? B2B_RUNGS.map(b2bName)
-                         : B2B_RUNGS.slice(Math.max(0, i-2), i+3).map(b2bName);
+                         : B2B_RUNGS.slice(Math.max(0, i-3), i+4).map(b2bName);
     near.push(easyName(60));   // option to drop the back-to-back for an easy run
     return withCurrent(near, curName);
   }
@@ -4623,6 +4745,11 @@ function generatePlan(){
     }
     setCycle(shiftCycleLen(shiftAlignStart(resolveStartMonday())));
   } else setCycle(7);
+  /* Phase lengths are quantities of TIME. Expressed in weeks in the profiles,
+     they're converted to however many blocks cover the same span, so a
+     twelve-week specific phase stays twelve weeks long whether that's twelve
+     blocks of seven days or eight blocks of ten. */
+  const inBlocks = wks => Math.max(1, Math.round(wks * 7 / CYCLE));
   const runAv = runDaysOf().sort((a,b)=>a-b);
   const xtAv  = xtDaysOf();
   /* Two running days can hold a long run and one quality session and nothing
@@ -4692,10 +4819,23 @@ function generatePlan(){
     /* Unset means "give me a sensible default"; an explicit zero means none.
        Conflating the two made the dropdown's own "None" option silently add
        four weeks of base. */
-    const autoBase = (planState.baseWeeks == null) ? 4 : planState.baseWeeks;
-    N = prof.spec + autoBase;
-    /* Same span of time, counted in rotations rather than weeks. */
-    if (planState.shiftMode) N = Math.max(3, Math.round(N * 7 / CYCLE));
+    if (planState.shiftMode){
+      /* The rotation planner counts its base in ROTATIONS and has its own
+         control for it -- borrowing the plan builder's week-based selector
+         meant the two tabs quietly moved each other, and the rounding between
+         units could hand back the same block length you were trying to leave.
+         The specific phase converts once; the base is added in blocks. */
+      const autoBlocks = (TAB_PREFS.shift.baseBlocks == null)
+        ? Math.max(1, Math.round(4 * 7 / CYCLE))
+        : TAB_PREFS.shift.baseBlocks;
+      N = Math.max(3, inBlocks(prof.spec) + autoBlocks);
+    } else {
+      /* Unset means "give me a sensible default"; an explicit zero means none.
+         Conflating the two made the dropdown's own "None" option silently add
+         four weeks of base. */
+      const autoBase = (planState.baseWeeks == null) ? 4 : planState.baseWeeks;
+      N = prof.spec + autoBase;
+    }
     if (planState.shiftMode){
       // the benchmark goes in the best-rested slot of the final rotation
       const lastMode = shiftWeekMode(addDays(start, (N-1)*CYCLE));
@@ -4705,11 +4845,6 @@ function generatePlan(){
   }
 
   // --- periodisation: [ base ][ development + specific ][ taper ] ---
-  /* Phase lengths are quantities of TIME. Expressed in weeks in the profiles,
-     they're converted to however many rotations cover the same span, so a
-     twelve-week specific phase stays twelve weeks long whether that's twelve
-     blocks of seven days or eight blocks of ten. */
-  const inBlocks = wks => Math.max(1, Math.round(wks * 7 / CYCLE));
   let taperWeeks = N >= inBlocks(6) ? inBlocks(prof.taper) : (N >= inBlocks(4) ? 1 : 0);
   const specWeeks = Math.min(inBlocks(prof.spec), N);  // focused block length
   const baseWeeks = Math.max(0, N - specWeeks);       // extra time becomes base
@@ -5032,13 +5167,16 @@ function generatePlan(){
       if (!lc) return;
       const lm = durOf(lc.name);
       if (!lm) return;
+      // same proportions the sizing used, re-applied after every later pass
+      const medRoof  = lm * 0.86;
+      const easyRoof = lm * 0.75;
       cells.forEach((c, i) => {
-        if (c.kind === 'medlong' && durOf(c.name) > lm){
-          const fit = MEDLONG_RUNGS.filter(r => r <= lm);
+        if (c.kind === 'medlong' && durOf(c.name) > medRoof){
+          const fit = MEDLONG_RUNGS.filter(r => r <= medRoof);
           cells[i] = { ...c, name: medLongName(fit.length ? fit[fit.length-1] : MEDLONG_RUNGS[0]) };
         }
-        if (c.kind === 'easy' && durOf(c.name) > lm){
-          const fit = EASY_RUNGS.filter(r => r <= lm);
+        if (c.kind === 'easy' && durOf(c.name) > easyRoof){
+          const fit = EASY_RUNGS.filter(r => r <= easyRoof);
           cells[i] = { ...c, name: easyName(fit.length ? fit[fit.length-1] : EASY_RUNGS[0]) };
         }
       });
@@ -5301,10 +5439,12 @@ function renderPlan(){
     const phaseForCol = wk.isTaper ? 'specific' : wk.phase;
     const phaseForSwap = wk.namePhase || phaseForCol;
 
-    // apply any user swaps before measuring load (same resolver as export)
+    /* Apply any user swaps before measuring load (same resolver as export).
+       The prescribed name is carried along as `baseName`, because that -- not
+       the swap -- is what the swap list is built from. */
     const cells = wk.cells.map(c => {
       const name = effectiveName(wk, c);
-      return name !== c.name && c.kind !== 'xt' ? { ...c, name } : c;
+      return name !== c.name && c.kind !== 'xt' ? { ...c, name, baseName:c.name } : c;
     });
 
     const load = state ? weekLoad(cells) : null;
@@ -5323,7 +5463,7 @@ function renderPlan(){
                   : c.kind === 'timetrial' ? (c.name + ' (benchmark)')
                   : c.kind === 'xt' ? (c.name || xtMetaOf(c).label)
                   : c.name;
-      const cands = candidatesFor(c.kind, phaseForSwap, null, c.name);
+      const cands = candidatesFor(c.kind, phaseForSwap, null, c.baseName || c.name);
       const canSwap = cands.length > 1 && c.kind !== 'race' && c.kind !== 'xt';
       const nameHtml = canSwap
         ? `<select class="pl-swap" data-w="${wk.w}" data-idx="${c.idx}" aria-label="Swap ${dowOf(wk, c.idx)} session">
@@ -5449,24 +5589,30 @@ function renderPlan(){
     /* Lengthen the block by adding base weeks in front of it: the focused part
        stays the length the distance needs, and the extra time goes where extra
        time belongs -- building the engine before the sharp work starts. */
-    /* `want` is a number of BLOCKS. Base is always set in weeks, so on a
-       rotation it has to be converted -- and then nudged up until the block
-       count actually lands on the target, because the weeks-to-rotations
-       rounding can otherwise hand back the very length we're trying to leave. */
+    /* `want` is a number of BLOCKS. Each planner sets its base in its own unit
+       and through its own control -- the rotation planner in rotations, the
+       plan builder in weeks -- so the extension goes to the right one. */
     const want = +ext.dataset.n;
     const cyc  = +(ext.dataset.cycle || 7) || 7;
     const prof = raceProfile();
-    let base = Math.max(0, Math.round(want * cyc / 7) - prof.spec);
-    while (base < 60 && Math.max(3, Math.round((prof.spec + base) * 7 / cyc)) < want) base++;
-    planState.baseWeeks = base;
-    const sel = pd('base-weeks');
-    if (sel && !Array.from(sel.options).some(o => +o.value === planState.baseWeeks)){
+    const onShift = planState.shiftMode;
+    const sel = pd(onShift ? 'shift-base' : 'base-weeks');
+    let base;
+    if (onShift){
+      base = Math.max(0, want - Math.max(1, Math.round(prof.spec * 7 / cyc)));
+      TAB_PREFS.shift.baseBlocks = base;
+    } else {
+      base = Math.max(0, want - prof.spec);
+      planState.baseWeeks = base;
+      TAB_PREFS.plan.baseWeeks = base;
+    }
+    if (sel && !Array.from(sel.options).some(o => +o.value === base)){
       const o = document.createElement('option');
-      o.value = String(planState.baseWeeks);
-      o.textContent = planState.baseWeeks + ' weeks of base';
+      o.value = String(base);
+      o.textContent = base + (onShift ? ' rotations of base' : ' weeks of base');
       sel.appendChild(o);
     }
-    if (sel) sel.value = String(planState.baseWeeks);
+    if (sel) sel.value = String(base);
     planState.sig = null;
     generatePlan();
   };
@@ -5569,7 +5715,10 @@ function updateCurAvg(){
   pd('cur-avg-hint').textContent = note;
 }
 pd('xt-mins').onchange = e => { planState.xtMins = +e.target.value; };
-pd('base-weeks').onchange = e => { planState.baseWeeks = e.target.value === 'auto' ? null : +e.target.value; };
+pd('base-weeks').onchange = e => {
+  planState.baseWeeks = e.target.value === 'auto' ? null : +e.target.value;
+  TAB_PREFS.plan.baseWeeks = planState.baseWeeks;
+};
 pd('speed-day').onchange = e => { planState.speedDay = +e.target.value; };
 /* Each planner has its own intent toggle and its own answer. Wanting a PB off a
    rotation says nothing about what you want from the block you're building on
@@ -5690,6 +5839,7 @@ function collectSnapshot(){
       // the rotation and its shift bank, so a shift plan reloads as one
       shiftMode:     !!planState.shiftMode,
       shiftSpeedSlot: (typeof planState.shiftSpeedSlot === 'number') ? planState.shiftSpeedSlot : -1,
+      shiftBaseBlocks: (typeof TAB_PREFS.shift.baseBlocks === 'number') ? TAB_PREFS.shift.baseBlocks : null,
       shiftPatterns: (planState.shiftPatterns || []).map(p => ({
         code: p.code || '', from: p.from || '', to: p.to || '',
         slots: Array.isArray(p.slots) ? p.slots.map(Boolean) : null
@@ -5819,6 +5969,15 @@ function applySnapshot(s){
         codeSeen: Array.isArray(x.slots) ? cleanCode(x.code) : null }))
     : [];
   planState.shiftSpeedSlot = (typeof p.shiftSpeedSlot === 'number') ? p.shiftSpeedSlot : -1;
+  TAB_PREFS.shift.baseBlocks = (typeof p.shiftBaseBlocks === 'number') ? p.shiftBaseBlocks : null;
+  pd('shift-base').value = TAB_PREFS.shift.baseBlocks == null ? 'auto' : String(TAB_PREFS.shift.baseBlocks);
+  if (TAB_PREFS.shift.baseBlocks != null && !Array.from(pd('shift-base').options).some(o => +o.value === TAB_PREFS.shift.baseBlocks)){
+    const o = document.createElement('option');
+    o.value = String(TAB_PREFS.shift.baseBlocks);
+    o.textContent = TAB_PREFS.shift.baseBlocks + ' rotations of base';
+    pd('shift-base').appendChild(o);
+    pd('shift-base').value = o.value;
+  }
   const wasShift = !!p.shiftMode && shiftValidPatterns().length > 0;
   planState.shiftMode = wasShift;
   if (wasShift) planState.planType = TAB_PREFS.shift.planType;
@@ -6348,6 +6507,8 @@ function showView(v){
   pd('view-plan').style.display      = v === 'plan' ? '' : 'none';
   pd('view-start').style.display     = v === 'start' ? '' : 'none';
   pd('view-shift').style.display     = v === 'shift' ? '' : 'none';
+  pd('view-about').style.display     = v === 'about' ? '' : 'none';
+  pd('nav-about').setAttribute('aria-selected', v === 'about');
   pd('nav-shift').setAttribute('aria-selected', v === 'shift');
   pd('nav-start').setAttribute('aria-selected', v === 'start');
   pd('nav-calibrate').setAttribute('aria-selected', v === 'calibrate');
@@ -6363,6 +6524,11 @@ function showView(v){
 pd('nav-start').onclick     = () => showView('start');
 pd('nav-calibrate').onclick = () => showView('calibrate');
 pd('nav-shift').onclick     = () => showView('shift');
+pd('nav-about').onclick     = () => showView('about');
+pd('reset-calibrate').onclick = () => resetTab('calibrate');
+pd('reset-plan').onclick      = () => resetTab('plan');
+pd('reset-shift').onclick     = () => resetTab('shift');
+pd('reset-c25k').onclick      = () => resetTab('c25k');
 pd('nav-sessions').onclick  = () => showView('sessions');
 pd('nav-plan').onclick      = () => {
   if (planState.planType === 'c25k') setPlanType(lastBuilderType);
@@ -6391,8 +6557,103 @@ pd('c25k-ics').onclick = () => exportIcs();
 pd('c25k-a4').onclick  = () => printCalendar('a4');
 
 
+/* ============ RESET ============
+   Each tab can be put back exactly as it opened. Rather than hand-writing a
+   default for every control -- which drifts the moment a default changes -- the
+   blank state is photographed at start-up and restored on demand. */
+const BLANK_STATE = {};
+const BLANK_IDS = ['dist','time','maxhr','age','cur-vol','cur-days','gt-time','gt-dist',
+  'paces','predict','gt-out','cal-locked','filters','dur-filters','grid','lib-q',
+  'goal','race-date','start-date','long-day','base-weeks','speed-day','xt-mins','plan-out',
+  'shift-goal','shift-race-date','shift-start','shift-base','shift-speed-slot','shift-out','shift-bank','shift-rows',
+  'start-days','start-date-c25k','c25k-out'];
+function captureBlanks(){
+  BLANK_IDS.forEach(id => {
+    const el = pd(id); if (!el) return;
+    BLANK_STATE[id] = ['INPUT','SELECT','TEXTAREA'].includes(el.tagName)
+      ? { value: el.value } : { html: el.innerHTML };
+  });
+}
+function restoreBlank(id){
+  const el = pd(id), b = BLANK_STATE[id];
+  if (!el || !b) return;
+  if (b.value !== undefined) el.value = b.value; else el.innerHTML = b.html;
+}
+/* Wipe the plan on screen only if it belongs to the tab being reset -- resetting
+   the beginner tab has no business deleting a rotation plan. */
+function clearPlanFor(owned){
+  if (planState.generated && owned){
+    planState.generated = null; planState.sig = null;
+    planState.overrides = {}; planState.flips = {}; planState.done = {};
+  }
+}
+function resetTab(tab){
+  // decided before anything is touched: resetting a tab can change what
+  // currentTab() would answer
+  const owned = currentTab() === tab;
+  if (tab === 'calibrate'){
+    ['dist','time','maxhr','age','cur-vol','cur-days','gt-time','gt-dist','lib-q'].forEach(restoreBlank);
+    ['paces','predict','gt-out','cal-locked','filters','dur-filters','grid'].forEach(restoreBlank);
+    state = null;
+    unit = 'km';
+    pd('unit-km').setAttribute('aria-pressed','true');
+    pd('unit-mi').setAttribute('aria-pressed','false');
+    pd('err').classList.remove('show');
+    planState.currentMins = +pd('cur-vol').value || 180;
+    planState.currentDays = +pd('cur-days').value || 3;
+    updateCurAvg(); refreshDoublesVisibility();
+    if (planState.generated) renderPlan();      // redraws without paces
+    flashHint('Calibration cleared. Enter a recent race or time trial to start again.');
+    return;
+  }
+  if (tab === 'plan'){
+    TAB_PREFS.plan = { goal:'5k', planType:'road', raceDate:null,
+                       start: BLANK_STATE['start-date'] ? BLANK_STATE['start-date'].value : ymd(planStartMonday()),
+                       intent:'improve', baseWeeks:null };
+    setPlanType('road');
+    ['goal','race-date','start-date','base-weeks','speed-day','xt-mins','long-day'].forEach(restoreBlank);
+    planState.dayMode = ['off','run','off','run','off','run','run'];
+    planState.longDay = 6; planState.speedDay = -1; planState.baseWeeks = null;
+    planState.xtMins = +pd('xt-mins').value || 45;
+    planState.races = []; planState.doubles = false;
+    planState.raceDate = null;
+    buildDayGrid(); refreshLongDayOptions(); renderRaces(); refreshDoublesVisibility();
+    document.querySelectorAll('#doubles-toggle .seg-opt').forEach(x => {
+      const on = x.dataset.dbl === '0'; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on);
+    });
+    setIntent('improve','plan');
+    clearPlanFor(owned);
+    restoreBlank('plan-out');
+    pd('pl-err').classList.remove('show');
+    return;
+  }
+  if (tab === 'shift'){
+    TAB_PREFS.shift = { goal:'5k', planType:'road', raceDate:null,
+                        start: BLANK_STATE['shift-start'] ? BLANK_STATE['shift-start'].value : ymd(planStartMonday()),
+                        intent:'improve', baseBlocks:null };
+    planState.shiftPatterns = [{ code:'', from:'', to:'' }];
+    planState.shiftSpeedSlot = -1;
+    ['shift-goal','shift-race-date','shift-start','shift-base'].forEach(restoreBlank);
+    setIntent('improve','shift');
+    redrawShift();
+    clearPlanFor(owned);
+    restoreBlank('shift-out');
+    pd('shift-export').style.display = 'none';
+    pd('shift-err').classList.remove('show');
+    return;
+  }
+  if (tab === 'c25k'){
+    ['start-days','start-date-c25k'].forEach(restoreBlank);
+    TAB_PREFS.c25k.start = BLANK_STATE['start-date-c25k'] ? BLANK_STATE['start-date-c25k'].value : ymd(planStartMonday());
+    clearPlanFor(owned);
+    restoreBlank('c25k-out');
+    pd('c25k-export').style.display = 'none';
+    return;
+  }
+}
+
 /* ---- shift work planner ---- */
-const redrawShift = () => { renderShiftRows(); renderShiftBank(); renderShiftSpeed(); renderShiftPreview(); };
+const redrawShift = () => { renderShiftRows(); renderShiftBank(); renderShiftSpeed(); };
 
 /* Which slots of the bank can hold the hard session? Only the ones ticked --
    and the offer is only ever a preference, so nothing here validates it against
@@ -6486,18 +6747,19 @@ function renderShiftBank(){
         <button class="ghost-btn" data-none="${pi}">Clear all</button>
         <button class="ghost-btn" data-reset="${pi}">Sensible default</button>
       </div>
-      <div class="sb-count"><b>${n}</b> of ${code.length} days available &mdash; about <b>${(n*7/code.length).toFixed(1)}</b> a week.</div>
+      <div class="sb-count"><b>${n}</b> of ${code.length} days available &mdash; about <b>${(n*7/code.length).toFixed(1)}</b> a week.
+        ${pi === 0 ? `One block of the plan is <b>${code.length} days</b>, one full turn of this pattern.` : ''}</div>
     </div>`;
   }).join('');
   box.querySelectorAll('input[type=checkbox]').forEach(inp => inp.onchange = () => {
     const p = planState.shiftPatterns[+inp.dataset.p];
     p.slots[+inp.dataset.i] = inp.checked;
-    renderShiftBank(); renderShiftSpeed(); renderShiftPreview();
+    renderShiftBank(); renderShiftSpeed();
   });
   const setAll = (pi, fn) => {
     const p = planState.shiftPatterns[pi];
     p.slots = fn(p);
-    renderShiftBank(); renderShiftSpeed(); renderShiftPreview();
+    renderShiftBank(); renderShiftSpeed();
   };
   box.querySelectorAll('[data-all]').forEach(b => b.onclick = () =>
     setAll(+b.dataset.all, p => p.slots.map(() => true)));
@@ -6507,30 +6769,9 @@ function renderShiftBank(){
     setAll(+b.dataset.reset, p => defaultSlots(p.code)));
 }
 
-/* A month of the rotation, so it's obvious at a glance whether the pattern and
-   the anchor date are right before a plan is built on top of them. */
-function renderShiftPreview(){
-  const ok = shiftValidPatterns().length;
-  if (!ok){ pd('shift-preview').innerHTML = ''; return; }
-  const start = shiftAlignStart(pd('shift-start').value
-    ? (new Date(pd('shift-start').value + 'T00:00:00'))
-    : planStartMonday());
-  const L = shiftCycleLen(start);
-  const span = Math.min(42, L * Math.max(2, Math.ceil(28 / L)));
-  const cells = Array.from({length:span}, (_,i) => {
-    const d = addDays(start, i);
-    const ch = shiftCharOn(d);
-    const avail = shiftAvailabilityOn(d) !== 'off';
-    return `<div class="sp-day sp-${ch}${avail?'':' sp-x'}" title="${SHIFT_LETTERS[ch]||ch}${avail?'':' \u2014 not available'}">
-      <b>${d.getDate()}</b><span>${ch}</span></div>`;
-  }).join('');
-  const used = new Set(planState.shiftPatterns.flatMap(p => cleanCode(p.code).split('')));
-  pd('shift-preview').innerHTML = `<h3 class="panel-h" style="font-size:18px;margin-bottom:8px">Your rotation from ${fmtDate(start)}</h3>
-    <div class="sp-grid">${cells}</div>
-    <div class="sp-key">${[...used].filter(c=>SHIFT_LETTERS[c]).map(c=>`<span><i class="sp-${c}"></i>${SHIFT_LETTERS[c]}</span>`).join('')}
-      <span>Faded = not ticked in your bank</span></div>
-    <div class="sb-count">One block of the plan is <b>${L} days</b> &mdash; one full turn of the pattern.</div>`;
-}
+/* The calendar strip that used to live here only ever drew the first pattern,
+   so a second rotation looked broken when it wasn't. It told you nothing the
+   shift bank doesn't already show, so it's gone. */
 
 pd('shift-add').onclick = () => { planState.shiftPatterns.push({code:'',from:'',to:''}); redrawShift(); };
 pd('shift-speed-slot').onchange = e => {
@@ -6544,7 +6785,10 @@ pd('shift-goal').onchange = e => {
   TAB_PREFS.shift.planType = (RACE[e.target.value] && RACE[e.target.value].ultra) ? 'ultra' : 'road';
 };
 pd('shift-race-date').onchange = e => { TAB_PREFS.shift.raceDate = e.target.value || null; };
-pd('shift-start').onchange = e => { TAB_PREFS.shift.start = e.target.value; renderShiftPreview(); };
+pd('shift-start').onchange = e => { TAB_PREFS.shift.start = e.target.value; renderShiftBank(); };
+pd('shift-base').onchange = e => {
+  TAB_PREFS.shift.baseBlocks = e.target.value === 'auto' ? null : +e.target.value;
+};
 
 pd('build-shift').onclick = () => {
   pd('shift-err').classList.remove('show');
@@ -6591,6 +6835,8 @@ redrawShift();
 updateCurAvg();
 setIntent('improve', 'plan');
 setIntent('improve', 'shift');
+// photograph the blank state of every tab, now that everything is populated
+captureBlanks();
 refreshDoublesVisibility();
 checkBackup();
 </script>
