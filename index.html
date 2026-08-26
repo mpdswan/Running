@@ -5921,9 +5921,50 @@ function flashHint(msg){
   h.textContent = msg; h.classList.add('save-hint-ok');
   setTimeout(() => { h.innerHTML = prev; h.classList.remove('save-hint-ok'); }, 4000);
 }
+/* ---- saving the plan ITSELF, not a recipe for rebuilding it ----
+   The file used to hold only the settings, and loading it re-ran the generator.
+   That works right up until one setting fails to make the round trip, or the
+   app changes, and then the plan you get back is a near-miss of the one you
+   saved -- same shape, same days, different sessions. Nobody wants a plan that
+   quietly rewrites itself. So the built block travels in the file too, and is
+   restored exactly as it was.
+   These two walk any structure and survive JSON: Date objects become tagged
+   strings, and arrays that carry named properties (the volume targets do) keep
+   them instead of having them silently dropped by JSON.stringify. */
+function jsonSafe(v){
+  if (v instanceof Date) return { __date: ymd(v) };
+  if (Array.isArray(v)){
+    const arr = v.map(jsonSafe);
+    const extra = {}; let has = false;
+    Object.keys(v).forEach(k => { if (!/^\d+$/.test(k)){ extra[k] = jsonSafe(v[k]); has = true; } });
+    return has ? { __arr: arr, __props: extra } : arr;
+  }
+  if (v && typeof v === 'object'){
+    const o = {}; for (const k in v) o[k] = jsonSafe(v[k]); return o;
+  }
+  return v;
+}
+function jsonRevive(v){
+  if (Array.isArray(v)) return v.map(jsonRevive);
+  if (v && typeof v === 'object'){
+    if (typeof v.__date === 'string'){ const d = new Date(v.__date + 'T00:00:00'); return isNaN(d) ? null : d; }
+    if (Array.isArray(v.__arr)){
+      const a = v.__arr.map(jsonRevive);
+      const p = v.__props || {};
+      Object.keys(p).forEach(k => { a[k] = jsonRevive(p[k]); });
+      return a;
+    }
+    const o = {}; for (const k in v) o[k] = jsonRevive(v[k]); return o;
+  }
+  return v;
+}
+
 function collectSnapshot(){
   return {
-    app: 'session-forge', version: 12, savedAt: new Date().toISOString(),
+    app: 'session-forge', version: 13, savedAt: new Date().toISOString(),
+    // the block exactly as built, so what you load is what you saved
+    built: planState.generated ? jsonSafe(planState.generated) : null,
+    sig:   planState.sig || null,
     benchmark: {
       distM: +pd('dist').value,
       time:  pd('time').value.trim(),
@@ -6033,6 +6074,14 @@ function applySnapshot(s){
     start: savedStart,
     intent: INTENTS[p.intent] ? p.intent : 'improve'
   });
+  /* Base weeks belongs to the plan builder's own settings record. Restoring it
+     into planState alone wasn't enough: the record is what the engine reads at
+     build time, so a fresh page would load the file, quietly fall back to the
+     default four weeks, and hand back a block of a different LENGTH -- which
+     moves every phase boundary and so changes which sessions get picked. */
+  if (savedTab === 'plan'){
+    TAB_PREFS.plan.baseWeeks = (p.baseWeeks === null || typeof p.baseWeeks === 'number') ? p.baseWeeks : null;
+  }
   planState.goal = savedGoal;
   if (savedTab !== 'shift') setPlanType(savedType);
   planState.goal = savedGoal;
@@ -6098,9 +6147,22 @@ function applySnapshot(s){
     pd('shift-start').value = TAB_PREFS.shift.start || '';
     redrawShift();
   }
-  generatePlan();
-  showView(wasShift ? 'shift' : 'plan');
-  flashHint('Loaded. Enter a fresh test time on the Calibrate tab to re-tighten every pace.');
+  /* If the file carries the block that was built, put THAT back rather than
+     rebuilding one and hoping it comes out the same. Older files (before the
+     block was saved) still rebuild from their settings. */
+  const built = s.built ? jsonRevive(s.built) : null;
+  if (built && Array.isArray(built.weeks) && built.weeks.length){
+    planState.generated = built;
+    planState.shiftMode = !!built.shift;
+    planState.planType  = built.c25k ? 'c25k' : planState.planType;
+    planState.sig = s.sig || null;
+    renderPlan();
+  } else {
+    generatePlan();
+  }
+  const g = planState.generated;
+  showView(g && g.c25k ? 'start' : (g && g.shift) || wasShift ? 'shift' : 'plan');
+  flashHint('Loaded. Enter a fresh test time on the Calibrate tab to re-tighten every pace — the calendar stays put.');
 }
 
 /* ---- race list editor ---- */
