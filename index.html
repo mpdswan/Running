@@ -4493,10 +4493,18 @@ function candidatesFor(kind, phase, prof, curName){
     return withCurrent(near, curName);
   }
   switch(kind){
-    case 'primary':   return phase === 'base' ? BASE.primary
-                           : phase === 'development' ? prof.devPrimary : prof.specPrimary;
-    case 'secondary': return phase === 'base' ? BASE.secondary
-                           : phase === 'development' ? prof.devSecondary : prof.specSecondary;
+    case 'primary': {
+      const pool = phase === 'base' ? BASE.primary
+                 : phase === 'development' ? prof.devPrimary : prof.specPrimary;
+      // Benchmark tests are offered on any primary speed slot so the user can
+      // place them when they feel paces are drifting -- never auto-scheduled.
+      return withCurrent([...pool, '5K Benchmark Test', '3K Time Trial'], curName);
+    }
+    case 'secondary': {
+      const pool = phase === 'base' ? BASE.secondary
+                 : phase === 'development' ? prof.devSecondary : prof.specSecondary;
+      return withCurrent([...pool, '5K Benchmark Test', '3K Time Trial'], curName);
+    }
   }
   return [];
 }
@@ -5222,10 +5230,11 @@ function generatePlan(){
   } else {
     /* Road race: specific phase takes priority; base is capped at 8 weeks.
        11+ weeks of base for a marathon is excessive — standard is 4-8 weeks. */
-    specWeeks = Math.max(inBlocks(prof.spec), Math.floor(N * 0.4));
-    const specCore  = specWeeks - taperWeeks;
+    const wantedSpec = Math.max(inBlocks(prof.spec), Math.floor(N * 0.4));
+    const specCore   = wantedSpec - taperWeeks;
     devWeeks  = Math.max(1, Math.round(specCore * 0.4));
-    baseWeeks = Math.min(8, Math.max(0, N - specWeeks - taperWeeks - devWeeks));
+    baseWeeks = Math.min(8, Math.max(0, N - wantedSpec - taperWeeks - devWeeks));
+    specWeeks = N - baseWeeks - devWeeks - taperWeeks; // derived last — always sums to N
   }
   
   const baseEnd   = baseWeeks;
@@ -5426,26 +5435,19 @@ function generatePlan(){
       });
     }
     let note = '', noteCls = '';
-    if (isDown) note = 'Recovery week — ease the volume back and let the adaptations land.';
     /* A benchmark test is a race in all but name; scheduling one inside the
        last three weeks would sit an all-out effort on top of the taper it is
-       supposed to be sharpening. */
-    const isRetest = (!isTaper) && ((N - w) >= 3)
-                     && ((baseWeeks > 0 && w === baseEnd) || w === devEnd);
-    if (isRetest){
-      note = 'Benchmark week \u2014 the test is in your calendar below. Run it, enter the time on the Calibrate tab, and every pace in the rest of this plan re-tightens.';
-      noteCls = 'retest';
+       supposed to be sharpening. Benchmarks now run on EVERY down/recovery
+       week far enough from race day — the lower volume means fresher legs
+       and a more representative test result. */
+    // Benchmarks are user-placed via the session swap dropdown, not auto-scheduled.
+    const isRetest = false;
+    if (isDown){
+      note = 'Recovery week — ease the volume back and let the adaptations land.';
     }
     if (isTaper && w < N) note = 'Taper — volume drops sharply, intensity stays. Resist the urge to add anything back.';
     if (isTaper && w === N) note = raceDateObj ? 'Race week — taper down, keep it sharp, trust the work you\u2019ve banked.' : (prof.ultra ? ('Goal week \u2014 this is your ' + prof.label + '. Set a real race date next time so the taper lines up, but the culminating session is here.') : ('Peak week — finish with an all-out ' + prof.label + ': the ' + prof.tt + ' file is on that day.'));
-    // A benchmark week actually schedules the benchmark. The test replaces the
-    // week's main quality session; the second one steps back to easy so the
-    // legs are fresh enough for an honest effort.
-    if (isRetest){
-      const pi = cells.findIndex(c => c.kind === 'primary');
-      if (pi >= 0) cells[pi] = { ...cells[pi], kind:'retest', name: retestSession() };
-      cells = cells.map(c => c.kind === 'secondary' ? { ...c, kind:'easy', name: easyName(40) } : c);
-    }
+    // Benchmarks are now user-swappable from any speed session dropdown -- nothing auto-placed.
 
     // easy runs absorb whatever volume is left to hit the week's target,
     // then the long run is trimmed if it would dominate the week.
@@ -5477,9 +5479,6 @@ function generatePlan(){
       const lastNormal = normals.length ? cellsMins(normals[normals.length-1].cells) : 0;
       if (isDown && lastNormal){
         cells = trimWeekTo(cells, lastNormal * 0.9);
-      } else if (isRetest && lastNormal){
-        // don't pile volume on the week you're trying to run a fast test in
-        cells = trimWeekTo(cells, lastNormal * 0.95);
       } else if (taperTrain && weeks.length){
         /* A ceiling, not a second taper. The weekly targets already carry the
            taper shape (~80/60/45% over three weeks, 75/52% over two); this used
@@ -5725,6 +5724,11 @@ function renderPlan(){
     ? `<div class="wk-note" style="border-radius:var(--radius);border:1px solid var(--line);margin-bottom:16px">
          <span>\u2691</span><span>Structure is ready. <b>Calibrate</b> (first tab) to fill in target paces and turn on one-tap .FIT downloads for each day.</span></div>`
     : '';
+  /* Benchmark hint \u2014 shown on all non-C25K plans so the user knows benchmarks
+     exist in the swap menus. Shown below the calibration banner (or in its
+     place when calibration is done) so it's always visible above the week grid. */
+  const benchmarkHint = g.c25k ? '' :
+    `<div class="plan-note-info" style="margin-bottom:16px"><b>Benchmark tests are in the swap menu.</b> If the paces start to feel wrong \u2014 too easy or too hard \u2014 open the dropdown on any speed session and pick a <b>5K Benchmark Test</b> or <b>3K Time Trial</b>. Run it, enter the time on the Calibrate tab, and every pace in the plan re-tightens. Recovery weeks are a natural fit: the lower volume means fresher legs and a more representative result.</div>`;
   const blockWeeks = g.shift ? Math.round(g.N * g.cycleDays / 7) : g.N;
   const headline = `<div class="plan-headline">${g.prof} plan \u00b7 ${
     g.shift ? `${g.N} rotations of ${g.cycleDays} days \u00b7 about ${blockWeeks} weeks` : `${g.N} weeks`
@@ -5931,7 +5935,7 @@ function renderPlan(){
     : '';
 
   out.innerHTML =
-    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${rotaNote}${shiftVolNote}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${weeksHtml}
+    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${rotaNote}${shiftVolNote}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${benchmarkHint}${weeksHtml}
      ${g.c25k ? `<div class="plan-tip"><h4>How to run it</h4>
        <b>Three runs a week, with a rest day between each.</b> The walking is not a failure or a fallback \u2014 it is the part that lets you come back two days later, which is the only thing that actually matters over nine weeks.
        <br><br><b>Go slower than feels right.</b> Almost everyone who struggles with this programme is running their intervals too fast. You should be able to talk. If you cannot, slow down until you can \u2014 there is no pace target here on purpose.
