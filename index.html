@@ -428,7 +428,7 @@ h1 .accent{color:var(--flame)}
 .wk-dates{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
 .wk-badge{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#fff;border-radius:20px;padding:3px 10px;margin-left:auto}
 .wk-note{padding:8px 16px;font-size:12.5px;color:var(--ink-soft);background:#FFF6F2;border-bottom:1px solid var(--line);display:flex;gap:7px}
-.wk-note.retest{background:var(--tint);color:var(--track-deep)}
+.wk-note.milestone{background:var(--tint);color:var(--track-deep)}
 .wk-note b{color:var(--ink)}
 .wk-days{display:flex;flex-direction:column}
 .pl-day{display:grid;grid-template-columns:16px 30px 11px minmax(0,1fr) auto 74px 62px;align-items:center;gap:11px;padding:9px 16px;border-bottom:1px solid #EEF1F8}
@@ -670,6 +670,26 @@ h1 .accent{color:var(--flame)}
           <option value="7">7 days</option>
         </select>
         <div class="hint" id="cur-avg-hint"></div>
+      </div>
+
+      <div class="field">
+        <label for="cur-long">Your longest run in the last month</label>
+        <select id="cur-long">
+          <option value="auto" selected>Not sure &mdash; estimate it</option>
+          <option value="30">About 30 min</option>
+          <option value="45">About 45 min</option>
+          <option value="60">About 1 hour</option>
+          <option value="75">About 1&frac14; hours</option>
+          <option value="90">About 1&frac12; hours</option>
+          <option value="105">About 1&frac34; hours</option>
+          <option value="120">About 2 hours</option>
+          <option value="150">About 2&frac12; hours</option>
+          <option value="180">About 3 hours</option>
+          <option value="210">About 3&frac12; hours</option>
+          <option value="240">About 4 hours</option>
+          <option value="300">5 hours or more</option>
+        </select>
+        <div class="hint" id="cur-long-hint"></div>
       </div>
 
       <button class="go" id="calc">Calibrate</button>
@@ -1030,7 +1050,7 @@ h1 .accent{color:var(--flame)}
     <div class="gl-item"><b>Shakeout</b><p>A very short, very easy jog &mdash; typically 20 minutes &mdash; the day before a race or after a hard effort. Loosens everything off and settles the nerves. It has no training effect and isn't supposed to.</p></div>
     <div class="gl-item"><b>Sharpener</b><p>A short, sharp session in race week: a handful of quick 200s or strides. Not enough volume to tire you, just enough speed to remind your legs what's coming.</p></div>
     <div class="gl-item"><b>Warm up and cool down</b><p>Easy running either side of the hard work. The warm up raises muscle temperature and gets your aerobic system online so the first rep isn't a shock; the cool down clears the legs and eases you back down. Skipping the warm up makes hard sessions worse and riskier &mdash; skipping the cool down mostly just makes you stiff.</p></div>
-    <div class="gl-item"><b>Time trial / benchmark</b><p>An all-out effort over a set distance, run as a test rather than a race. This app puts one mid-block so your paces can be re-set from what you can do now rather than what you could do in January.</p></div>
+    <div class="gl-item"><b>Time trial / benchmark</b><p>An all-out effort over a set distance, run as a test rather than a race. Swap one into any speed day when the paces stop feeling right (the 5K and 3K tests are in every speed session’s dropdown), then enter the time on the Calibrate tab so your paces are re-set from what you can do now rather than what you could do in January.</p></div>
   </div>
 
   <div class="gl-group">
@@ -1041,7 +1061,7 @@ h1 .accent{color:var(--flame)}
     <div class="gl-item"><b>Development phase</b><p>Where threshold and VO&#8322;max work arrive properly. You're lifting the ceiling before you make anything race-specific.</p></div>
     <div class="gl-item"><b>Specific phase</b><p>The last stretch of hard training, where sessions start to look like the race you're aiming at &mdash; goal-pace work, race-length efforts, the right rhythm.</p></div>
     <div class="gl-item"><b>Taper</b><p>The deliberate drop in volume before race day &mdash; usually two to three weeks &mdash; while keeping some intensity so you stay sharp. You cannot gain fitness here, only lose freshness. Almost everyone tapers too little and then panics and trains in race week.</p></div>
-    <div class="gl-item"><b>Deload / recovery week</b><p>Every fourth week or so, volume comes down on purpose. Fitness is built while you recover, not while you train &mdash; the easy week is when the previous three actually land.</p></div>
+    <div class="gl-item"><b>Deload / recovery week</b><p>Every few weeks, volume comes down on purpose &mdash; every third week if you’re training to finish, every fourth for steady progression, every fifth when chasing a PB. Fitness is built while you recover, not while you train &mdash; the easy week is when the weeks before it actually land.</p></div>
     <div class="gl-item"><b>Peak week</b><p>The biggest week of the block, usually just before the taper starts. It should feel like a lot, because it is.</p></div>
     <div class="gl-item"><b>Volume and frequency</b><p>Volume is how much you run in a week (this app counts it in time, not distance &mdash; an hour is an hour whoever you are). Frequency is how many days. More frequency at the same volume is generally easier to absorb than fewer, longer runs.</p></div>
     <div class="gl-item"><b>Quality session</b><p>Any run with real intensity in it &mdash; intervals, threshold, hills, a race. Most weeks hold two, and the whole plan is arranged around keeping them apart.</p></div>
@@ -1082,7 +1102,7 @@ h1 .accent{color:var(--flame)}
       <li><b>Workout files I can put on my watch myself</b>, whenever I need them, without a subscription sitting between me and my own training.</li>
       <li><b>A library of classic sessions</b> &mdash; Mona fartlek, Yasso 800s, Michigan, hill repeats, threshold ladders &mdash; because the same three workouts on repeat is how people fall out of love with running.</li>
       <li><b>Swap anything for something equivalent.</b> Every session in the plan has alternatives of the same purpose, so if you fancy a fartlek instead of track reps, take it. The week's shape doesn't break.</li>
-      <li><b>Real periodisation</b> &mdash; base, development, race-specific, taper, with a recovery week every fourth week and a benchmark test built in so the paces re-tighten as you get fitter.</li>
+      <li><b>Real periodisation</b> &mdash; base, development, race-specific, taper, with a recovery week every third to fifth week depending on what you want from the block, and benchmark tests a tap away in the swap menu so the paces re-tighten as you get fitter.</li>
     </ul>
     <p>No account, no cloud, no data going anywhere. It's a single HTML file that runs in your browser.</p>
   </div>
@@ -1501,6 +1521,15 @@ const LONG_RUNGS = (() => {
 const LONG_LIB_STEP = 15;   // only these appear as library cards, to avoid 29 near-identical entries
 const LONG_RUN_ROAD_MAX = 180;   // above this is ultra territory
 const EASY_RUNGS = (() => { const a=[]; for (let m=25; m<=180; m+=5) a.push(m); return a; })();
+// every "Recovery N min" session the library holds (20/30/45/60/75 plus the 25/35/40/50 extras)
+const RECOVERY_LIB_RUNGS = [20,25,30,35,40,45,50,60,75];
+/* The strides run in sizes: "Easy Run + 6 Strides" is the 25-minute version;
+   longer ones name their easy portion. Strides and cool-down add ~13 minutes.
+   Capped at 70 minutes of easy running: strides are for fresh legs, not the
+   end of a long run, so very big weeks leave the extra to the other days. */
+const STRIDES_MAX_EASY = 70;
+const stridesName = m => m <= 25 ? 'Easy Run + 6 Strides' : 'Easy ' + m + ' min + 6 Strides';
+const stridesEasyOf = n => { if (n === 'Easy Run + 6 Strides') return 25; const r = /^Easy (\d+) min \+ 6 Strides$/.exec(n || ''); return r ? +r[1] : 0; };
 const EASY_LIB_STEP = 15;
 const longName = m => 'Long Run ' + m + ' min';
 const b2bName = m => 'Back-to-Back ' + m + ' min';
@@ -1743,6 +1772,20 @@ function makeSessions(P, Z){
     lines:[ '25 min easy \u00b7 easy HR', '6 \u00d7 [ 20 s stride \u00b7 1:00 easy ]', '5 min cool down' ],
     blocks:[ ['easy',25], ...Array(6).fill(0).flatMap(()=>[['max',.33],['rest',1]]), ['easy',5] ]
   });
+  /* Longer versions of the same session, so the strides day in a base week can
+     carry its share of the volume. A fixed 38-minute strides run was one of
+     three fixed-length sessions in every base week, which left base weeks well
+     short of target and made the step into development a cliff. Kept out of the
+     library grid -- the card above stands for the family. */
+  EASY_RUNGS.filter(m => m > 25 && m <= STRIDES_MAX_EASY).forEach(m => add({
+    hidden: true,
+    cat:'Speed & Track', name: stridesName(m),
+    desc:`${m} minutes easy, then six 20-second strides — smooth accelerations to fast-but-relaxed — with a minute’s walk or jog between.`,
+    benefit:'Easy volume with a touch of leg speed at the end — the base-phase staple.',
+    structure:[ stepTimeHr('Easy run',m,Z.z1[0],Z.z2[1],0), {loop:[stepTimeOpen('Stride 20 s',1/3,0), stepTimeOpen('Walk / jog',1,1)], times:6}, cd(5) ],
+    lines:[ `${m} min easy · easy HR`, '6 × [ 20 s stride · 1:00 easy ]', '5 min cool down' ],
+    blocks:[ ['easy',m], ...Array(6).fill(0).flatMap(()=>[['max',.33],['rest',1]]), ['easy',5] ]
+  }));
 
   /* ---------- HILLS ---------- */
   add({
@@ -2416,6 +2459,51 @@ function makeSessions(P, Z){
     blocks:[ ['easy',12], ...Array(6).fill(0).flatMap(()=>[['interval',distMins(1200,P.interval)],['rest',3]]), ['easy',10] ]
   });
 
+  /* ---- rep-count variants the race profiles schedule ----
+     The 5K/10K/ultra session pools named these, but they were never written, so
+     a plan that landed on one showed a session with no paces, no .FIT file and
+     zero minutes in the weekly total. Each is a one-rep step from a sibling. */
+  add({
+    cat:'Intervals', name:'6 × 1 km Classic',
+    desc:'Six 1 km reps at interval pace with 2½-minute jog recoveries. One more rep than the classic five — the step up once five feels controlled.',
+    benefit:'The same VO2max stimulus as the five-rep version with a little more time at it. The sixth rep is where the adaptation is earned.',
+    structure:[ wu(12), {loop:[stepDistPace('1 km rep',1000,P.interval[0],P.interval[1]), jog(2.5)], times:6}, cd(10) ],
+    lines:[ '12 min warm up · easy HR', `6 × [ 1 km @ ${fmtBand(P.interval)} · 2:30 jog ]`, '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(6).fill(0).flatMap(()=>[['interval',distMins(1000,P.interval)],['rest',2.5]]), ['easy',10] ]
+  });
+  add({
+    cat:'Intervals', name:'8 × 800 m',
+    desc:'Eight 800 m reps at interval pace, 2-minute jogs. The bigger version of six 800s — manageable rep length, serious total volume.',
+    benefit:'Builds VO2max volume with reps short enough to hold form to the last one. A strong late-block 5K session.',
+    structure:[ wu(12), {loop:[stepDistPace('800 m rep',800,P.interval[0],P.interval[1]), jog(2)], times:8}, cd(10) ],
+    lines:[ '12 min warm up', `8 × [ 800 m @ ${fmtBand(P.interval)} · 2:00 jog ]`, '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(8).fill(0).flatMap(()=>[['interval',distMins(800,P.interval)],['rest',2]]), ['easy',10] ]
+  });
+  add({
+    cat:'Intervals', name:'5 × 1200 m',
+    desc:'Five 1200 m reps at interval pace with 3-minute jogs — between the four- and six-rep versions.',
+    benefit:'Long reps at near-maximal aerobic output; the step between four and six reps keeps the progression gradual.',
+    structure:[ wu(12), {loop:[stepDistPace('1200 m rep',1200,P.interval[0],P.interval[1]), jog(3)], times:5}, cd(10) ],
+    lines:[ '12 min warm up', `5 × [ 1200 m @ ${fmtBand(P.interval)} · 3:00 jog ]`, '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(5).fill(0).flatMap(()=>[['interval',distMins(1200,P.interval)],['rest',3]]), ['easy',10] ]
+  });
+  add({
+    cat:'Hills', name:'4 × 2 min Hills',
+    desc:'Four 2-minute climbs at threshold-to-hard effort on a moderate gradient, with easy jog-down recoveries. Effort-based, so exported as open-target timed steps.',
+    benefit:'Strength and aerobic power in one rep, one rep lighter than the five-rep version — keeps the hill stimulus in a busy week.',
+    structure:[ wu(12), {loop:[stepTimeOpen('2 min hill — strong',2,0), stepTimeOpen('Jog down',3,1)], times:4}, cd(10) ],
+    lines:[ '12 min warm up', '4 × [ 2 min uphill strong · 3:00 down ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(4).fill(0).flatMap(()=>[['interval',2],['rest',3]]), ['easy',10] ]
+  });
+  add({
+    cat:'Hills', name:'5 × 90 s Long Hills',
+    desc:'Five 90-second climbs at threshold effort — strong but sustainable — with easy jog-down recoveries.',
+    benefit:'Threshold stimulus and strength work together, one rep lighter than the six-rep version.',
+    structure:[ wu(12), {loop:[stepTimeOpen('Long hill — threshold',1.5,0), stepTimeOpen('Jog down',2.5,1)], times:5}, cd(10) ],
+    lines:[ '12 min warm up', '5 × [ 90 s uphill threshold · 2:30 down ]', '10 min cool down' ],
+    blocks:[ ['easy',12], ...Array(5).fill(0).flatMap(()=>[['tempo',1.5],['rest',2.5]]), ['easy',10] ]
+  });
+
   add({
     cat:'Intervals', name:'5 \u00d7 1 mile',
     desc:'Five mile reps at interval pace with 3-minute jog recoveries. The longest interval session in the library \u2014 each rep is 6\u20139 minutes at high aerobic intensity.',
@@ -2999,7 +3087,8 @@ $('lib-q').addEventListener('input', e => {
    12-WEEK PLAN BUILDER
    Periodised block: Foundation -> Development -> Sharpening -> Taper.
    Places the long run on the chosen day, spaces quality sessions with
-   easy/recovery between them, eases off roughly every fourth week (shifting that week when it would otherwise land just before your biggest long run), and
+   easy/recovery between them, eases off every third, fourth or fifth week by intent
+   (skipping the week of, and the week before, the biggest long run), and
    references real library sessions so paces + .FIT flow straight through.
    =================================================================== */
 'use strict';
@@ -3118,12 +3207,18 @@ const RACE = {
     longPool:     ['Long Run 180 min','Long Run 195 min','Progressive Long Run','Long Run + Tempo Finish'] }
 };
 function raceProfile(){ return RACE[planState.goal] || RACE['5k']; }
-
-/* Mid-block recalibration wants a short, honest effort you can recover from in
-   days -- not a goal-distance race. A 5K is the sweet spot; a 3K suits
-   low-volume weeks. */
-function retestSession(){
-  return planState.currentMins < 150 ? '3K Time Trial' : '5K Benchmark Test';
+/* What "Recommended" base means for a goal: four weeks on the road, the
+   profile's own (five or six weeks) for an ultra, where the base carries more
+   of the durability work. */
+function defaultBaseWeeks(prof){
+  prof = prof || raceProfile();
+  return (prof.ultra && prof.base) ? prof.base : 4;
+}
+/* Keep the selector's "Recommended" label honest for the goal on screen. */
+function refreshBaseLabel(){
+  const sel = pd('base-weeks'); if (!sel) return;
+  const o = sel.querySelector('option[value="auto"]');
+  if (o) o.textContent = 'Recommended — ' + defaultBaseWeeks(RACE[TAB_PREFS.plan.goal] || raceProfile()) + ' weeks';
 }
 
 /* How much weekly volume a block should add by its peak. A 5K block barely
@@ -3147,7 +3242,7 @@ const INTENTS = {
   improve: { label:'Progression',        growth:1.00, comfortRun:95,  qCap:2, workScale:1.00, weeklyRate:0.038,
              blurb:'Steady, balanced progress. The default \u2014 real training without pushing the edges.' },
   pb:      { label:'Chase a PB',         growth:1.30, comfortRun:75,  qCap:2, workScale:1.15, weeklyRate:0.048,
-             blurb:'Maximise what your time allows. Volume climbs harder, sessions run longer, and the plan will use every day you give it.' }
+             blurb:'Maximise what your time allows. Volume climbs harder, sessions run longer, and the plan adds running days sooner as the volume grows.' }
 };
 const intentOf = () => INTENTS[planState.intent] || INTENTS.improve;
 
@@ -3385,7 +3480,10 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
      Snap to the nearest rung and cap at 50% of peak so we don't overshoot. */
   const curDays  = planState.currentDays || 3;
   const curAvgSession = (planState.currentMins || targets[1]) / Math.max(1, curDays);
-  const estCurrentLong = snapRung(Math.min(curAvgSession * 1.7, longPeakFor(prof)));
+  /* The athlete's own longest recent run when they've given it (Calibrate tab);
+     otherwise the estimate, which the same tab shows them so they can correct it. */
+  const knownLong = planState.currentLong ? planState.currentLong : curAvgSession * 1.7;
+  const estCurrentLong = snapRung(Math.min(knownLong, longPeakFor(prof)));
   const startByShare   = snapRung(Math.max(targets[1] * capStart, LONG_RUNGS[0]));
   /* Cap starting long run at longPeak, not 55% of it. The 55% cap was intended
      to prevent the long run from overshooting in week 1, but for short-distance
@@ -3412,11 +3510,17 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
       const idx = w - specEnd;                    // 1 = first taper week
       const isRaceWk = (w === N);
       if (isRaceWk){ out[w] = 0; continue; }       // race week: no separate long run
-      // taper weeks step the long run down from roughly half peak toward nothing,
-      // so each taper week is clearly lighter than the one before it
-      const stepsFromEnd = (N - w);                 // taper weeks remaining after this one
-      const frac = Math.min(0.55, 0.25 + 0.18 * stepsFromEnd);
-      out[w] = snapRung(peak * frac);
+      /* Taper weeks bring the long run down IN STEP WITH THE WEEK -- the same
+         80/60% (three-week taper) or 75% (two-week) of peak that weeklyTargets
+         uses -- so it keeps its usual share. It used to drop to ~43% of peak
+         while the week was meant to hold 75%; the gap was papered over by
+         recovery runs longer than the long run, and once those were capped the
+         first taper week fell to about half of peak. */
+      const taperFrac = taperWeeks >= 3 ? [0.80, 0.60, 0.45]
+                      : taperWeeks === 2 ? [0.75, 0.52]
+                      : [0.60];
+      const frac = taperFrac[idx-1] !== undefined ? taperFrac[idx-1] : taperFrac[taperFrac.length-1];
+      out[w] = Math.max(LONG_RUNGS[0], snapRung(peak * frac));
       continue;
     }
     const target = start + ((w - 1) / span) * (peak - start);
@@ -3449,7 +3553,7 @@ function longRunLadder(N, specEnd, taperWeeks, prof, isDownWeek, targets){
 // training load, so neither figure counts them.
 const NOT_LOAD = ['xt','race','timetrial','bRace','cRace'];
 /* Days that carry real intensity, and so must not sit next to each other. */
-const HARDK = ['primary','secondary','long','longdown','retest','bRace','cRace'];
+const HARDK = ['primary','secondary','long','longdown','bRace','cRace'];
 const cellsMins = cells => cells.reduce((a,c) => a + (NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name)) + (c.double ? c.double.mins : 0), 0);
 const trainingMins = cells => cells.reduce((a,c) => a + (c.kind === 'xt' ? XT_MINS : (NOT_LOAD.includes(c.kind) ? 0 : durOf(c.name))) + (c.double ? c.double.mins : 0), 0);
 
@@ -3482,39 +3586,50 @@ function capLongShare(cells){
    up longer than the week it is meant to recover from. */
 function trimWeekTo(cells, maxMins){
   if (!state) return cells;
-  for (let guard = 0; guard < 200; guard++){
+  /* One rung shorter for each kind of flexible run, or null at its floor.
+     Recovery jogs and strides runs are trimmable as well as easy runs. Only
+     easy runs used to be, so a recovery week whose flexible days were recovery
+     jogs or a strides run couldn't come down at all -- 15% of base-phase
+     recovery weeks ended up as big as the week before, some bigger. */
+  const shorter = c => {
+    if (c.kind === 'easy'){
+      const k = EASY_RUNGS.indexOf(parseInt(c.name.replace(/\D+/g,''), 10));
+      return k > 0 ? easyName(EASY_RUNGS[k-1]) : null;
+    }
+    if (c.kind === 'recovery'){
+      const k = RECOVERY_LIB_RUNGS.indexOf(durOf(c.name));
+      return k > 0 ? 'Recovery ' + RECOVERY_LIB_RUNGS[k-1] + ' min' : null;
+    }
+    if (c.kind === 'strides'){
+      const e = stridesEasyOf(c.name);
+      return e > 25 ? stridesName(e - 5) : null;
+    }
+    return null;
+  };
+  for (let guard = 0; guard < 300; guard++){
     if (cellsMins(cells) <= maxMins) break;
-    let bi = -1, bm = 0;
+    // take from the longest flexible run that can still come down, so no one
+    // run collapses to its floor while the others stay big
+    let bi = -1, bm = 0, bn = null;
     cells.forEach((c,i) => {
-      if (c.kind !== 'easy') return;
+      const n = shorter(c);
+      if (!n) return;
       const m = durOf(c.name);
-      if (m > bm){ bm = m; bi = i; }
+      if (m > bm){ bm = m; bi = i; bn = n; }
     });
-    if (bi < 0){
-      // nothing easy left to trim: shorten the (already reduced) long run
-      const li = cells.findIndex(c => c.kind === 'longdown');
-      if (li < 0) break;
-      const lr = parseInt(cells[li].name.replace(/\D+/g,''), 10);
-      const j = LONG_RUNGS.indexOf(lr);
-      if (j <= 0) break;
+    if (bi >= 0){
       cells = cells.slice();
-      cells[li] = { ...cells[li], name: longName(LONG_RUNGS[j-1]) };
+      cells[bi] = { ...cells[bi], name: bn };
       continue;
     }
-    const cur = parseInt(cells[bi].name.replace(/\D+/g,''), 10);
-    const i = EASY_RUNGS.indexOf(cur);
-    if (i <= 0){
-      const li = cells.findIndex(c => c.kind === 'longdown');
-      if (li < 0) break;
-      const lr = parseInt(cells[li].name.replace(/\D+/g,''), 10);
-      const j = LONG_RUNGS.indexOf(lr);
-      if (j <= 0) break;
-      cells = cells.slice();
-      cells[li] = { ...cells[li], name: longName(LONG_RUNGS[j-1]) };
-      continue;
-    }
+    // nothing flexible left to trim: shorten the (already reduced) long run
+    const li = cells.findIndex(c => c.kind === 'longdown');
+    if (li < 0) break;
+    const lr = parseInt(cells[li].name.replace(/\D+/g,''), 10);
+    const j = LONG_RUNGS.indexOf(lr);
+    if (j <= 0) break;
     cells = cells.slice();
-    cells[bi] = { ...cells[bi], name: easyName(EASY_RUNGS[i-1]) };
+    cells[li] = { ...cells[li], name: longName(LONG_RUNGS[j-1]) };
   }
   return cells;
 }
@@ -3570,10 +3685,12 @@ function fitEasyRuns(cells, targetMins){
   const easyIdx     = cells.map((c,i) => c.kind === 'easy'     ? i : -1).filter(i => i >= 0);
   const recoveryIdx = cells.map((c,i) => c.kind === 'recovery' ? i : -1).filter(i => i >= 0);
   const medIdx      = cells.map((c,i) => c.kind === 'medlong'  ? i : -1).filter(i => i >= 0);
-  if (!easyIdx.length && !recoveryIdx.length && !medIdx.length) return cells;
+  // the strides run is an easy run with a few strides on the end, so it flexes too
+  const strideIdx   = cells.map((c,i) => (c.kind === 'strides' && stridesEasyOf(c.name)) ? i : -1).filter(i => i >= 0);
+  if (!easyIdx.length && !recoveryIdx.length && !medIdx.length && !strideIdx.length) return cells;
   // fixed load = everything the week can't resize
   const NOT_FLEX = [...NOT_LOAD, 'easy', 'recovery', 'medlong'];
-  const fixed = cells.reduce((a,c) => a + (NOT_FLEX.includes(c.kind) ? 0 : durOf(c.name)), 0);
+  const fixed = cells.reduce((a,c,i) => a + (NOT_FLEX.includes(c.kind) || strideIdx.includes(i) ? 0 : durOf(c.name)), 0);
   const remain = targetMins - fixed;
   /* The flexible days share what's left, weighted by what each is for: a
      medium-long run should be roughly twice an easy run, and a recovery jog a
@@ -3585,7 +3702,8 @@ function fitEasyRuns(cells, targetMins){
      to its cap. A recovery run is shorter than an easy run, not a token. */
   const W_EASY = 4, W_MED = 6, W_REC = 2.5;
   const easyCount = easyIdx.length, recCount = recoveryIdx.length, medCount = medIdx.length;
-  const totalW = easyCount * W_EASY + medCount * W_MED + recCount * W_REC;
+  const strideCount = strideIdx.length;
+  const totalW = (easyCount + strideCount) * W_EASY + medCount * W_MED + recCount * W_REC;
   const per = w => totalW ? remain * w / totalW : 0;
   /* Nothing flexible may outgrow the long run. An "easy" day that runs longer
      than the week's long run is a contradiction, and it happens easily when a
@@ -3610,13 +3728,21 @@ function fitEasyRuns(cells, targetMins){
   const PRE_LONG_CAP = 60;
   const preIdx  = easyIdx.filter(i => cells[i].preLong);
   const freeIdx = easyIdx.filter(i => !cells[i].preLong);
-  const easyMinsFor = i => cells[i].preLong ? Math.min(easyMinsFree, PRE_LONG_CAP) : easyMinsFree;
-  // solve the free slots first, then hand the capped ones whatever they can take
-  const freeW  = freeIdx.length * W_EASY + medCount * W_MED + recCount * W_REC;
-  const preUse = preIdx.length * Math.min(PRE_LONG_CAP, EASY_RUNGS[0] + 20);
+  /* The day-before-long-run slot takes its fair share of the week, capped at an
+     hour; whatever it can't take goes to the other flexible days. It used to be
+     handed the FREE slots' size instead -- and when it was the only easy run in
+     the week (Tue/Thu/Sat/Sun, the default grid) there were no free slots, so it
+     sat on the 25-minute floor whatever the week needed. */
+  const preMins = snapEasy(Math.max(EASY_RUNGS[0], Math.min(PRE_LONG_CAP, easyCap, per(W_EASY))));
+  const freeW  = (freeIdx.length + strideCount) * W_EASY + medCount * W_MED + recCount * W_REC;
+  const preUse = preIdx.length * preMins;
   const remainFree = Math.max(0, remain - preUse);
   const perFree = w => freeW ? remainFree * w / freeW : 0;
   const easyMinsFree = snapEasy(Math.max(EASY_RUNGS[0], Math.min(easyCap, perFree(W_EASY))));
+  // the strides run takes an easy run's share; its strides and cool-down use ~13 min of it
+  const strideExtra = Math.max(0, durOf(stridesName(25)) - 25) || 13;
+  const strideEasy  = snapEasy(Math.max(25, Math.min(STRIDES_MAX_EASY, Math.min(easyCap, perFree(W_EASY)) - strideExtra)));
+  const easyMinsFor = i => cells[i].preLong ? preMins : easyMinsFree;
   const easyMins = easyMinsFree;
   const mlrFrac  = planState.intent === 'pb' ? 0.72 : planState.intent === 'finish' ? 0.65 : 0.68;
   const medTarget = Math.min(longMins * mlrFrac, medCap);
@@ -3631,13 +3757,19 @@ function fitEasyRuns(cells, targetMins){
   /* Two 75-minute Z1 runs in a row are easy runs wearing the wrong label. Cap
      recovery whenever the week has somewhere else for the volume to go -- an
      easy run, or simply a second recovery cell sharing the load. */
-  const recCeiling = (easyCount || recCount > 1) ? 45 : 75;
-  const recMins  = snapRec(Math.max(25, Math.min(recCeiling, perFree(W_REC))));
+  /* ...and never more than three quarters of the long run. With no easy run to
+     share the load, a recovery week's lone recovery jog was growing to 75
+     minutes beside a 45-minute long run. */
+  const recCeiling = Math.min((easyCount || recCount > 1) ? 45 : 75, longMins * 0.75);
+  const recFit   = RECOVERY_RUNGS.filter(r => r <= recCeiling);
+  const recMins  = (recFit.length ? recFit : [RECOVERY_RUNGS[0]])
+    .reduce((a,b) => Math.abs(b - Math.max(25, perFree(W_REC))) < Math.abs(a - Math.max(25, perFree(W_REC))) ? b : a);
   const recName  = n => 'Recovery ' + n + ' min';
   const out = cells.slice();
   easyIdx.forEach(i     => { out[i] = { ...out[i], name: easyName(snapEasy(easyMinsFor(i))) }; });
   medIdx.forEach(i      => { out[i] = { ...out[i], name: medLongName(medMins) }; });
   recoveryIdx.forEach(i => { out[i] = { ...out[i], name: recName(recMins) }; });
+  strideIdx.forEach(i   => { out[i] = { ...out[i], name: stridesName(strideEasy) }; });
   return out;
 }
 
@@ -3668,7 +3800,7 @@ const xtSelected = () => ['xt'];
 const xtMetaOf = () => XT_TYPES.xt;
 let planState = { dayMode:['off','run','off','run','off','run','run'], longDay:6, raceDate:null, goal:'5k', planType:'road',
                   xtTypes:['xt'], baseWeeks:null, shiftMode:false, shiftPatterns:[], shiftSpeedSlot:-1, speedDay:-1, doubles:false, intent:'improve',
-                  currentMins:180, currentDays:3, xtMins:45, races:[], overrides:{}, flips:{}, done:{}, generated:null };
+                  currentMins:180, currentDays:3, currentLong:null, xtMins:45, races:[], overrides:{}, flips:{}, done:{}, generated:null };
 // "any" days are counted as run days for capacity (long-run share, frequency),
 // since the plan will lean on them for running whenever the week needs it
 const runDaysOf = () => planState.dayMode.map((m,i)=>(m==='run'||m==='any')?i:-1).filter(i=>i>=0);
@@ -3792,6 +3924,24 @@ function targetWorkMins(){
   return Math.max(9, Math.min(34, (11 + (v - 28) * 0.42) * intentOf().workScale));
 }
 
+/* The session pool for a quality day: by phase, using the ultra profiles' own
+   base pools and the Finish intent's pools where the goal has them. The plan
+   picks from this AND the swap menu offers it, so the two can never disagree --
+   they used to, and a Finish marathon's swap menu offered the marathon-pace
+   sessions its plan deliberately leaves out. */
+function qualityPool(kind, phase, prof){
+  prof = prof || raceProfile();
+  const finish = planState.intent === 'finish';
+  const sec = kind === 'secondary';
+  if (phase === 'base') return (sec ? prof.baseSecondary : prof.basePrimary) || (sec ? BASE.secondary : BASE.primary);
+  if (phase === 'development'){
+    const f = sec ? prof.finishDevSecondary : prof.finishDevPrimary;
+    return (finish && f) ? f : (sec ? prof.devSecondary : prof.devPrimary);
+  }
+  const f = sec ? prof.finishSpecSecondary : prof.finishSpecPrimary;
+  return (finish && f) ? f : (sec ? prof.specSecondary : prof.specPrimary);
+}
+
 function resolveName(kind, phase, weekNo, prof, longCapMins, isDown, isTaper){
   prof = prof || raceProfile();
   /* Rotate through the pool for variety, but bias the choice toward sessions
@@ -3863,31 +4013,11 @@ function resolveName(kind, phase, weekNo, prof, longCapMins, isDown, isTaper){
     case 'xt':        return XT_TYPES.xt.label;
     case 'strides':   return 'Easy Run + 6 Strides';
     case 'sharpener': return '8 \u00d7 200 m';
-    case 'primary': {
-      const isFinish = planState.intent === 'finish';
-      const devPool  = (isFinish && prof.finishDevPrimary)  ? prof.finishDevPrimary  : prof.devPrimary;
-      const specPool = (isFinish && prof.finishSpecPrimary) ? prof.finishSpecPrimary : prof.specPrimary;
-      const basePool = prof.basePrimary || BASE.primary;
-      if (isDown) {
-        const pool = phase === 'base' ? basePool : phase === 'development' ? devPool : specPool;
-        return pick(pool.slice(0, Math.ceil(pool.length * 0.6)));
-      }
-      if (phase === 'base')        return pick(basePool);
-      if (phase === 'development') return pick(devPool);
-      return pick(specPool);
-    }
+    case 'primary':
     case 'secondary': {
-      const isFinish = planState.intent === 'finish';
-      const devPool  = (isFinish && prof.finishDevSecondary)  ? prof.finishDevSecondary  : prof.devSecondary;
-      const specPool = (isFinish && prof.finishSpecSecondary) ? prof.finishSpecSecondary : prof.specSecondary;
-      const basePool = prof.baseSecondary || BASE.secondary;
-      if (isDown) {
-        const pool = phase === 'base' ? basePool : phase === 'development' ? devPool : specPool;
-        return pick(pool.slice(0, Math.ceil(pool.length * 0.6)));
-      }
-      if (phase === 'base')        return pick(basePool);
-      if (phase === 'development') return pick(devPool);
-      return pick(specPool);
+      const pool = qualityPool(kind, phase, prof);
+      if (isDown) return pick(pool.slice(0, Math.ceil(pool.length * 0.6)));
+      return pick(pool);
     }
   }
   return 'Easy Aerobic 40 min';
@@ -3909,7 +4039,6 @@ function kindColor(kind, phase){
     case 'sharpener': return 'var(--lv-max)';
     case 'race':
     case 'timetrial':
-    case 'retest':
     case 'bRace':     return 'var(--flame)';
     case 'cRace':     return 'var(--amber)';
     case 'primary':   return (phase === 'specific') ? 'var(--lv-max)' : 'var(--lv-interval)';
@@ -3990,8 +4119,7 @@ function kindTarget(kind, phase, cell){
     case 'race':      return (state && state.goalTime && state.goalDist === RACE_DIST_M[planState.goal])
                              ? ('goal ' + fmtClock(state.goalTime))
                              : (state ? ('~' + fmtClock(equivalentTime(state.vdot, RACE_DIST_M[planState.goal]))) : 'goal effort');
-    case 'timetrial':
-    case 'retest':    return 'all-out';
+    case 'timetrial': return 'all-out';
     case 'bRace':     return 'race effort';
     case 'cRace':     return 'hard \u00b7 race effort';
   }
@@ -4029,7 +4157,7 @@ const DOUBLE_RUNGS = [20,25,30,35,40,45,50,60];   // every one exists as a sessi
 const snapDouble = m => DOUBLE_RUNGS.reduce((a,b) => Math.abs(b-m) < Math.abs(a-m) ? b : a);
 function doubleSessionFor(cell, need, weekMins){
   const mins = snapDouble(Math.max(20, Math.min(60, need)));
-  const afterHard = ['primary','secondary','retest'].includes(cell.kind);
+  const afterHard = ['primary','secondary'].includes(cell.kind);
   if (afterHard)          return { mins, name:'Recovery ' + Math.min(mins,45) + ' min', kind:'recovery' };
   if (weekMins >= 540 && mins >= 40)
                           return { mins, name:'Steady Second Run ' + mins + ' min', kind:'steady' };
@@ -4425,8 +4553,11 @@ function buildWeek(runAv, xtAv, longDay, phase, isDown, isTaper, weekNo, raceDay
    Every plan day offers alternatives of the same training purpose, so you can
    mix things up without breaking the week's hard/easy structure. Overrides are
    keyed by week+weekday and survive save/load. */
+/* Benchmark tests the athlete can drop onto any speed day when the paces stop
+   feeling right. Offered in the swap menus only -- the generator never picks
+   them (see downWeekVersion). */
+const BENCHMARK_SWAPS = ['5K Benchmark Test', '3K Time Trial'];
 const SWAP_FIXED = {
-  retest:   ['5K Benchmark Test','3K Time Trial','10K Time Trial','1 Mile Time Trial'],
   bRace:    ['1 Mile Time Trial','5K Benchmark Test','10K Time Trial','Half Marathon Race','Marathon Race','50K Ultra','50 Mile Ultra','100K Ultra','100 Mile Ultra'],
   cRace:    ['1 Mile Time Trial','5K Benchmark Test','10K Time Trial','Half Marathon Race','Marathon Race','50K Ultra','50 Mile Ultra','100K Ultra','100 Mile Ultra'],
   recovery: ['Recovery 30 min','20-Minute Shakeout'],
@@ -4493,17 +4624,13 @@ function candidatesFor(kind, phase, prof, curName){
     return withCurrent(near, curName);
   }
   switch(kind){
-    case 'primary': {
-      const pool = phase === 'base' ? BASE.primary
-                 : phase === 'development' ? prof.devPrimary : prof.specPrimary;
-      // Benchmark tests are offered on any primary speed slot so the user can
-      // place them when they feel paces are drifting -- never auto-scheduled.
-      return withCurrent([...pool, '5K Benchmark Test', '3K Time Trial'], curName);
-    }
+    case 'primary':
     case 'secondary': {
-      const pool = phase === 'base' ? BASE.secondary
-                 : phase === 'development' ? prof.devSecondary : prof.specSecondary;
-      return withCurrent([...pool, '5K Benchmark Test', '3K Time Trial'], curName);
+      // the same pool the plan picks from (qualityPool), plus the benchmark
+      // tests, offered on every speed day so the athlete can place one when the
+      // paces stop feeling right -- never scheduled by the plan itself
+      const pool = qualityPool(kind, phase, prof);
+      return withCurrent([...pool, ...BENCHMARK_SWAPS.filter(n => !pool.includes(n))], curName);
     }
   }
   return [];
@@ -4527,12 +4654,23 @@ const doneKey = (w, idx) => w + ':' + idx;
    hand a well-trained runner ten minutes of work that maintains nothing. */
 function downWeekVersion(pool, current){
   if (!pool || !pool.length) return current;
-  const cur = qualityWorkMins(sessionByName(current));
+  /* Benchmarks sit in the swap lists for the athlete to choose, never for the
+     plan to pick. Left in, a 3K time trial's small amount of hard running made
+     it the "easier version" of a hill session in most ultra recovery weeks. */
+  pool = pool.filter(n => !BENCHMARK_SWAPS.includes(n));
+  if (!pool.length) return current;
+  const curS = sessionByName(current);
+  const cur = qualityWorkMins(curS);
+  const curLen = curS ? sessionMins(curS.blocks) : Infinity;
   const want = cur ? cur * 0.65 : 0;
-  const scored = pool.map(n => ({ n, w: qualityWorkMins(sessionByName(n)) }))
-                     .filter(x => x.w > 0)
+  /* Less hard running AND no longer on the day: a 46-minute hill session is
+     not the recovery-week version of a 42-minute tempo, whatever its rep count. */
+  const scored = pool.map(n => { const s = sessionByName(n); return { n, w: qualityWorkMins(s), len: s ? sessionMins(s.blocks) : Infinity }; })
+                     .filter(x => x.w > 0 && x.len <= curLen + 1)
                      .sort((a,b) => Math.abs(a.w - want) - Math.abs(b.w - want));
-  return scored.length ? scored[0].n : shortestOf(pool);
+  if (scored.length) return scored[0].n;
+  const sh = shortestOf(pool);
+  return (sh && durOf(sh) <= curLen) ? sh : current;
 }
 
 function shortestOf(names){
@@ -4574,7 +4712,7 @@ function weekLoad(cells){
     if (i == null){ hasUnknown = true; continue; }
     const b = state.sessions[i].blocks;
     runMin += sessionMins(b);
-    if (['primary','secondary','sharpener','retest'].includes(c.kind)) quality++;
+    if (['primary','secondary','sharpener'].includes(c.kind)) quality++;
   }
   return { runMin, xtMin, quality, hasUnknown };
 }
@@ -4961,39 +5099,78 @@ function generateRecoveryBlock(){
   if (runAv.length < 2) return planError('Set at least 2 running days to generate a recovery block.');
 
   const start      = resolveStartMonday();
-  /* Block length: use the gap to any entered date if it's within 8 weeks,
-     otherwise default to 3 weeks. This lets the race-date field double as a
-     "return to training" date when in recovery mode. */
-  let blockWeeks = 3;
-  if (planState.raceDate){
-    const rd = new Date(planState.raceDate + 'T00:00:00');
-    if (!isNaN(rd)){
-      const weeksOut = Math.round((rd - start) / (7 * 86400000));
-      if (weeksOut >= 1 && weeksOut <= 8) blockWeeks = weeksOut;
-    }
-  }
-  const longDay    = runAv[runAv.length - 1];
+  /* Three weeks. The race-date field used to set the length here, but it is
+     hidden in recovery mode -- so all it could ever do was carry a date over
+     from the last road plan and silently stretch or shrink the block. */
+  const blockWeeks = 3;
+  const longDay    = runAv.includes(planState.longDay) ? planState.longDay : runAv[runAv.length - 1];
+
+  /* The day grid is availability, not a prescription -- the same rule as the
+     main planner. Run on as many days as the athlete runs now (at least two,
+     never more than they've offered), spread across the week around the long
+     run, preferring days marked Run over Either. */
+  /* ...and no more days than the reduced volume can fill with real runs: at
+     about 70% of a 90-minute week, three runs of the shortest sensible length
+     would add up to more than the athlete runs now. */
+  const baseVol = (planState.currentMins || 120) * 0.70;
+  const nDays = Math.max(2, Math.min(runAv.length, planState.currentDays || 3, Math.floor(baseVol / 28)));
+  const markedRun = planState.dayMode.map((m,i) => m === 'run' ? i : -1).filter(i => i >= 0);
+  /* Seven days give at most a few dozen combinations, so try them all: fewest
+     Either days, then the widest smallest gap between runs, then the most even
+     spacing. Picking greedily one day at a time could lock in a bad early
+     choice (Wed + Sun, leaving only cramped options for the third run). */
+  const others = runAv.filter(d => d !== longDay);
+  const combos = [];
+  const walk = (from, acc) => {
+    if (acc.length === nDays - 1){ combos.push(acc.slice()); return; }
+    for (let i = from; i < others.length; i++){ acc.push(others[i]); walk(i + 1, acc); acc.pop(); }
+  };
+  walk(0, []);
+  const scoreOf = set => {
+    const days = [longDay, ...set].sort((a,b) => a-b);
+    const gaps = days.map((d, i) => ((days[(i+1) % days.length] - d + 7) % 7) || 7);
+    const mean = 7 / days.length;
+    return [set.filter(d => !markedRun.includes(d)).length,
+            -Math.min(...gaps),
+            gaps.reduce((a,g) => a + (g - mean) * (g - mean), 0)];
+  };
+  const cmp = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+  const bestSet = combos.reduce((best, s) => (!best || cmp(scoreOf(s), scoreOf(best)) < 0) ? s : best, null) || [];
+  const runDays = [longDay, ...bestSet].sort((a,b) => a-b);
+  const otherDays = runDays.filter(d => d !== longDay);
+  /* Strides on one non-long day (the one furthest from the long run) when there
+     are 3+ runs and the volume has room for the fixed-length strides session. */
+  const STRIDES = 'Easy Run + 6 Strides';
+  const stridesMins = durOf(STRIDES) || 38;
+  const roomForStrides = baseVol - 30 - stridesMins - EASY_RUNGS[0] * (otherDays.length - 1) >= 0;
+  const strideDay = (otherDays.length >= 2 && roomForStrides)
+    ? otherDays.reduce((a,b) => dayDist(b, longDay) > dayDist(a, longDay) ? b : a)
+    : -1;
 
   const weeks = [];
   for (let w = 0; w < blockWeeks; w++){
     const wkStart = addDays(start, w * 7);
     const wkEnd   = addDays(wkStart, 6);
     const cells   = [];
+    const lastWeek = w === blockWeeks - 1;
 
-    runAv.forEach((d, i) => {
-      const isLast   = i === runAv.length - 1;
-      const isStride = i === runAv.length - 2 && runAv.length > 2;
-      /* Week 3: slightly more volume to ease back into training */
-      const easyMins = w === 2 ? 50 : 40;
-      const longMins = w === 2 ? 75 : 60;
+    /* Scale session lengths to the runner's current volume: about 70% of what
+       they run now (80% in the final week, to ease back towards structured
+       training). The long run takes roughly 35% of that; the fixed strides run
+       is counted; the easy runs share what's left. Every name is a real library
+       session -- easy runs start at 25 minutes. */
+    const currentMins = planState.currentMins || 120; // fallback: 2 h/wk
+    const targetVol = Math.round(currentMins * (lastWeek ? 0.80 : 0.70));
+    const longMins  = Math.max(30, Math.min(120, Math.round(targetVol * 0.35 / 5) * 5));
+    const nEasy     = otherDays.length - (strideDay >= 0 ? 1 : 0);
+    const easyBudget = Math.max(0, targetVol - longMins - (strideDay >= 0 ? stridesMins : 0));
+    const rawEasy   = nEasy ? easyBudget / nEasy : 0;
+    const easyMins  = snapEasy(Math.max(EASY_RUNGS[0], Math.min(75, longMins * 0.85, rawEasy)));
 
-      if (isLast){
-        cells.push({ idx:d, kind:'long', name:`Easy Aerobic ${longMins} min` });
-      } else if (isStride){
-        cells.push({ idx:d, kind:'strides', name:'Easy Run + 6 Strides' });
-      } else {
-        cells.push({ idx:d, kind:'easy', name:`Easy Aerobic ${easyMins} min` });
-      }
+    runDays.forEach(d => {
+      if (d === longDay)        cells.push({ idx:d, kind:'long',    name: easyName(snapEasy(longMins)) });
+      else if (d === strideDay) cells.push({ idx:d, kind:'strides', name: STRIDES });
+      else                      cells.push({ idx:d, kind:'easy',    name: easyName(easyMins) });
     });
 
     /* Add cross-training days */
@@ -5004,8 +5181,8 @@ function generateRecoveryBlock(){
     cells.sort((a,b) => a.idx - b.idx);
 
     const note = w === 0 ? 'Recovery block — maintenance training only. Easy effort throughout, no targets, no pressure.'
-               : w === 1 ? 'Keep it easy. The goal is freshness, not fitness gains.'
-               : 'Final week — slight uptick in volume to ease back into structured training.';
+               : lastWeek ? 'Final week — slight uptick in volume to ease back into structured training.'
+               : 'Keep it easy. The goal is freshness, not fitness gains.';
 
     weeks.push({
       w: w + 1, wkStart, wkEnd,
@@ -5071,7 +5248,7 @@ function generateC25K(){
       note: w === 5 ? 'Week five ends with twenty unbroken minutes. It is the step everyone dreads and almost everyone makes.'
           : w === 9 ? 'Final week. The last session is your 5K \u2014 run it, then enter the time on the Calibrate tab and the full planner opens up.'
           : '',
-      noteCls: w === 9 ? 'retest' : '',
+      noteCls: w === 9 ? 'milestone' : '',
       target: 0, hasRace: w === 9
     };
   });
@@ -5085,11 +5262,13 @@ function generateC25K(){
   renderPlan();
 }
 function generatePlan(){
+  // the plan on screen before this rebuild, so ticks and swaps can be carried over
+  const prevGen = planState.generated;
   // hand the engine the settings of whichever planner this plan belongs to
   applyTabPrefs(currentTab());
   // the beginner programme is a fixed table, not a generated block
   if (planState.planType === 'c25k'){ setCycle(7); SHAPE_DAYS = null; return generateC25K(); }
-  if (planState.planType === 'recovery'){ return generateRecoveryBlock(); }
+  if (planState.planType === 'recovery'){ setCycle(7); SHAPE_DAYS = null; return generateRecoveryBlock(); }
   pd('pl-err').classList.remove('show');
   XT_MINS = planState.xtMins || 45;
   /* THE UNIT OF THE BLOCK. Seven days for everybody on a calendar; the length
@@ -5190,14 +5369,14 @@ function generatePlan(){
          units could hand back the same block length you were trying to leave.
          The specific phase converts once; the base is added in blocks. */
       const autoBlocks = (TAB_PREFS.shift.baseBlocks == null)
-        ? Math.max(1, Math.round(4 * 7 / CYCLE))
+        ? Math.max(1, Math.round(defaultBaseWeeks(prof) * 7 / CYCLE))
         : TAB_PREFS.shift.baseBlocks;
       N = Math.max(3, inBlocks(prof.spec) + autoBlocks);
     } else {
       /* Unset means "give me a sensible default"; an explicit zero means none.
          Conflating the two made the dropdown's own "None" option silently add
          four weeks of base. */
-      const autoBase = (planState.baseWeeks == null) ? 4 : planState.baseWeeks;
+      const autoBase = (planState.baseWeeks == null) ? defaultBaseWeeks(prof) : planState.baseWeeks;
       N = prof.spec + autoBase;
     }
     if (planState.shiftMode){
@@ -5211,42 +5390,52 @@ function generatePlan(){
   // --- periodisation: [ base ][ development ][ specific ][ taper ] ---
   let taperWeeks = N >= inBlocks(6) ? inBlocks(prof.taper) : (N >= inBlocks(4) ? 1 : 0);
   
-  /* Ultras get explicit base/dev/spec phases; road races use flexible allocation.
-     For ultras: base → dev → specific, with specified lengths.
-     For road: base (flexible) → dev (flexible) → specific (flexible) */
+  /* One rule for every goal, road or ultra, calendar or rotation.
+     `prof.spec` is the length of the FOCUSED BLOCK -- development, race-specific
+     and taper together -- as the race profiles define it. Everything before that
+     block is base.
+       - No race date: N was built as focused block + the base you asked for,
+         so base comes out at exactly your selection.
+       - Race date: the date fixes N. Spare time beyond the focused block
+         becomes base (up to eight weeks; anything more lengthens the block),
+         and a short runway shortens the focused block -- base goes first,
+         never the race-specific work. The base selector plays no part, as its
+         hint says.
+     Inside the block: the taper, then development and race-specific in the
+     profile's proportions (about 40/60 on the road; ultras use their own dev /
+     spec ratio, roughly a third development).
+     Every length goes through inBlocks, so a rotation plan gets the same span
+     of DAYS as a calendar plan. Ultras used to take prof.base and prof.taper
+     as raw block counts -- on a ten-day rotation a 100-miler's six-week base and
+     three-week taper became sixty and thirty days -- and kept that base however
+     short the runway, leaving a 100-miler twelve weeks out with two weeks of
+     race-specific work. */
   let baseWeeks, devWeeks, specWeeks;
-  if (prof.ultra && prof.base){
-    /* Ultra: keep base fixed, distribute remaining time proportionally between
-       dev and spec using their profile ratios. This ensures:
-         baseEnd + devWeeks + specWeeks + taperWeeks = N  (no gaps, no overlaps)
-       Extra time favours specific phase (more race-specific work is better than
-       more development). */
-    taperWeeks  = prof.taper || 2;
-    baseWeeks   = Math.min(prof.base, Math.max(0, N - taperWeeks - 4));
-    const remaining = N - baseWeeks - taperWeeks;
-    const ratio  = prof.dev / (prof.dev + prof.spec);   // e.g. 10/26 ≈ 0.38
-    devWeeks     = Math.max(2, Math.round(remaining * ratio));
-    specWeeks    = Math.max(2, remaining - devWeeks);
-  } else {
-    /* Road race: specific phase takes priority; base is capped at 8 weeks.
-       11+ weeks of base for a marathon is excessive — standard is 4-8 weeks. */
-    const wantedSpec = Math.max(inBlocks(prof.spec), Math.floor(N * 0.4));
-    const specCore   = wantedSpec - taperWeeks;
-    devWeeks  = Math.max(1, Math.round(specCore * 0.4));
-    baseWeeks = Math.min(8, Math.max(0, N - wantedSpec - taperWeeks - devWeeks));
-    specWeeks = N - baseWeeks - devWeeks - taperWeeks; // derived last — always sums to N
+  {
+    const focusedWanted = inBlocks(prof.spec);
+    let focused = Math.min(N, focusedWanted);
+    baseWeeks = N - focused;
+    if (raceDateObj){
+      baseWeeks = Math.min(baseWeeks, inBlocks(8));
+      focused = N - baseWeeks;
+    }
+    taperWeeks = Math.min(taperWeeks, focused);
+    const core = focused - taperWeeks;
+    const devShare = (prof.dev && prof.spec) ? prof.dev / (prof.dev + prof.spec) : 0.4;
+    devWeeks  = core >= 2 ? Math.min(core - 1, Math.max(1, Math.round(core * devShare))) : 0;
+    specWeeks = core - devWeeks;      // derived last: phases always sum to N
   }
   
   const baseEnd   = baseWeeks;
   const devEnd    = baseWeeks + devWeeks;
-  const specEnd   = devEnd + specWeeks;   // = N - taperWeeks by construction for ultras; matches for road too
+  const specEnd   = devEnd + specWeeks;   // = N - taperWeeks by construction
 
   const phaseOf = w => w > specEnd ? 'taper'
                      : w <= baseEnd ? 'base'
                      : w <= devEnd ? 'development'
                      : 'specific';
 
-  /* Recovery weeks every fourth week -- but never immediately before the peak
+  /* Recovery weeks every third to fifth week -- but never immediately before the peak
      long run. Deloading and then asking for the biggest run of the block seven
      days later gets the sequencing backwards; the peak long run wants a normal
      week in front of it and two to three weeks of taper behind it. */
@@ -5435,19 +5624,13 @@ function generatePlan(){
       });
     }
     let note = '', noteCls = '';
-    /* A benchmark test is a race in all but name; scheduling one inside the
-       last three weeks would sit an all-out effort on top of the taper it is
-       supposed to be sharpening. Benchmarks now run on EVERY down/recovery
-       week far enough from race day — the lower volume means fresher legs
-       and a more representative test result. */
-    // Benchmarks are user-placed via the session swap dropdown, not auto-scheduled.
-    const isRetest = false;
+    // Benchmarks are never scheduled: the athlete swaps one into a speed day
+    // from its dropdown when the paces stop feeling right.
     if (isDown){
       note = 'Recovery week — ease the volume back and let the adaptations land.';
     }
     if (isTaper && w < N) note = 'Taper — volume drops sharply, intensity stays. Resist the urge to add anything back.';
     if (isTaper && w === N) note = raceDateObj ? 'Race week — taper down, keep it sharp, trust the work you\u2019ve banked.' : (prof.ultra ? ('Goal week \u2014 this is your ' + prof.label + '. Set a real race date next time so the taper lines up, but the culminating session is here.') : ('Peak week — finish with an all-out ' + prof.label + ': the ' + prof.tt + ' file is on that day.'));
-    // Benchmarks are now user-swappable from any speed session dropdown -- nothing auto-placed.
 
     // easy runs absorb whatever volume is left to hit the week's target,
     // then the long run is trimmed if it would dominate the week.
@@ -5473,9 +5656,9 @@ function generatePlan(){
     // share of the week, so re-apply the cap afterwards and settle.
     if (state){
       // A recovery week is measured against the last NORMAL training week, not
-      // simply the week before -- a benchmark week is deliberately light, and
+      // simply the week before -- a race week is deliberately light, and
       // deloading from it would spiral downward.
-      const normals = weeks.filter(x => !x.isDown && !x.isTaper && x.noteCls !== 'retest' && !x.hasRace);
+      const normals = weeks.filter(x => !x.isDown && !x.isTaper && !x.hasRace);
       const lastNormal = normals.length ? cellsMins(normals[normals.length-1].cells) : 0;
       if (isDown && lastNormal){
         cells = trimWeekTo(cells, lastNormal * 0.9);
@@ -5554,9 +5737,13 @@ function generatePlan(){
       if (!lc) return;
       const lm = durOf(lc.name);
       if (!lm) return;
-      // same proportions the sizing used, re-applied after every later pass
+      // same proportions the sizing used (fitEasyRuns: easy 85%, medium-long
+      // 86%), re-applied after every later pass. This guard was left at 75% when
+      // the sizing moved to 85%, so it quietly undid the change.
       const medRoof  = lm * 0.86;
-      const easyRoof = lm * 0.75;
+      const easyRoof = lm * 0.85;
+      // a recovery run is shorter than an easy run, never longer than the long run
+      const recRoof  = lm * 0.75;
       cells.forEach((c, i) => {
         if (c.kind === 'medlong' && durOf(c.name) > medRoof){
           const fit = MEDLONG_RUNGS.filter(r => r <= medRoof);
@@ -5565,6 +5752,16 @@ function generatePlan(){
         if (c.kind === 'easy' && durOf(c.name) > easyRoof){
           const fit = EASY_RUNGS.filter(r => r <= easyRoof);
           cells[i] = { ...c, name: easyName(fit.length ? fit[fit.length-1] : EASY_RUNGS[0]) };
+        }
+        if (c.kind === 'recovery' && durOf(c.name) > recRoof){
+          const fit = RECOVERY_LIB_RUNGS.filter(r => r <= recRoof);
+          cells[i] = { ...c, name: 'Recovery ' + (fit.length ? fit[fit.length-1] : RECOVERY_LIB_RUNGS[0]) + ' min' };
+        }
+        if (c.kind === 'strides' && stridesEasyOf(c.name) > 25 && durOf(c.name) > easyRoof){
+          // same roof as an easy run, measured on the whole session
+          const extra = durOf(c.name) - stridesEasyOf(c.name);
+          const fit = EASY_RUNGS.filter(r => r + extra <= easyRoof);
+          cells[i] = { ...c, name: stridesName(fit.length ? fit[fit.length-1] : 25) };
         }
       });
     })();
@@ -5620,7 +5817,7 @@ function generatePlan(){
   if (state){
     weeks.forEach((wk, i) => {
       if (!wk.isDown || wk.hasRace) return;
-      const normals = weeks.slice(0, i).filter(x => !x.isDown && !x.isTaper && x.noteCls !== 'retest' && !x.hasRace);
+      const normals = weeks.slice(0, i).filter(x => !x.isDown && !x.isTaper && !x.hasRace);
       if (!normals.length) return;
       const base = cellsMins(normals[normals.length-1].cells);
       if (cellsMins(wk.cells) > base * 0.9) wk.cells = trimWeekTo(wk.cells, base * 0.9);
@@ -5678,17 +5875,45 @@ function generatePlan(){
   const b2bMissed = !!state && wantsB2B && !gotB2B;
   planState.generated = { shift: !!planState.shiftMode, cycleDays: CYCLE, weeks, N, start, longDay: longDayFixed, raceDateObj, underVolume, baseEnd, devEnd, specEnd, prof:prof.label, crowded, allQuality, targets, longCapped, raceWarns, goalLong: longPeakFor(prof), peakLong: longLadder.peakLong, longLimit: longLadder.limitedBy, ultra: !!prof.ultra, b2bMissed,
     weeksForFull: targets.weeksForFull, growthWanted: targets.growthWanted, growthUsed: targets.growthUsed,
-    sufficient: targets.sufficient, volumeHeld: targets.volumeHeld };
-  // a rebuild can change what each day is for, so stale swaps are dropped
-  const sig = [planState.goal, planState.dayMode.join(''), longDayFixed, N, ymd(start), planState.currentMins, planState.xtMins, planState.speedDay, JSON.stringify(planState.races||[]),
+    sufficient: targets.sufficient, volumeHeld: targets.volumeHeld, downEvery };
+  // a rebuild can change what each day is for, so day-level edits are checked
+  const sig = [planState.goal, planState.intent, planState.dayMode.join(''), longDayFixed, N, ymd(start), planState.currentMins, planState.currentLong || '', planState.xtMins, planState.speedDay, JSON.stringify(planState.races||[]),
                planState.shiftMode ? JSON.stringify([planState.shiftSpeedSlot, (planState.shiftPatterns||[]).map(p => [p.code, p.from, p.to, (p.slots||[]).map(x=>x?1:0).join('')])]) : ''].join('|');
-  if (planState.sig && planState.sig !== sig){
-    // the shape of the block changed, so day-level edits no longer refer to
-    // the same sessions
-    planState.overrides = {}; planState.flips = {}; planState.done = {};
-  }
+  if (planState.sig && planState.sig !== sig) pruneDayEdits(prevGen, planState.generated);
   planState.sig = sig;
   renderPlan();
+}
+
+/* After a rebuild, keep what the athlete has done to the plan wherever it
+   still makes sense. A tick or a swap belongs to a day; if that day still holds
+   the same kind of session it stays, and only edits on days whose purpose has
+   changed are cleared. This used to wipe every tick and swap whenever almost
+   anything changed -- updating your weekly volume or adding a parkrun mid-block
+   erased weeks of ticked-off sessions. If the weeks no longer fall on the same
+   dates (a new start date, a different rotation, another kind of plan), nothing
+   can be matched up and everything is cleared, as before. Either way the plan
+   says what went. */
+function pruneDayEdits(prev, next){
+  const before = { done: Object.keys(planState.done).filter(k => planState.done[k]).length,
+                   swaps: Object.keys(planState.overrides).length };
+  const sameDates = prev && prev.weeks && next && next.weeks
+    && ymd(prev.start) === ymd(next.start)
+    && (prev.cycleDays || 7) === (next.cycleDays || 7)
+    && !!prev.recovery === !!next.recovery && !!prev.c25k === !!next.c25k;
+  if (!sameDates){
+    planState.overrides = {}; planState.flips = {}; planState.done = {};
+  } else {
+    const kindAt = g => { const m = {}; g.weeks.forEach(wk => wk.cells.forEach(c => { m[wk.w + ':' + c.idx] = c.kind; })); return m; };
+    const was = kindAt(prev), now = kindAt(next);
+    const same = k => was[k] && now[k] && was[k] === now[k];
+    Object.keys(planState.done).forEach(k => { if (!same(k)) delete planState.done[k]; });
+    Object.keys(planState.overrides).forEach(k => { if (!same(k)) delete planState.overrides[k]; });
+    // a run/cross-train flip belongs to a day of a week that must still exist
+    Object.keys(planState.flips).forEach(k => { if (+k.split(':')[0] > next.N) delete planState.flips[k]; });
+  }
+  const lostDone  = before.done  - Object.keys(planState.done).filter(k => planState.done[k]).length;
+  const lostSwaps = before.swaps - Object.keys(planState.overrides).length;
+  planState.pruned = (lostDone || lostSwaps) ? { done: lostDone, swaps: lostSwaps, dates: !sameDates } : null;
 }
 
 function renderPlan(){
@@ -5727,8 +5952,22 @@ function renderPlan(){
   /* Benchmark hint \u2014 shown on all non-C25K plans so the user knows benchmarks
      exist in the swap menus. Shown below the calibration banner (or in its
      place when calibration is done) so it's always visible above the week grid. */
-  const benchmarkHint = g.c25k ? '' :
+  // (not on a recovery block: it has no speed sessions to swap)
+  const benchmarkHint = (g.c25k || g.recovery) ? '' :
     `<div class="plan-note-info" style="margin-bottom:16px"><b>Benchmark tests are in the swap menu.</b> If the paces start to feel wrong \u2014 too easy or too hard \u2014 open the dropdown on any speed session and pick a <b>5K Benchmark Test</b> or <b>3K Time Trial</b>. Run it, enter the time on the Calibrate tab, and every pace in the plan re-tightens. Recovery weeks are a natural fit: the lower volume means fresher legs and a more representative result.</div>`;
+  /* What a rebuild cleared, said once and then forgotten. */
+  const pr = planState.pruned;
+  planState.pruned = null;
+  const plural = (n, one) => n + ' ' + one + (n === 1 ? '' : 's');
+  const prunedNote = pr
+    ? `<div class="plan-note-info" style="margin-bottom:16px"><b>Plan rebuilt.</b> ${[
+         pr.done  ? plural(pr.done, 'ticked session') : '',
+         pr.swaps ? plural(pr.swaps, 'swap') : ''
+       ].filter(Boolean).join(' and ')} ${pr.done + pr.swaps === 1 ? 'was' : 'were'} cleared ${pr.dates
+         ? 'because the weeks no longer fall on the same dates.'
+         : 'because ' + (pr.done + pr.swaps === 1 ? 'that day now holds' : 'those days now hold') + ' a different kind of session.'}${
+         (Object.keys(planState.done).length || Object.keys(planState.overrides).length) ? ' Everything else you\u2019ve ticked or swapped is kept.' : ''}</div>`
+    : '';
   const blockWeeks = g.shift ? Math.round(g.N * g.cycleDays / 7) : g.N;
   const headline = `<div class="plan-headline">${g.prof} plan \u00b7 ${
     g.shift ? `${g.N} rotations of ${g.cycleDays} days \u00b7 about ${blockWeeks} weeks` : `${g.N} weeks`
@@ -5934,18 +6173,32 @@ function renderPlan(){
     ? `<div class="plan-totals"><b>${g.shift ? `${g.N} rotations` : `${g.N} weeks`}</b> \u00b7 about <b>${fmtHrs(totals.run)}</b> of running${totals.xt ? ` plus <b>${fmtHrs(totals.xt)}</b> cross-training` : ''} \u00b7 averaging <b>${fmtHrs(totals.run/Math.max(1,blockWeeks))}</b> a week</div>`
     : '';
 
+  /* "How to run it" describes THIS plan, not a generic one: how many quality
+     days its build weeks actually carry, and how often it eases off (every
+     third, fourth or fifth week depending on what you want from the block). */
+  const buildWks = (g.weeks || []).filter(wk => !wk.isDown && !wk.isTaper);
+  const qCounts  = buildWks.map(wk => wk.cells.filter(c => c.kind === 'primary' || c.kind === 'secondary').length);
+  const qualityLine = !qCounts.length || qCounts.every(n => n <= 1) ? 'One quality day a week'
+                    : qCounts.every(n => n >= 2) ? 'Two quality days a week'
+                    : 'One or two quality days a week';
+  const ORD = { 2:'second', 3:'third', 4:'fourth', 5:'fifth', 6:'sixth' };
+  const unitWord = g.shift ? 'rotation' : 'week';
+  const easeLine = (g.downEvery && (g.weeks || []).some(wk => wk.isDown))
+    ? `Every ${ORD[g.downEvery] || (g.downEvery + 'th')} ${unitWord} eases off on purpose \u2014 except just before your biggest long run \u2014 and that\u2019s when you actually absorb the training.`
+    : 'Recovery comes from the easy days around each hard one \u2014 that\u2019s when you actually absorb the training.';
+
   out.innerHTML =
-    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${rotaNote}${shiftVolNote}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${banner}${benchmarkHint}${weeksHtml}
+    `${headline}<div class="phase-strip">${strip}</div>${volWarn}${raceWarn}${crowdWarn}${goalUnreachable}${rotaNote}${shiftVolNote}${b2bNote}${volumeHeldNote}${shortBlock}${fixedDateNote}${longNote}${modelNote}${totalHtml}${progress}${prunedNote}${banner}${benchmarkHint}${weeksHtml}
      ${g.c25k ? `<div class="plan-tip"><h4>How to run it</h4>
        <b>Three runs a week, with a rest day between each.</b> The walking is not a failure or a fallback \u2014 it is the part that lets you come back two days later, which is the only thing that actually matters over nine weeks.
        <br><br><b>Go slower than feels right.</b> Almost everyone who struggles with this programme is running their intervals too fast. You should be able to talk. If you cannot, slow down until you can \u2014 there is no pace target here on purpose.
        <br><br><b>Repeat a week if you need to.</b> Nothing breaks if week five takes a fortnight. The programme assumes you finish each week feeling like you could have done a little more, not a little less.
        <br><br><b>When you finish</b>, run your 5K, then enter the time on the Calibrate tab. That single number unlocks the full planner \u2014 pace bands, heart-rate zones, and a proper block for whatever you want to do next.</div>`
      : `<div class="plan-tip"><h4>How to run it</h4>
-       Two quality days a week, never back to back \u2014 the day after anything hard stays easy, recovery or cross-training. Hills and strides in the base weeks build the strength that makes the sharp sessions bite later. Every fourth week eases off on purpose: that\u2019s when you actually absorb the training.
+       ${qualityLine}, never back to back \u2014 the day after anything hard stays easy, recovery or cross-training. Hills and strides in the base weeks build the strength that makes the sharp sessions bite later. ${easeLine}
        <br><br><b>Swap freely.</b> Any session with a dropdown can be exchanged for another of the same purpose \u2014 a different interval flavour, a longer easy run \u2014 without breaking the week\u2019s structure. Swaps are saved with your plan. Tap <b>FIT</b> to send that exact session to your watch.
        ${g.ultra ? `<br><br><b>Train on the terrain you'll race on.</b> This plan prescribes time and effort, not ground \u2014 and for an ultra the ground is most of the difficulty. Run your long runs and back-to-backs on terrain that matches your race wherever you can: the climbs, the descents, the underfoot conditions and the time of day. Practise hiking the steep sections deliberately, because on race day you will hike them whether you planned to or not, and the runners who hike well finish faster than the ones who don't. Treat the paces here as a guide on the flat and effort as the real target everywhere else.` : ''}
-       <br><br><b>The long run builds.</b> It climbs rung by rung toward a peak set by your goal and what you want from the block \u2014 a marathon you intend to race asks for close to three hours, one you intend to finish rather less \u2014 stepping back one rung in each recovery week and dropping away entirely in race week. Your easy runs stretch out in the second half of the block too, so weekly volume genuinely progresses rather than drifting.
+       <br><br><b>The long run builds.</b> It climbs rung by rung toward a peak set by your goal and what you want from the block \u2014 a marathon you intend to race asks for close to three hours, one you intend to finish rather less \u2014 stepping back about a quarter of an hour in each recovery week (more for the biggest ultra long runs), easing down with the rest of the week through the taper, and dropping away entirely in race week. Your easy runs stretch out in the second half of the block too, so weekly volume genuinely progresses rather than drifting.
        <br><br>Weekly volume is estimated from the sessions themselves; the kilometre figure assumes easy pace, so treat it as indicative rather than exact.</div>`}`;
 
   out.querySelectorAll('.pl-dl').forEach(b => b.onclick = () => {
@@ -6052,7 +6305,7 @@ buildDayGrid();
 refreshLongDayOptions();
 pd('long-day').onchange = e => { planState.longDay = +e.target.value; };
 pd('race-date').onchange = e => { TAB_PREFS.plan.raceDate = e.target.value || null; planState.raceDate = TAB_PREFS.plan.raceDate; };
-pd('goal').onchange = e => { TAB_PREFS.plan.goal = e.target.value; planState.goal = e.target.value; };
+pd('goal').onchange = e => { TAB_PREFS.plan.goal = e.target.value; planState.goal = e.target.value; refreshBaseLabel(); };
 
 const GOAL_OPTS = {
   road:     [['5k','5K'],['10k','10K'],['half','Half marathon'],['marathon','Marathon']],
@@ -6093,12 +6346,23 @@ function setPlanType(type){
     : type === 'ultra'
     ? '50K to 100 miles \u2014 time on feet, hills, and back-to-back long runs'
     : '5K to marathon, on the road or track';
+  refreshBaseLabel();
 }
 document.querySelectorAll('#plan-type .seg-opt').forEach(b => {
   b.onclick = () => setPlanType(b.dataset.type);
 });
 pd('cur-vol').onchange = e => { planState.currentMins = +e.target.value; updateCurAvg(); refreshDoublesVisibility(); if (planState.generated) generatePlan(); };
 pd('cur-days').onchange = e => { planState.currentDays = +e.target.value; updateCurAvg(); refreshDoublesVisibility(); if (planState.generated) generatePlan(); };
+pd('cur-long').onchange = e => { planState.currentLong = e.target.value === 'auto' ? null : +e.target.value; updateCurAvg(); if (planState.generated) generatePlan(); };
+
+/* The plan's first long run starts from the athlete's real longest run when
+   they give it. Weekly time and days can't say whether someone runs three equal
+   hours or two short runs and a two-hour Sunday, so the estimate (about 1.7
+   times the average run) is shown in the hint for them to correct. */
+function estimatedCurrentLong(){
+  const avg = (planState.currentMins || 180) / Math.max(1, planState.currentDays || 3);
+  return Math.max(LONG_RUNGS[0], snapRung(avg * 1.7));
+}
 
 /* A quiet piece of feedback that tells the athlete something true about their
    own training before the plan says anything: what their runs actually average,
@@ -6112,6 +6376,10 @@ function updateCurAvg(){
   else if (avg < 115) note = 'Around ' + avg + ' min a run \u2014 already substantial. Expect progress to come more from the work inside the runs than from extra minutes.';
   else                note = 'Around ' + avg + ' min a run \u2014 you\u2019re at the practical limit of a single session. The plan will build quality rather than length — mark a day as Either if you could add one.';
   pd('cur-avg-hint').textContent = note;
+  const lh = pd('cur-long-hint');
+  if (lh) lh.textContent = planState.currentLong
+    ? 'Your long runs start from here — or lower, if your weekly time can’t carry a run that long yet — and build toward what your goal needs.'
+    : 'We’ll assume your longest run is about ' + fmtHrs(estimatedCurrentLong()) + ', from your weekly time and days. If it’s different, pick it — it sets where your long runs start.';
 }
 pd('xt-mins').onchange = e => { planState.xtMins = +e.target.value; };
 pd('base-weeks').onchange = e => {
@@ -6270,6 +6538,7 @@ function collectSnapshot(){
       intent:      planState.intent || 'improve',
       currentMins: planState.currentMins,
       currentDays: planState.currentDays || 3,
+      currentLong: planState.currentLong || null,
       xtMins:      planState.xtMins,
       races:       (planState.races || []).map(r => ({ ...r })),
       dayMode:     planState.dayMode.slice(),
@@ -6388,6 +6657,11 @@ function applySnapshot(s){
   pd('cur-vol').value = planState.currentMins;
   planState.currentDays = (typeof p.currentDays === 'number') ? Math.max(3, p.currentDays) : 3;
   pd('cur-days').value = String(planState.currentDays);
+  planState.currentLong = (typeof p.currentLong === 'number' && p.currentLong > 0) ? p.currentLong : null;
+  pd('cur-long').value = planState.currentLong
+    && Array.from(pd('cur-long').options).some(o => +o.value === planState.currentLong)
+    ? String(planState.currentLong) : 'auto';
+  if (pd('cur-long').value === 'auto') planState.currentLong = null;
   updateCurAvg();
   planState.xtMins = (typeof p.xtMins === 'number') ? p.xtMins : 45;
   pd('xt-mins').value = planState.xtMins;
@@ -6395,6 +6669,7 @@ function applySnapshot(s){
   planState.xtTypes = ['xt'];
   planState.baseWeeks = (p.baseWeeks === null || typeof p.baseWeeks === 'number') ? p.baseWeeks : null;
   pd('base-weeks').value = planState.baseWeeks == null ? 'auto' : String(planState.baseWeeks);
+  refreshBaseLabel();
   planState.speedDay = (typeof p.speedDay === 'number') ? p.speedDay : -1;
   pd('speed-day').value = String(planState.speedDay);
   setIntent(INTENTS[p.intent] ? p.intent : 'improve', savedTab);
@@ -6837,10 +7112,10 @@ const RACE_LABEL   = { '1mile':'1 mile', '5k':'5K', '10k':'10K', 'half':'Half ma
 /* Days of easy running owed afterwards, before you can train hard again. */
 const RACE_RECOVERY= { '1mile':1, '5k':1, '10k':2, 'half':3, 'marathon':6,
                        '50k':7, '50mi':10, '100k':14, '100mi':16 };
-/* Distances short enough to double as a mid-block benchmark. */
+/* Race distances short enough that the result makes a good benchmark. */
 const BENCHMARKABLE= ['1mile','5k','10k'];
 const LONGK   = ['long','longdown'];
-const INTENSE = ['primary','secondary','retest'];
+const INTENSE = ['primary','secondary'];
 
 const dayIndexIn = (d, wkStart) => Math.round((d - wkStart) / 86400000);
 /* A block longer than a week runs past Sunday, so a day's name has to come from
@@ -7031,12 +7306,7 @@ function applyRaces(weeks, g, prof){
     wk.hasRace = r.pri;
 
 
-    // If you're racing something short in a benchmark week, the race IS the
-    // benchmark. Making you also run a time trial would be daft.
-    if (wk.noteCls === 'retest' && BENCHMARKABLE.includes(r.dist)){
-      wk.cells = wk.cells.map(c => c.kind === 'retest' ? { ...c, kind:'easy', name: easyName(40) } : c);
-      wk.note = 'Your ' + RACE_LABEL[r.dist] + ' race is the benchmark \u2014 no separate test needed. Put the result into the Calibrate tab and every pace below re-tightens.';
-    } else if (!wk.note || wk.noteCls !== 'retest'){
+    {
       if (wk.bRaceLeadUp){
         wk.note = `Building toward your ${RACE_LABEL[wk.bRaceLeadUp.dist]} (B race). These sessions are tailored to that distance — shorter repeats, higher intensity than your ${prof.label} work.`;
       } else {
@@ -7045,8 +7315,12 @@ function applyRaces(weeks, g, prof){
                : 'run it hard, but it replaces this week\u2019s quality session rather than adding to it.');
       }
       wk.noteCls = 'race';
+      /* A short race run all-out is as good a benchmark as any test -- better,
+         usually -- so say so rather than leaving the athlete to swap one in. */
+      if (BENCHMARKABLE.includes(r.dist)){
+        wk.note += ' Run it all-out and it doubles as a benchmark: put the time into the Calibrate tab and every pace re-tightens.';
+      }
     }
-    if (BENCHMARKABLE.includes(r.dist) && !isB) wk.canBenchmark = true;
   });
 
   // Any week that started with a long run, has a race, and ended up without
@@ -7145,7 +7419,7 @@ pd('build-c25k').onclick = () => {
    default for every control -- which drifts the moment a default changes -- the
    blank state is photographed at start-up and restored on demand. */
 const BLANK_STATE = {};
-const BLANK_IDS = ['dist','time','maxhr','age','cur-vol','cur-days','gt-time','gt-dist',
+const BLANK_IDS = ['dist','time','maxhr','age','cur-vol','cur-days','cur-long','gt-time','gt-dist',
   'paces','predict','gt-out','cal-locked','filters','dur-filters','grid','lib-q',
   'goal','race-date','start-date','long-day','base-weeks','speed-day','xt-mins','plan-out',
   'shift-goal','shift-race-date','shift-start','shift-base','shift-speed-slot','shift-out','shift-bank','shift-rows',
@@ -7179,7 +7453,7 @@ function resetTabInner(tab){
   // currentTab() would answer
   const owned = currentTab() === tab;
   if (tab === 'calibrate'){
-    ['dist','time','maxhr','age','cur-vol','cur-days','gt-time','gt-dist','lib-q'].forEach(restoreBlank);
+    ['dist','time','maxhr','age','cur-vol','cur-days','cur-long','gt-time','gt-dist','lib-q'].forEach(restoreBlank);
     ['paces','predict','gt-out','cal-locked','filters','dur-filters','grid'].forEach(restoreBlank);
     state = null;
     unit = 'km';
@@ -7188,6 +7462,7 @@ function resetTabInner(tab){
     pd('err').classList.remove('show');
     planState.currentMins = +pd('cur-vol').value || 180;
     planState.currentDays = +pd('cur-days').value || 3;
+    planState.currentLong = null;
     updateCurAvg(); refreshDoublesVisibility();
     if (planState.generated) renderPlan();      // redraws without paces
     flashHint('Calibration cleared. Enter a recent race or time trial to start again.');
